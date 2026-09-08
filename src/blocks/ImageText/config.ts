@@ -1,5 +1,10 @@
 import type { Block } from "payload";
 import {
+  createAppearanceGroup,
+  createSpacingField,
+  createToneField,
+} from "../../fields/block-appearance";
+import {
   closedSelect,
   requiredRichText,
   requiredText,
@@ -78,5 +83,9 @@ export const ImageTextBlock: Block = {
       },
       fields: createLinkFields(),
     },
+    createAppearanceGroup([
+      createToneField(["default", "surface", "muted"], "default"),
+      createSpacingField(["compact", "default", "spacious"], "default"),
+    ]),
   ],
 };

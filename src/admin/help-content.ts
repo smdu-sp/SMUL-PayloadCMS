@@ -17,7 +17,7 @@ export const adminHelpSections: AdminHelpSection[] = [
     id: "primeiros-passos",
     title: "Primeiros passos",
     body: [
-      "O Admin serve para manter paginas, imagens, navegacao e configuracoes editoriais do portal.",
+      "O Admin serve para manter paginas, imagens, navegacao e configuracoes editoriais do portal para perfis como Editor e Admin.",
       "Antes de publicar, revise se o conteudo informa, orienta e encaminha para servicos oficiais sem prometer deferimento ou regularidade definitiva.",
       "Use rascunhos e preview para revisar a pagina antes de deixa-la publica.",
     ],

@@ -1,4 +1,9 @@
 import type { Block } from "payload";
+import {
+  createAppearanceGroup,
+  createSpacingField,
+  createWidthField,
+} from "../../fields/block-appearance";
 import { closedSelect, requiredRichText } from "../../fields/editorial-validation";
 import { createBlockAdmin } from "../shared/admin";
 
@@ -41,5 +46,9 @@ export const RichTextBlock: Block = {
         { label: "Leitura estreita", value: "narrow" },
       ],
     },
+    createAppearanceGroup([
+      createWidthField(["narrow", "default", "wide"], "default"),
+      createSpacingField(["compact", "default", "spacious"], "default"),
+    ]),
   ],
 };

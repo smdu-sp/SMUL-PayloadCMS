@@ -20,10 +20,35 @@ type CardsItem = CardsBlockProps["items"][number] & {
   mediaSource?: CardMediaSource | string | null;
 };
 
+type CardsAppearance = {
+  spacing?: "compact" | "default" | "spacious" | string | null;
+  tone?: "default" | "muted" | "surface" | string | null;
+};
+
+type CardsBlockWithAppearanceProps = CardsBlockProps & {
+  appearance?: CardsAppearance | null;
+};
+
 export function normalizeCardsVariant(
   variant: CardsBlockProps["variant"] | string | null | undefined,
 ): CardsVariant {
   return variant === "modalities" ? "modalities" : "default";
+}
+
+export function normalizeCardsTone(
+  tone?: string | null,
+  fallbackTone: "default" | "muted" | "surface" = "default",
+): "default" | "muted" | "surface" {
+  if (tone === "muted" || tone === "surface" || tone === "default") return tone;
+  return fallbackTone;
+}
+
+export function normalizeCardsSpacing(
+  spacing?: string | null,
+  fallbackSpacing: "compact" | "default" | "spacious" = "default",
+): "compact" | "default" | "spacious" {
+  if (spacing === "compact" || spacing === "spacious") return spacing;
+  return fallbackSpacing;
 }
 
 export function normalizeCardMediaSource(item: CardsItem): CardMediaSource {
@@ -138,12 +163,26 @@ function CardMedia({
   );
 }
 
-export function CardsBlock({ description, items, title, variant }: CardsBlockProps) {
+export function CardsBlock({
+  appearance,
+  description,
+  items,
+  title,
+  variant,
+}: CardsBlockWithAppearanceProps) {
   const normalizedVariant = normalizeCardsVariant(variant);
   const modalities = normalizedVariant === "modalities";
+  const effectiveTone = normalizeCardsTone(
+    appearance?.tone && appearance.tone !== "default" ? appearance.tone : null,
+    modalities ? "default" : "muted",
+  );
+  const effectiveSpacing = normalizeCardsSpacing(
+    appearance?.spacing,
+    "default",
+  );
 
   return (
-    <Section spacing="md" tone={modalities ? "default" : "muted"}>
+    <Section spacing={effectiveSpacing} tone={effectiveTone}>
       <Container size="lg">
         {title ? (
           <Heading level={2} size="lg">

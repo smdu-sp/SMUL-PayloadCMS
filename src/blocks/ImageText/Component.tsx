@@ -6,7 +6,13 @@ import { BlockLink } from "../shared/BlockLink";
 
 type ImageTextVariant = "image-left" | "image-right";
 
+type ImageTextAppearance = {
+  spacing?: "compact" | "default" | "spacious" | string | null;
+  tone?: "default" | "muted" | "surface" | string | null;
+};
+
 type ImageTextBlockWithLegacyProps = ImageTextBlockProps & {
+  appearance?: ImageTextAppearance | null;
   imagePosition?: "left" | "right" | string | null;
 };
 
@@ -17,7 +23,22 @@ export function normalizeImageTextVariant(
   return "image-left";
 }
 
+export function normalizeImageTextTone(
+  tone?: string | null,
+): "default" | "muted" | "surface" {
+  if (tone === "muted" || tone === "surface" || tone === "default") return tone;
+  return "default";
+}
+
+export function normalizeImageTextSpacing(
+  spacing?: string | null,
+): "compact" | "default" | "spacious" {
+  if (spacing === "compact" || spacing === "spacious") return spacing;
+  return "default";
+}
+
 export function ImageTextBlock({
+  appearance,
   content,
   cta,
   image,
@@ -27,9 +48,11 @@ export function ImageTextBlock({
 }: ImageTextBlockWithLegacyProps) {
   const normalizedVariant = normalizeImageTextVariant(variant ?? imagePosition);
   const imageOnRight = normalizedVariant === "image-right";
+  const effectiveTone = normalizeImageTextTone(appearance?.tone);
+  const effectiveSpacing = normalizeImageTextSpacing(appearance?.spacing);
 
   return (
-    <Section spacing="md" tone="default">
+    <Section spacing={effectiveSpacing} tone={effectiveTone}>
       <Container size="lg">
         <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
           <MediaImage

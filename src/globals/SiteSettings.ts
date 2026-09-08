@@ -83,10 +83,10 @@ export const SiteSettings: GlobalConfig = {
           name: "primaryColor",
           type: "text",
           label: "Cor principal",
-          defaultValue: "#007a73",
+          defaultValue: "#0a3299",
           admin: {
             description:
-              "Cor principal de botoes, links e destaques. Use hexadecimal curto ou longo, como #007a73.",
+              "Cor principal de botoes, links e destaques. Use hexadecimal curto ou longo, como #0a3299.",
           },
           validate: validateOptionalHexColor,
         },
@@ -94,10 +94,10 @@ export const SiteSettings: GlobalConfig = {
           name: "secondaryColor",
           type: "text",
           label: "Cor institucional escura",
-          defaultValue: "#103b3f",
+          defaultValue: "#0a3299",
           admin: {
             description:
-              "Cor de fundos fortes, como areas de destaque. Use hexadecimal curto ou longo.",
+              "Cor de fundos fortes, como areas de destaque. Use hexadecimal curto ou longo, como #0a3299.",
           },
           validate: validateOptionalHexColor,
         },
@@ -105,10 +105,10 @@ export const SiteSettings: GlobalConfig = {
           name: "accentColor",
           type: "text",
           label: "Cor de destaque",
-          defaultValue: "#fff4cc",
+          defaultValue: "#5cd6c9",
           admin: {
             description:
-              "Cor suave para superficies de apoio e chamadas secundarias. Use hexadecimal curto ou longo.",
+              "Cor suave para superficies de apoio e chamadas secundarias. Use hexadecimal curto ou longo, como #5cd6c9.",
           },
           validate: validateOptionalHexColor,
         },
