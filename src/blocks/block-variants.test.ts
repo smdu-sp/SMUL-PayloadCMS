@@ -9,8 +9,10 @@ import { normalizeAlertBoxType } from "./AlertBox/Component";
 import { normalizeCTAVariant } from "./CTA/Component";
 import { normalizeCardsVariant } from "./Cards/Component";
 import { normalizeFAQVariant } from "./FAQ/Component";
+import { HeroBlock } from "./Hero/config";
 import { normalizeHeroVariant } from "./Hero/Component";
 import { normalizeIconGridVariant } from "./IconGrid/Component";
+import { ImageTextBlock } from "./ImageText/config";
 import { normalizeImageTextVariant } from "./ImageText/Component";
 import { normalizeRichTextVariant } from "./RichText/Component";
 
@@ -22,6 +24,29 @@ describe("block variant fallbacks", () => {
     assert.equal(normalizeHeroVariant("image"), "split");
     assert.equal(normalizeHeroVariant("unknown"), "default");
     assert.equal(normalizeHeroVariant(undefined), "default");
+  });
+
+  it("adds a safe presentation group to Hero and ImageText blocks without arbitrary numeric controls", () => {
+    const heroPresentation = HeroBlock.fields.find(
+      (field) => "name" in field && field.name === "imagePresentation",
+    );
+    const imageTextPresentation = ImageTextBlock.fields.find(
+      (field) => "name" in field && field.name === "imagePresentation",
+    );
+
+    assert.ok(heroPresentation && "type" in heroPresentation && heroPresentation.type === "group");
+    assert.ok(
+      imageTextPresentation && "type" in imageTextPresentation && imageTextPresentation.type === "group",
+    );
+
+    for (const presentation of [heroPresentation, imageTextPresentation]) {
+      assert.ok(presentation && "fields" in presentation);
+      const nestedTypes = presentation.fields
+        .filter((field) => "type" in field)
+        .map((field) => field.type);
+      assert.ok(!nestedTypes.includes("number"));
+      assert.ok(!nestedTypes.includes("text"));
+    }
   });
 
   it("keeps known CTA variants and maps legacy values without breaking rendering", () => {

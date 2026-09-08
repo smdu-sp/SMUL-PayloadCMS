@@ -1,4 +1,5 @@
 import Image from "next/image";
+import type { CSSProperties } from "react";
 import type { Media } from "../../payload-types";
 
 const localizeMediaUrl = (url: string): string => {
@@ -33,11 +34,13 @@ export function MediaImage({
   media,
   priority = false,
   sizes = "100vw",
+  style,
 }: {
   className?: string;
   media?: Media | number | null;
   priority?: boolean;
   sizes?: string;
+  style?: CSSProperties;
 }) {
   if (!media || typeof media !== "object" || !media.url) return null;
 
@@ -51,6 +54,7 @@ export function MediaImage({
       priority={priority}
       sizes={sizes}
       src={src}
+      style={style}
       width={media.width || 1200}
     />
   );

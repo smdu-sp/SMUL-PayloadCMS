@@ -1,5 +1,9 @@
 import type { HeroBlock as HeroBlockProps } from "../../payload-types";
 import { Container, Heading, Section, Text } from "../../components/ui";
+import {
+  getFocalPointStyle,
+  getImagePresentationClassName,
+} from "../shared/image-presentation";
 import { MediaImage } from "../shared/MediaImage";
 import { BlockLink } from "../shared/BlockLink";
 
@@ -18,6 +22,7 @@ export function HeroBlock({
   description,
   eyebrow,
   image,
+  imagePresentation,
   title,
   variant,
 }: HeroBlockProps) {
@@ -77,10 +82,14 @@ export function HeroBlock({
           </div>
           {split ? (
             <MediaImage
-              className="aspect-video h-auto w-full rounded-xl border border-border object-cover"
+              className={`h-auto rounded-xl border border-border ${getImagePresentationClassName(imagePresentation)}`}
               media={image}
               priority
               sizes="(min-width: 1024px) 50vw, 100vw"
+              style={getFocalPointStyle(
+                typeof image === "object" ? image : null,
+                imagePresentation,
+              )}
             />
           ) : null}
         </div>

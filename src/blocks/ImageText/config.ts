@@ -4,6 +4,7 @@ import {
   requiredRichText,
   requiredText,
 } from "../../fields/editorial-validation";
+import { createImagePresentationFields } from "../../fields/image-presentation";
 import { createLinkFields } from "../../fields/link";
 import { createBlockAdmin } from "../shared/admin";
 
@@ -48,6 +49,20 @@ export const ImageTextBlock: Block = {
         description:
           "Imagem principal do bloco. Em celulares, ela aparece antes do texto.",
       },
+    },
+    {
+      name: "imagePresentation",
+      type: "group",
+      label: "Apresentação da imagem",
+      admin: {
+        description:
+          "Define como esta imagem é exibida neste bloco. O arquivo original na Mídia não é alterado.",
+      },
+      fields: createImagePresentationFields({
+        defaultSize: "medium",
+        defaultAspectRatio: "original",
+        defaultFit: "cover",
+      }),
     },
     {
       name: "variant",

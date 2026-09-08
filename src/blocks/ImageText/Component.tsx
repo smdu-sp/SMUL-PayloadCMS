@@ -1,6 +1,10 @@
 import { RichText } from "@payloadcms/richtext-lexical/react";
 import type { ImageTextBlock as ImageTextBlockProps } from "../../payload-types";
 import { Container, Heading, Section } from "../../components/ui";
+import {
+  getFocalPointStyle,
+  getImagePresentationClassName,
+} from "../shared/image-presentation";
 import { MediaImage } from "../shared/MediaImage";
 import { BlockLink } from "../shared/BlockLink";
 
@@ -22,6 +26,7 @@ export function ImageTextBlock({
   cta,
   image,
   imagePosition,
+  imagePresentation,
   variant,
   title,
 }: ImageTextBlockWithLegacyProps) {
@@ -33,9 +38,13 @@ export function ImageTextBlock({
       <Container size="lg">
         <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
           <MediaImage
-            className={`aspect-video h-auto w-full rounded-xl border border-border object-cover ${imageOnRight ? "lg:order-2" : ""}`}
+            className={`h-auto rounded-xl border border-border ${getImagePresentationClassName(imagePresentation)} ${imageOnRight ? "lg:order-2" : ""}`}
             media={image}
             sizes="(min-width: 1024px) 50vw, 100vw"
+            style={getFocalPointStyle(
+              typeof image === "object" ? image : null,
+              imagePresentation,
+            )}
           />
           <div className="max-w-container-sm">
             <Heading level={2} size="lg">
