@@ -15,6 +15,7 @@ const headingTones = {
 } as const;
 
 const headingAlignments = {
+  end: "text-right",
   start: "text-left",
   center: "text-center",
 } as const;

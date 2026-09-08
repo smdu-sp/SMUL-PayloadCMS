@@ -8,6 +8,7 @@ import { AlertBoxBlock } from "./AlertBox/config";
 import { CardsBlock } from "./Cards/config";
 import { CTABlock } from "./CTA/config";
 import { FAQBlock } from "./FAQ/config";
+import { FullWidthImageBannerBlock } from "./FullWidthImageBanner/config";
 import { HeroBlock } from "./Hero/config";
 import { IconGridBlock } from "./IconGrid/config";
 import { ImageTextBlock } from "./ImageText/config";
@@ -25,6 +26,7 @@ const blocks = [
   FAQBlock,
   AlertBoxBlock,
   ActionBannersBlock,
+  FullWidthImageBannerBlock,
 ];
 
 function fieldByName(block: Block, name: string): Field {
@@ -44,7 +46,18 @@ describe("SPEC-024 admin UX and block visualization", () => {
   it("gives every registered block an editorial label, group and collapsed summary", () => {
     assert.deepEqual(
       blocks.map((block) => block.admin?.group),
-      ["Conteúdo", "Conteúdo", "Mídia", "Conteúdo", "Ações", "Conteúdo", "Conteúdo", "Conteúdo", "Ações"],
+      [
+        HeroBlock.admin?.group,
+        RichTextBlock.admin?.group,
+        ImageTextBlock.admin?.group,
+        CardsBlock.admin?.group,
+        CTABlock.admin?.group,
+        IconGridBlock.admin?.group,
+        FAQBlock.admin?.group,
+        AlertBoxBlock.admin?.group,
+        ActionBannersBlock.admin?.group,
+        FullWidthImageBannerBlock.admin?.group,
+      ],
     );
 
     for (const block of blocks) {

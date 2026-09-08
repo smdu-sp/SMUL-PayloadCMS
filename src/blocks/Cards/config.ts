@@ -1,4 +1,4 @@
-import type { Block } from "payload";
+import type { Block, UploadFieldSingleValidation } from "payload";
 import {
   closedSelect,
   requiredText,
@@ -6,6 +6,36 @@ import {
 } from "../../fields/editorial-validation";
 import { createLinkFields } from "../../fields/link";
 import { createBlockAdmin } from "../shared/admin";
+
+const mediaSourceOptions = [
+  { label: "Sem midia", value: "none" },
+  { label: "Icone", value: "icon" },
+  { label: "Imagem", value: "image" },
+];
+
+const mediaPositionOptions = [
+  { label: "Acima do texto", value: "top" },
+  { label: "A esquerda", value: "left" },
+  { label: "A direita", value: "right" },
+];
+
+const imageSizeOptions = [
+  { label: "Pequena", value: "small" },
+  { label: "Media", value: "medium" },
+  { label: "Grande", value: "large" },
+];
+
+const imageAspectOptions = [
+  { label: "Original", value: "original" },
+  { label: "Quadrada", value: "square" },
+  { label: "4:3", value: "4:3" },
+  { label: "16:9", value: "16:9" },
+];
+
+const fitOptions = [
+  { label: "Cobrir", value: "cover" },
+  { label: "Conter", value: "contain" },
+];
 
 export const CardsBlock: Block = {
   slug: "cards",
@@ -67,6 +97,73 @@ export const CardsBlock: Block = {
       },
       fields: [
         {
+          name: "mediaSource",
+          type: "select",
+          label: "Tipo de midia",
+          defaultValue: "none",
+          validate: closedSelect(
+            ["none", "icon", "image"],
+            "Escolha um tipo de midia aprovado.",
+          ),
+          options: mediaSourceOptions,
+        },
+        {
+          name: "mediaPosition",
+          type: "select",
+          label: "Posicao da midia",
+          defaultValue: "top",
+          validate: closedSelect(
+            ["top", "left", "right"],
+            "Escolha uma posicao de midia aprovada.",
+          ),
+          admin: {
+            condition: (_, siblingData) => siblingData?.mediaSource !== "none",
+          },
+          options: mediaPositionOptions,
+        },
+        {
+          name: "imageSize",
+          type: "select",
+          label: "Tamanho da imagem",
+          defaultValue: "medium",
+          validate: closedSelect(
+            ["small", "medium", "large"],
+            "Escolha um tamanho de imagem aprovado.",
+          ),
+          admin: {
+            condition: (_, siblingData) => siblingData?.mediaSource === "image",
+          },
+          options: imageSizeOptions,
+        },
+        {
+          name: "imageAspect",
+          type: "select",
+          label: "Proporcao da imagem",
+          defaultValue: "original",
+          validate: closedSelect(
+            ["original", "square", "4:3", "16:9"],
+            "Escolha uma proporcao de imagem aprovada.",
+          ),
+          admin: {
+            condition: (_, siblingData) => siblingData?.mediaSource === "image",
+          },
+          options: imageAspectOptions,
+        },
+        {
+          name: "fit",
+          type: "select",
+          label: "Enquadramento da imagem",
+          defaultValue: "cover",
+          validate: closedSelect(
+            ["cover", "contain"],
+            "Escolha um enquadramento aprovado.",
+          ),
+          admin: {
+            condition: (_, siblingData) => siblingData?.mediaSource === "image",
+          },
+          options: fitOptions,
+        },
+        {
           name: "title",
           type: "text",
           label: "Titulo do card",
@@ -94,9 +191,42 @@ export const CardsBlock: Block = {
           relationTo: "media",
           label: "Icone",
           admin: {
+            condition: (_, siblingData) =>
+              !siblingData?.mediaSource || siblingData?.mediaSource === "icon",
             description:
-              "Opcional. Use imagem simples e com texto alternativo adequado.",
+              "Opcional para conteudo antigo; obrigatorio quando Tipo de midia for Icone.",
           },
+          validate: ((value, { siblingData }) => {
+            const data = siblingData as { image?: unknown; mediaSource?: string };
+            if (data.mediaSource === "image" && value) {
+              return "Use icone ou imagem, nao ambos no mesmo card.";
+            }
+            if (data.mediaSource === "icon" && !value) {
+              return "Selecione um icone para este card.";
+            }
+            return true;
+          }) satisfies UploadFieldSingleValidation,
+        },
+        {
+          name: "image",
+          type: "upload",
+          relationTo: "media",
+          label: "Imagem",
+          admin: {
+            condition: (_, siblingData) => siblingData?.mediaSource === "image",
+            description:
+              "Imagem do card. O arquivo original permanece preservado na biblioteca de midia.",
+          },
+          validate: ((value, { siblingData }) => {
+            const data = siblingData as { icon?: unknown; mediaSource?: string };
+            if (data.mediaSource === "icon" && value) {
+              return "Use icone ou imagem, nao ambos no mesmo card.";
+            }
+            if (data.mediaSource === "image" && !value) {
+              return "Selecione uma imagem para este card.";
+            }
+            return true;
+          }) satisfies UploadFieldSingleValidation,
         },
         {
           name: "link",

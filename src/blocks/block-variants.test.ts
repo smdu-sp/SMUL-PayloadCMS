@@ -9,6 +9,11 @@ import { normalizeAlertBoxType } from "./AlertBox/Component";
 import { normalizeCTAVariant } from "./CTA/Component";
 import { normalizeCardsVariant } from "./Cards/Component";
 import { normalizeFAQVariant } from "./FAQ/Component";
+import {
+  normalizeBannerContentPosition,
+  normalizeBannerImageFit,
+  normalizeFullWidthImageBannerVariant,
+} from "./FullWidthImageBanner/Component";
 import { normalizeHeroVariant } from "./Hero/Component";
 import { normalizeIconGridVariant } from "./IconGrid/Component";
 import { normalizeImageTextVariant } from "./ImageText/Component";
@@ -75,5 +80,16 @@ describe("block variant fallbacks", () => {
     assert.equal(normalizeActionBannerAppearance("brand"), "brand");
     assert.equal(normalizeActionBannerAppearance("accent"), "accent");
     assert.equal(normalizeActionBannerAppearance("yellow"), "primary");
+  });
+
+  it("normalizes SPEC-033 full-width banner presentation presets", () => {
+    assert.equal(normalizeFullWidthImageBannerVariant("default"), "default");
+    assert.equal(normalizeFullWidthImageBannerVariant("compact"), "compact");
+    assert.equal(normalizeFullWidthImageBannerVariant("immersive"), "immersive");
+    assert.equal(normalizeFullWidthImageBannerVariant("unknown"), "default");
+    assert.equal(normalizeBannerContentPosition("right"), "right");
+    assert.equal(normalizeBannerContentPosition("unknown"), "left");
+    assert.equal(normalizeBannerImageFit("contain"), "contain");
+    assert.equal(normalizeBannerImageFit("stretch"), "cover");
   });
 });

@@ -224,6 +224,7 @@ export interface Page {
         | FAQAccordionBlock
         | AlertBoxBlock
         | ActionBannersBlock
+        | FullWidthImageBannerBlock
       )[]
     | null;
   /**
@@ -307,6 +308,21 @@ export interface HeroBlock {
      * Recomendado para links externos, mantendo o portal aberto na aba atual.
      */
     newTab?: boolean | null;
+  };
+  /**
+   * Opcional. Use midia cadastrada para compor o fundo do destaque sem alterar o arquivo original.
+   */
+  background?: {
+    /**
+     * Imagem principal do fundo. Se ausente, o destaque usa o visual padrao.
+     */
+    image?: (number | null) | Media;
+    /**
+     * Opcional. Use quando a composicao desktop nao funcionar bem em telas estreitas.
+     */
+    mobileImage?: (number | null) | Media;
+    overlay?: ('none' | 'light' | 'dark') | null;
+    focalPoint?: ('center' | 'top' | 'bottom' | 'left' | 'right') | null;
   };
   /**
    * Padrao alinha o conteudo a esquerda; Centralizado destaca uma mensagem curta; Imagem lateral exibe texto e imagem lado a lado no desktop. Este bloco nao possui contador nem timer automatico.
@@ -432,6 +448,11 @@ export interface CardsBlock {
    * Adicione de 1 a 12 cards. O layout ajusta a quantidade de colunas conforme a largura da tela.
    */
   items: {
+    mediaSource?: ('none' | 'icon' | 'image') | null;
+    mediaPosition?: ('top' | 'left' | 'right') | null;
+    imageSize?: ('small' | 'medium' | 'large') | null;
+    imageAspect?: ('original' | 'square' | '4:3' | '16:9') | null;
+    fit?: ('cover' | 'contain') | null;
     /**
      * Texto principal do card. Pode quebrar linha sem afetar os demais itens.
      */
@@ -441,9 +462,13 @@ export interface CardsBlock {
      */
     description: string;
     /**
-     * Opcional. Use imagem simples e com texto alternativo adequado.
+     * Opcional para conteudo antigo; obrigatorio quando Tipo de midia for Icone.
      */
     icon?: (number | null) | Media;
+    /**
+     * Imagem do card. O arquivo original permanece preservado na biblioteca de midia.
+     */
+    image?: (number | null) | Media;
     /**
      * Opcional. Use quando o card deve encaminhar para outra pagina ou servico.
      */
@@ -748,6 +773,61 @@ export interface ActionBannersBlock {
   blockType: 'actionBanners';
 }
 /**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FullWidthImageBannerBlock".
+ */
+export interface FullWidthImageBannerBlock {
+  /**
+   * Imagem principal do banner. O layout controla largura, altura e responsividade.
+   */
+  desktopImage: number | Media;
+  /**
+   * Opcional. Use uma composicao alternativa quando a imagem desktop nao for adequada em telas estreitas.
+   */
+  mobileImage?: (number | null) | Media;
+  /**
+   * Opcional. Use apenas quando a mensagem tambem deve existir como texto acessivel sobre a imagem.
+   */
+  content?: {
+    eyebrow?: string | null;
+    title?: string | null;
+    description?: string | null;
+    actions?:
+      | {
+          /**
+           * Texto visivel para o usuario. Use uma acao clara, como Abrir pagina ou Saiba mais.
+           */
+          label: string;
+          /**
+           * Escolha pagina interna para navegar no portal ou URL externa para encaminhar a servico oficial.
+           */
+          type: 'internal' | 'external';
+          /**
+           * Pagina publicada ou em rascunho dentro deste CMS. Mudancas de slug nao quebram este relacionamento.
+           */
+          page?: (number | null) | Page;
+          /**
+           * Informe o endereco completo, incluindo http:// ou https://.
+           */
+          url?: string | null;
+          /**
+           * Recomendado para links externos, mantendo o portal aberto na aba atual.
+           */
+          newTab?: boolean | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  contentPosition: 'left' | 'center' | 'right';
+  overlay: 'none' | 'light' | 'dark';
+  imageFit: 'cover' | 'contain';
+  focalPoint: 'center' | 'top' | 'bottom' | 'left' | 'right';
+  variant: 'default' | 'compact' | 'immersive';
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'fullWidthImageBanner';
+}
+/**
  * Consulte eventos editoriais registrados automaticamente. Logs nao devem ser editados ou criados manualmente.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -917,6 +997,7 @@ export interface PagesSelect<T extends boolean = true> {
         faqAccordion?: T | FAQAccordionBlockSelect<T>;
         alertBox?: T | AlertBoxBlockSelect<T>;
         actionBanners?: T | ActionBannersBlockSelect<T>;
+        fullWidthImageBanner?: T | FullWidthImageBannerBlockSelect<T>;
       };
   seo?:
     | T
@@ -952,6 +1033,14 @@ export interface HeroBlockSelect<T extends boolean = true> {
         page?: T;
         url?: T;
         newTab?: T;
+      };
+  background?:
+    | T
+    | {
+        image?: T;
+        mobileImage?: T;
+        overlay?: T;
+        focalPoint?: T;
       };
   variant?: T;
   id?: T;
@@ -999,9 +1088,15 @@ export interface CardsBlockSelect<T extends boolean = true> {
   items?:
     | T
     | {
+        mediaSource?: T;
+        mediaPosition?: T;
+        imageSize?: T;
+        imageAspect?: T;
+        fit?: T;
         title?: T;
         description?: T;
         icon?: T;
+        image?: T;
         link?:
           | T
           | {
@@ -1125,6 +1220,38 @@ export interface ActionBannersBlockSelect<T extends boolean = true> {
             };
         id?: T;
       };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FullWidthImageBannerBlock_select".
+ */
+export interface FullWidthImageBannerBlockSelect<T extends boolean = true> {
+  desktopImage?: T;
+  mobileImage?: T;
+  content?:
+    | T
+    | {
+        eyebrow?: T;
+        title?: T;
+        description?: T;
+        actions?:
+          | T
+          | {
+              label?: T;
+              type?: T;
+              page?: T;
+              url?: T;
+              newTab?: T;
+              id?: T;
+            };
+      };
+  contentPosition?: T;
+  overlay?: T;
+  imageFit?: T;
+  focalPoint?: T;
+  variant?: T;
   id?: T;
   blockName?: T;
 }

@@ -138,14 +138,14 @@ com filtros úteis.
 
 ## Critérios de aceite
 
-- [ ] create gera log.
-- [ ] update gera log.
-- [ ] publish gera log.
-- [ ] unpublish gera log.
-- [ ] actor é identificado.
-- [ ] timestamp existe.
-- [ ] Editor não acessa logs.
-- [ ] Admin consegue consultar.
-- [ ] logs não são editáveis normalmente.
+- [x] create gera log.
+- [x] update gera log.
+- [x] publish gera log.
+- [x] unpublish gera log.
+- [x] actor é identificado.
+- [x] timestamp existe.
+- [x] Editor não acessa logs.
+- [x] Admin consegue consultar.
+- [x] logs não são editáveis normalmente.
 
 ---

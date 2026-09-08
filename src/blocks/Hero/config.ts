@@ -3,6 +3,20 @@ import { closedSelect, requiredText } from "../../fields/editorial-validation";
 import { createLinkFields } from "../../fields/link";
 import { createBlockAdmin } from "../shared/admin";
 
+const overlayOptions = [
+  { label: "Sem sobreposicao", value: "none" },
+  { label: "Clara", value: "light" },
+  { label: "Escura", value: "dark" },
+];
+
+const focalPointOptions = [
+  { label: "Centro", value: "center" },
+  { label: "Topo", value: "top" },
+  { label: "Base", value: "bottom" },
+  { label: "Esquerda", value: "left" },
+  { label: "Direita", value: "right" },
+];
+
 export const HeroBlock: Block = {
   slug: "hero",
   interfaceName: "HeroBlock",
@@ -61,6 +75,60 @@ export const HeroBlock: Block = {
           "Link opcional exibido como botao principal da abertura.",
       },
       fields: createLinkFields(),
+    },
+    {
+      name: "background",
+      type: "group",
+      label: "Imagem de fundo",
+      admin: {
+        description:
+          "Opcional. Use midia cadastrada para compor o fundo do destaque sem alterar o arquivo original.",
+      },
+      fields: [
+        {
+          name: "image",
+          type: "upload",
+          relationTo: "media",
+          label: "Imagem desktop",
+          admin: {
+            description:
+              "Imagem principal do fundo. Se ausente, o destaque usa o visual padrao.",
+          },
+        },
+        {
+          name: "mobileImage",
+          type: "upload",
+          relationTo: "media",
+          label: "Imagem mobile",
+          admin: {
+            condition: (_, siblingData) => Boolean(siblingData?.image),
+            description:
+              "Opcional. Use quando a composicao desktop nao funcionar bem em telas estreitas.",
+          },
+        },
+        {
+          name: "overlay",
+          type: "select",
+          label: "Sobreposicao",
+          defaultValue: "dark",
+          validate: closedSelect(
+            ["none", "light", "dark"],
+            "Escolha uma sobreposicao aprovada.",
+          ),
+          options: overlayOptions,
+        },
+        {
+          name: "focalPoint",
+          type: "select",
+          label: "Foco visual",
+          defaultValue: "center",
+          validate: closedSelect(
+            ["center", "top", "bottom", "left", "right"],
+            "Escolha um foco visual aprovado.",
+          ),
+          options: focalPointOptions,
+        },
+      ],
     },
     {
       name: "variant",

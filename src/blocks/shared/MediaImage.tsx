@@ -30,25 +30,43 @@ const localizeMediaUrl = (url: string): string => {
 
 export function MediaImage({
   className,
+  fill = false,
   media,
-  priority = false,
+  priority,
+  preload,
   sizes = "100vw",
 }: {
   className?: string;
+  fill?: boolean;
   media?: Media | number | null;
+  preload?: boolean;
   priority?: boolean;
   sizes?: string;
 }) {
   if (!media || typeof media !== "object" || !media.url) return null;
 
   const src = localizeMediaUrl(media.url);
+  const eager = preload ?? priority;
+
+  if (fill) {
+    return (
+      <Image
+        alt={media.alt}
+        className={className}
+        fill
+        preload={eager}
+        sizes={sizes}
+        src={src}
+      />
+    );
+  }
 
   return (
     <Image
       alt={media.alt}
       className={className}
       height={media.height || 900}
-      priority={priority}
+      preload={eager}
       sizes={sizes}
       src={src}
       width={media.width || 1200}

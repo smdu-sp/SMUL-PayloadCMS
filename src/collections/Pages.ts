@@ -4,6 +4,7 @@ import { AlertBoxBlock } from "../blocks/AlertBox/config.ts";
 import { CardsBlock } from "../blocks/Cards/config.ts";
 import { CTABlock } from "../blocks/CTA/config.ts";
 import { FAQBlock } from "../blocks/FAQ/config.ts";
+import { FullWidthImageBannerBlock } from "../blocks/FullWidthImageBanner/config.ts";
 import { HeroBlock } from "../blocks/Hero/config.ts";
 import { IconGridBlock } from "../blocks/IconGrid/config.ts";
 import { ImageTextBlock } from "../blocks/ImageText/config.ts";
@@ -146,6 +147,7 @@ export const Pages: CollectionConfig = {
         FAQBlock,
         AlertBoxBlock,
         ActionBannersBlock,
+        FullWidthImageBannerBlock,
       ],
       admin: {
         description:

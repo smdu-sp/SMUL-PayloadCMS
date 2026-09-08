@@ -126,12 +126,12 @@ exemplo visual
 
 ## Critérios de aceite
 
-- [ ] documentação existe.
-- [ ] pode ser acessada pelo Admin.
-- [ ] Editor consegue acessá-la.
-- [ ] fluxo de Page está documentado.
-- [ ] Blocks estão documentados.
-- [ ] workflow editorial está documentado.
-- [ ] não exige conhecimento de código.
+- [x] documentação existe.
+- [x] pode ser acessada pelo Admin.
+- [x] Editor consegue acessá-la.
+- [x] fluxo de Page está documentado.
+- [x] Blocks estão documentados.
+- [x] workflow editorial está documentado.
+- [x] não exige conhecimento de código.
 
 ---

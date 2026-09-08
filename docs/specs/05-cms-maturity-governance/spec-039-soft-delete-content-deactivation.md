@@ -134,14 +134,14 @@ reactivate
 
 ## Critérios de aceite
 
-- [ ] fluxo normal não destrói Page.
-- [ ] Page pode ser desativada.
-- [ ] Page pode ser reativada.
-- [ ] inativa não aparece publicamente.
-- [ ] navegação respeita estado.
-- [ ] histórico permanece.
-- [ ] AuditLog registra mudanças.
-- [ ] Draft/Published continua independente.
+- [x] fluxo normal não destrói Page.
+- [x] Page pode ser desativada.
+- [x] Page pode ser reativada.
+- [x] inativa não aparece publicamente.
+- [x] navegação respeita estado.
+- [x] histórico permanece.
+- [x] AuditLog registra mudanças.
+- [x] Draft/Published continua independente.
 
 ---
 

@@ -89,12 +89,12 @@ Esconder botão não conta como controle de acesso.
 
 ## Critérios de aceite
 
-- [ ] matriz foi aprovada.
-- [ ] regras estão centralizadas.
-- [ ] Editor não acessa Users.
-- [ ] Editor não acessa Logs.
-- [ ] Editor não altera configurações proibidas.
-- [ ] API respeita as mesmas regras.
-- [ ] testes de roles existem.
+- [x] matriz foi aprovada.
+- [x] regras estão centralizadas.
+- [x] Editor não acessa Users.
+- [x] Editor não acessa Logs.
+- [x] Editor não altera configurações proibidas.
+- [x] API respeita as mesmas regras.
+- [x] testes de roles existem.
 
 ---

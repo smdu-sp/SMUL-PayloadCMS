@@ -6,6 +6,7 @@ import { AlertBoxBlock } from "./blocks/AlertBox/config";
 import { CardsBlock } from "./blocks/Cards/config";
 import { CTABlock } from "./blocks/CTA/config";
 import { FAQBlock } from "./blocks/FAQ/config";
+import { FullWidthImageBannerBlock } from "./blocks/FullWidthImageBanner/config";
 import { HeroBlock } from "./blocks/Hero/config";
 import { IconGridBlock } from "./blocks/IconGrid/config";
 import { ImageTextBlock } from "./blocks/ImageText/config";
@@ -230,6 +231,7 @@ describe("SPEC-029 CMS foundation validation", () => {
       FAQBlock,
       AlertBoxBlock,
       ActionBannersBlock,
+      FullWidthImageBannerBlock,
     ];
 
     assert.deepEqual(registeredBlockSlugs(), configuredBlocks.map((block) => block.slug));

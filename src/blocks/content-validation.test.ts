@@ -14,6 +14,7 @@ import { AlertBoxBlock } from "./AlertBox/config";
 import { CardsBlock } from "./Cards/config";
 import { CTABlock } from "./CTA/config";
 import { FAQBlock } from "./FAQ/config";
+import { FullWidthImageBannerBlock } from "./FullWidthImageBanner/config";
 import { HeroBlock } from "./Hero/config";
 import { IconGridBlock } from "./IconGrid/config";
 import { ImageTextBlock } from "./ImageText/config";
@@ -29,6 +30,7 @@ const blocks = [
   FAQBlock,
   AlertBoxBlock,
   ActionBannersBlock,
+  FullWidthImageBannerBlock,
 ];
 
 function fieldByName(fields: Field[], name: string): Field {
@@ -103,5 +105,34 @@ describe("SPEC-026 content validation", () => {
       );
       assert.ok(repeatedField && repeatedField.required && repeatedField.minRows === 1);
     }
+  });
+
+  it("validates SPEC-033 media rules for cards and full-width banners", async () => {
+    const bannerImage = fieldByName(FullWidthImageBannerBlock.fields, "desktopImage");
+    assert.ok("validate" in bannerImage && bannerImage.validate);
+    assert.equal(
+      await bannerImage.validate(null, validationArgs()),
+      "Selecione uma imagem para o banner desktop.",
+    );
+
+    const items = fieldByName(CardsBlock.fields, "items");
+    assert.ok("fields" in items);
+    const icon = fieldByName(items.fields, "icon");
+    const image = fieldByName(items.fields, "image");
+    assert.ok("validate" in icon && icon.validate);
+    assert.ok("validate" in image && image.validate);
+
+    assert.equal(
+      await icon.validate(null, validationArgs({ mediaSource: "icon" })),
+      "Selecione um icone para este card.",
+    );
+    assert.equal(
+      await image.validate(null, validationArgs({ mediaSource: "image" })),
+      "Selecione uma imagem para este card.",
+    );
+    assert.equal(
+      await image.validate(1, validationArgs({ icon: 2, mediaSource: "icon" })),
+      "Use icone ou imagem, nao ambos no mesmo card.",
+    );
   });
 });

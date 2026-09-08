@@ -11,6 +11,7 @@ const blockLabels: Record<string, string> = {
   cards: "Cards e grades de benefícios",
   cta: "Chamada para ação",
   faqAccordion: "Perguntas frequentes",
+  fullWidthImageBanner: "Banner de imagem full-width",
   hero: "Destaque principal",
   iconGrid: "Grade de ícones e informações",
   imageText: "Mídia e texto / imagem de destaque",
