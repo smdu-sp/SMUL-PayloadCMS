@@ -27,12 +27,16 @@ export const adminHelpView = {
 export const adminHelpNavLink =
   "/components/admin/AdminHelpNavLink#AdminHelpNavLink";
 
+export const ldapLoginFormComponent =
+  "/components/admin/LdapLoginForm#LdapLoginForm";
+
 export default buildConfig({
   editor: lexicalEditor(),
   admin: {
     user: Users.slug,
     components: {
       afterNavLinks: [adminHelpNavLink],
+      beforeLogin: [ldapLoginFormComponent],
       views: {
         ajuda: adminHelpView,
       },
