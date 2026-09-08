@@ -10,6 +10,10 @@ import { Users } from "./collections/Users.ts";
 import { Footer } from "./globals/Footer.ts";
 import { Header } from "./globals/Header.ts";
 import { SiteSettings } from "./globals/SiteSettings.ts";
+import { getLdapDevUser } from "./lib/ldap/dev-user.ts";
+
+// Fail at configuration loading as well as on requests if mock auth is unsafe.
+getLdapDevUser();
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);

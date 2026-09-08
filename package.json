@@ -12,7 +12,8 @@
     "typecheck": "tsc --noEmit",
     "payload": "payload",
     "seed:editorial": "payload run src/seeds/editorial-baseline.ts",
-    "seed:first-admin": "payload run src/seeds/create-first-admin.ts"
+    "seed:first-admin": "payload run src/seeds/create-first-admin.ts",
+    "seed:dev-admin": "payload run src/seeds/create-dev-admin.ts"
   },
   "dependencies": {
     "@payloadcms/db-sqlite": "3.88.0",

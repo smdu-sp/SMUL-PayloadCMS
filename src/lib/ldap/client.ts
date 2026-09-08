@@ -1,4 +1,5 @@
 import type { LdapUsuario } from "./types.ts";
+import { getLdapDevUser } from "./dev-user.ts";
 
 function getBaseUrl(): string {
   const baseUrl = process.env.LDAP_API_URL;
@@ -13,6 +14,11 @@ function getBaseUrl(): string {
 export async function buscarUsuarioLdapPorLogin(
   login: string,
 ): Promise<LdapUsuario | null> {
+  const devUser = getLdapDevUser();
+  if (devUser) {
+    return login === devUser.profile.login ? devUser.profile : null;
+  }
+
   const response = await fetch(
     `${getBaseUrl()}/auth/ldap/buscar-por-login/${encodeURIComponent(login)}`,
     { method: "GET" },
@@ -33,6 +39,11 @@ export async function autenticarLdap(
   login: string,
   senha: string,
 ): Promise<boolean> {
+  const devUser = getLdapDevUser();
+  if (devUser) {
+    return login === devUser.profile.login && senha === devUser.password;
+  }
+
   const response = await fetch(`${getBaseUrl()}/auth/ldap/autenticar`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
