@@ -7,6 +7,7 @@ import {
 } from "../../fields/block-appearance";
 
 import { closedSelect, requiredText } from "../../fields/editorial-validation";
+import { createImagePresentationFields } from "../../fields/image-presentation";
 import { createLinkFields } from "../../fields/link";
 import { createBlockAdmin } from "../shared/admin";
 
@@ -78,6 +79,21 @@ export const HeroBlock: Block = {
         description:
           "Usada apenas no modelo Imagem lateral. Em telas pequenas, a imagem fica empilhada abaixo do texto.",
       },
+    },
+    {
+      name: "imagePresentation",
+      type: "group",
+      label: "Apresentação da imagem",
+      admin: {
+        condition: (_, siblingData) => siblingData?.variant === "split",
+        description:
+          "Define como esta imagem é exibida neste bloco. O arquivo original na Mídia não é alterado.",
+      },
+      fields: createImagePresentationFields({
+        defaultSize: "full",
+        defaultAspectRatio: "16:9",
+        defaultFit: "cover",
+      }),
     },
     {
       name: "cta",

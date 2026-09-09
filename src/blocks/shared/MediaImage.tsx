@@ -1,4 +1,5 @@
 import Image from "next/image";
+import type { CSSProperties } from "react";
 import type { Media } from "../../payload-types";
 
 const localizeMediaUrl = (url: string): string => {
@@ -35,6 +36,7 @@ export function MediaImage({
   priority,
   preload,
   sizes = "100vw",
+  style,
 }: {
   className?: string;
   fill?: boolean;
@@ -42,6 +44,7 @@ export function MediaImage({
   preload?: boolean;
   priority?: boolean;
   sizes?: string;
+  style?: CSSProperties;
 }) {
   if (!media || typeof media !== "object" || !media.url) return null;
 
@@ -69,6 +72,7 @@ export function MediaImage({
       preload={eager}
       sizes={sizes}
       src={src}
+      style={style}
       width={media.width || 1200}
     />
   );

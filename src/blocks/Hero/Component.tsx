@@ -1,6 +1,14 @@
 import type { HeroBlock as HeroBlockProps } from "../../payload-types";
 import { Container, Heading, Section, Text } from "../../components/ui";
+import type { HeroBlock as HeroBlockProps } from "../../payload-types";
+import { Container, Heading, Section, Text } from "../../components/ui";
 import { classNames } from "../../components/ui/classNames";
+import {
+  getFocalPointStyle,
+  getImagePresentationClassName,
+} from "../shared/image-presentation";
+import { MediaImage } from "../shared/MediaImage";
+import { BlockLink } from "../shared/BlockLink";
 import { MediaImage } from "../shared/MediaImage";
 import { BlockLink } from "../shared/BlockLink";
 
@@ -90,6 +98,7 @@ export function HeroBlock({
   description,
   eyebrow,
   image,
+  imagePresentation,
   title,
   variant,
 }: HeroBlockWithBackgroundProps) {
@@ -220,8 +229,20 @@ export function HeroBlock({
               />
             ) : null}
           </div>
-        </Container>
-      </div>
+          {split ? (
+            <MediaImage
+              className={`h-auto rounded-xl border border-border ${getImagePresentationClassName(imagePresentation)}`}
+              media={image}
+              priority
+              sizes="(min-width: 1024px) 50vw, 100vw"
+              style={getFocalPointStyle(
+                typeof image === "object" ? image : null,
+                imagePresentation,
+              )}
+            />
+          ) : null}
+        </div>
+      </Container>
     </Section>
   );
 }
