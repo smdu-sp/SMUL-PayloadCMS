@@ -11,8 +11,9 @@ import { normalizeCardsVariant } from "./Cards/Component";
 import { normalizeFAQVariant } from "./FAQ/Component";
 import {
   normalizeBannerContentPosition,
+  normalizeBannerImageHeight,
   normalizeBannerImageFit,
-  normalizeFullWidthImageBannerVariant,
+  normalizeCustomBannerImageHeight,
 } from "./FullWidthImageBanner/Component";
 import { normalizeHeroVariant } from "./Hero/Component";
 import { normalizeIconGridVariant } from "./IconGrid/Component";
@@ -83,10 +84,19 @@ describe("block variant fallbacks", () => {
   });
 
   it("normalizes SPEC-033 full-width banner presentation presets", () => {
-    assert.equal(normalizeFullWidthImageBannerVariant("default"), "default");
-    assert.equal(normalizeFullWidthImageBannerVariant("compact"), "compact");
-    assert.equal(normalizeFullWidthImageBannerVariant("immersive"), "immersive");
-    assert.equal(normalizeFullWidthImageBannerVariant("unknown"), "default");
+    assert.equal(normalizeBannerImageHeight("auto"), "auto");
+    assert.equal(normalizeBannerImageHeight("compact"), "compact");
+    assert.equal(normalizeBannerImageHeight("medium"), "medium");
+    assert.equal(normalizeBannerImageHeight("large"), "large");
+    assert.equal(normalizeBannerImageHeight("custom"), "custom");
+    assert.equal(normalizeBannerImageHeight("unknown"), "auto");
+    assert.equal(normalizeBannerImageHeight(undefined, "compact"), "compact");
+    assert.equal(normalizeBannerImageHeight(undefined, "default"), "medium");
+    assert.equal(normalizeBannerImageHeight(undefined, "immersive"), "large");
+    assert.equal(normalizeCustomBannerImageHeight(420), 420);
+    assert.equal(normalizeCustomBannerImageHeight(120), 160);
+    assert.equal(normalizeCustomBannerImageHeight(1000), 900);
+    assert.equal(normalizeCustomBannerImageHeight(undefined), null);
     assert.equal(normalizeBannerContentPosition("right"), "right");
     assert.equal(normalizeBannerContentPosition("unknown"), "left");
     assert.equal(normalizeBannerImageFit("contain"), "contain");

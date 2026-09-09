@@ -11,7 +11,7 @@
     "test": "node --import tsx --test src/**/*.test.ts",
     "typecheck": "tsc --noEmit",
     "payload": "payload",
-    "seed:editorial": "payload run src/seeds/editorial-baseline.ts",
+    "seed:editorial": "node --import ./src/seeds/patch-os-userinfo.mjs --import tsx ./src/seeds/run-payload-development.mjs run src/seeds/editorial-baseline.ts",
     "seed:first-admin": "payload run src/seeds/create-first-admin.ts",
     "seed:dev-admin": "payload run src/seeds/create-dev-admin.ts"
   },

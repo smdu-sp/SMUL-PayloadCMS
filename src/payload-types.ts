@@ -770,7 +770,7 @@ export interface ActionBannersBlock {
  */
 export interface FullWidthImageBannerBlock {
   /**
-   * Imagem principal do banner. O layout controla largura, altura e responsividade.
+   * Imagem principal do banner. Largura minima: 1200px. Ideal: 1920px para full-width. Formatos recomendados: .webp ou .jpg otimizado.
    */
   desktopImage: number | Media;
   /**
@@ -812,9 +812,22 @@ export interface FullWidthImageBannerBlock {
   };
   contentPosition: 'left' | 'center' | 'right';
   overlay: 'none' | 'light' | 'dark';
-  imageFit: 'cover' | 'contain';
-  focalPoint: 'center' | 'top' | 'bottom' | 'left' | 'right';
-  variant: 'default' | 'compact' | 'immersive';
+  /**
+   * Automatica preserva a proporcao original. As demais opcoes definem uma altura fixa responsiva para o banner.
+   */
+  imageHeight: 'auto' | 'compact' | 'medium' | 'large' | 'custom';
+  /**
+   * Informe uma altura entre 160 e 900 pixels. O valor controla apenas a apresentacao deste banner.
+   */
+  customImageHeight?: number | null;
+  /**
+   * Usado quando a altura e fixa para controlar se a imagem cobre a area ou aparece inteira.
+   */
+  imageFit?: ('cover' | 'contain') | null;
+  /**
+   * Usado quando a altura e fixa para priorizar uma regiao da imagem no corte.
+   */
+  focalPoint?: ('center' | 'top' | 'bottom' | 'left' | 'right') | null;
   id?: string | null;
   blockName?: string | null;
   blockType: 'fullWidthImageBanner';
@@ -1231,9 +1244,10 @@ export interface FullWidthImageBannerBlockSelect<T extends boolean = true> {
       };
   contentPosition?: T;
   overlay?: T;
+  imageHeight?: T;
+  customImageHeight?: T;
   imageFit?: T;
   focalPoint?: T;
-  variant?: T;
   id?: T;
   blockName?: T;
 }

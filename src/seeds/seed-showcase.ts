@@ -43,6 +43,7 @@ const internalLink = (label: string, page: number) => ({
 export const seedShowcaseLayout = (
   mediaId: number,
   seedPageId: number,
+  bannerMediaId = mediaId,
 ): PageBlock[] => [
   {
     blockType: "hero",
@@ -128,6 +129,25 @@ export const seedShowcaseLayout = (
         button: internalLink("Abrir ação de apoio", seedPageId),
       },
     ],
+  },
+  {
+    blockType: "fullWidthImageBanner",
+    blockName: "Demonstracao - Banner de imagem full-width",
+    desktopImage: bannerMediaId,
+    content: {
+      eyebrow: "Imagem responsiva",
+      title: "Use uma imagem em largura total preservando sua proporcao",
+      description:
+        "O banner full-width apresenta uma midia entre secoes e se adapta as dimensoes do arquivo selecionado.",
+      actions: [
+        internalLink("Voltar ao inicio do catalogo", seedPageId),
+      ],
+    },
+    contentPosition: "left",
+    overlay: "none",
+    imageHeight: "auto",
+    imageFit: "contain",
+    focalPoint: "center",
   },
   {
     blockType: "faqAccordion",

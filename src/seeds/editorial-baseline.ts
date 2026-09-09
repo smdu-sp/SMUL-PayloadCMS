@@ -1,3 +1,4 @@
+import { readFile } from "node:fs/promises";
 import { getPayload } from "payload";
 
 import config from "../payload.config.ts";
@@ -33,6 +34,35 @@ const demoImage = existingDemoImage.docs[0] ?? await payload.create({
     mimetype: "image/png",
     name: "seed-catalogo-blocks.png",
     size: 68,
+  },
+});
+
+const bannerImageAlt = "Imagem demonstrativa usada no banner full-width";
+const existingBannerImage = await payload.find({
+  collection: "media",
+  depth: 0,
+  limit: 1,
+  where: {
+    alt: {
+      equals: bannerImageAlt,
+    },
+  },
+});
+
+const bannerImageData = await readFile(new URL("../../media/300", import.meta.url));
+const bannerImage = existingBannerImage.docs[0] ?? await payload.create({
+  collection: "media",
+  data: {
+    alt: bannerImageAlt,
+    caption:
+      "Imagem criada pelo seed para demonstrar o banner full-width adaptado a proporcao da midia.",
+    usage: "background",
+  },
+  file: {
+    data: bannerImageData,
+    mimetype: "image/jpeg",
+    name: "seed-banner-full-width.jpg",
+    size: bannerImageData.byteLength,
   },
 });
 
@@ -80,7 +110,7 @@ await payload.update({
   collection: "pages",
   id: seedPage.id,
   data: {
-    layout: seedShowcaseLayout(demoImage.id, seedPage.id),
+    layout: seedShowcaseLayout(demoImage.id, seedPage.id, bannerImage.id),
   },
   draft: false,
 });

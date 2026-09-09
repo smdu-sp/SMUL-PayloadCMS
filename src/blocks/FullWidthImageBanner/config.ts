@@ -1,4 +1,4 @@
-import type { Block, UploadFieldSingleValidation } from "payload";
+import type { Block, NumberFieldSingleValidation, UploadFieldSingleValidation } from "payload";
 import { closedSelect } from "../../fields/editorial-validation";
 import { createLinkFields } from "../../fields/link";
 import { createBlockAdmin } from "../shared/admin";
@@ -16,6 +16,24 @@ const focalPointOptions = [
   { label: "Esquerda", value: "left" },
   { label: "Direita", value: "right" },
 ];
+
+const imageHeightOptions = [
+  { label: "Automatica", value: "auto" },
+  { label: "Compacta", value: "compact" },
+  { label: "Media", value: "medium" },
+  { label: "Alta", value: "large" },
+  { label: "Personalizada", value: "custom" },
+];
+
+const validateCustomImageHeight: NumberFieldSingleValidation = (value, { siblingData }) => {
+  const data = siblingData as { imageHeight?: unknown };
+
+  if (data.imageHeight !== "custom") return true;
+  if (typeof value !== "number") return "Informe a altura personalizada em pixels.";
+  if (value < 160 || value > 900) return "Informe uma altura entre 160 e 900 pixels.";
+
+  return true;
+};
 
 const actionFieldDbNames: Record<string, string> = {
   label: "lbl",
@@ -43,8 +61,8 @@ export const FullWidthImageBannerBlock: Block = {
   interfaceName: "FullWidthImageBannerBlock",
   admin: createBlockAdmin("Mídia"),
   labels: {
-    singular: "Banner de imagem full-width",
-    plural: "Banners de imagem full-width",
+    singular: "Banner de imagem",
+    plural: "Banners de imagem",
   },
   fields: [
     {
@@ -57,7 +75,7 @@ export const FullWidthImageBannerBlock: Block = {
         value ? true : "Selecione uma imagem para o banner desktop.") satisfies UploadFieldSingleValidation,
       admin: {
         description:
-          "Imagem principal do banner. O layout controla largura, altura e responsividade.",
+          "Imagem principal do banner. Largura minima: 1200px. Ideal: 1920px para full-width. Formatos recomendados: .webp ou .jpg otimizado.",
       },
     },
     {
@@ -135,12 +153,48 @@ export const FullWidthImageBannerBlock: Block = {
       options: overlayOptions,
     },
     {
+      name: "imageHeight",
+      type: "select",
+      dbName: "imgHgt",
+      label: "Altura da imagem",
+      required: true,
+      defaultValue: "auto",
+      validate: closedSelect(
+        ["auto", "compact", "medium", "large", "custom"],
+        "Escolha uma altura de imagem aprovada.",
+      ),
+      admin: {
+        description:
+          "Automatica preserva a proporcao original. As demais opcoes definem uma altura fixa responsiva para o banner.",
+      },
+      options: imageHeightOptions,
+    },
+    {
+      name: "customImageHeight",
+      type: "number",
+      label: "Altura personalizada (px)",
+      min: 160,
+      max: 900,
+      admin: {
+        condition: (_, siblingData) => siblingData?.imageHeight === "custom",
+        description:
+          "Informe uma altura entre 160 e 900 pixels. O valor controla apenas a apresentacao deste banner.",
+        step: 10,
+      },
+      validate: validateCustomImageHeight,
+    },
+    {
       name: "imageFit",
       type: "select",
       dbName: "imgFit",
       label: "Enquadramento",
       required: true,
       defaultValue: "cover",
+      admin: {
+        condition: (_, siblingData) => siblingData?.imageHeight !== "auto",
+        description:
+          "Usado quando a altura e fixa para controlar se a imagem cobre a area ou aparece inteira.",
+      },
       validate: closedSelect(
         ["cover", "contain"],
         "Escolha um enquadramento aprovado.",
@@ -157,27 +211,16 @@ export const FullWidthImageBannerBlock: Block = {
       label: "Foco visual",
       required: true,
       defaultValue: "center",
+      admin: {
+        condition: (_, siblingData) => siblingData?.imageHeight !== "auto",
+        description:
+          "Usado quando a altura e fixa para priorizar uma regiao da imagem no corte.",
+      },
       validate: closedSelect(
         ["center", "top", "bottom", "left", "right"],
         "Escolha um foco visual aprovado.",
       ),
       options: focalPointOptions,
-    },
-    {
-      name: "variant",
-      type: "select",
-      label: "Modelo",
-      required: true,
-      defaultValue: "default",
-      validate: closedSelect(
-        ["default", "compact", "immersive"],
-        "Escolha um modelo de banner aprovado.",
-      ),
-      options: [
-        { label: "Padrao", value: "default" },
-        { label: "Compacto", value: "compact" },
-        { label: "Imersivo", value: "immersive" },
-      ],
     },
   ],
 };

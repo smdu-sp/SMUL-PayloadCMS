@@ -1,11 +1,12 @@
 import type { Media, Page } from "../../payload-types";
-import { Container, Heading, Text } from "../../components/ui";
+import { Heading, Text } from "../../components/ui";
 import { classNames } from "../../components/ui/classNames";
 import { BlockLink } from "../shared/BlockLink";
 import { MediaImage } from "../shared/MediaImage";
 import { normalizeFocalPoint, normalizeHeroOverlay } from "../Hero/Component";
 
 type BannerVariant = "compact" | "default" | "immersive";
+type BannerHeight = "auto" | "compact" | "custom" | "large" | "medium";
 type ContentPosition = "center" | "left" | "right";
 type ImageFit = "contain" | "cover";
 
@@ -26,25 +27,51 @@ export type FullWidthImageBannerBlockProps = {
     eyebrow?: string | null;
     title?: string | null;
   } | null;
-  contentPosition: ContentPosition;
+  contentPosition?: ContentPosition | null;
+  customImageHeight?: number | null;
   desktopImage: number | Media;
-  focalPoint: "bottom" | "center" | "left" | "right" | "top";
+  focalPoint?: "bottom" | "center" | "left" | "right" | "top" | null;
   id?: string | null;
-  imageFit: ImageFit;
+  imageHeight?: BannerHeight | null;
+  imageFit?: ImageFit | null;
   mobileImage?: (number | null) | Media;
-  overlay: "dark" | "light" | "none";
-  variant: BannerVariant;
+  overlay?: "dark" | "light" | "none" | null;
 };
 
 type BannerProps = FullWidthImageBannerBlockProps & {
+  customImageHeight?: number | null;
+  imageHeight?: BannerHeight | string | null;
   imageFit?: ImageFit | string | null;
+  variant?: BannerVariant | string | null;
 };
 
-export function normalizeFullWidthImageBannerVariant(
-  variant: BannerVariant | string | null | undefined,
-): BannerVariant {
-  if (variant === "compact" || variant === "immersive") return variant;
-  return "default";
+export function normalizeBannerImageHeight(
+  height: BannerHeight | string | null | undefined,
+  legacyVariant?: BannerVariant | string | null,
+): BannerHeight {
+  if (
+    height === "auto" ||
+    height === "compact" ||
+    height === "custom" ||
+    height === "medium" ||
+    height === "large"
+  ) {
+    return height;
+  }
+
+  if (legacyVariant === "compact") return "compact";
+  if (legacyVariant === "immersive") return "large";
+  if (legacyVariant === "default") return "medium";
+
+  return "auto";
+}
+
+export function normalizeCustomBannerImageHeight(
+  height: number | null | undefined,
+): number | null {
+  if (typeof height !== "number" || !Number.isFinite(height)) return null;
+
+  return Math.min(Math.max(Math.round(height), 160), 900);
 }
 
 export function normalizeBannerContentPosition(
@@ -60,16 +87,16 @@ export function normalizeBannerImageFit(
   return fit === "contain" ? "contain" : "cover";
 }
 
-const heightClasses: Record<BannerVariant, string> = {
-  compact: "min-h-64",
-  default: "min-h-96",
-  immersive: "min-h-[34rem]",
-};
-
 const positionClasses: Record<ContentPosition, string> = {
   center: "items-center text-center",
   left: "items-start text-left",
   right: "items-end text-right",
+};
+
+const heightClasses: Record<Exclude<BannerHeight, "auto" | "custom">, string> = {
+  compact: "h-64",
+  medium: "h-96",
+  large: "h-[34rem]",
 };
 
 const focalPointClasses = {
@@ -89,14 +116,17 @@ const overlayClasses = {
 export function FullWidthImageBannerBlock({
   content,
   contentPosition,
+  customImageHeight,
   desktopImage,
   focalPoint,
+  imageHeight,
   imageFit,
   mobileImage,
   overlay,
   variant,
 }: BannerProps) {
-  const normalizedVariant = normalizeFullWidthImageBannerVariant(variant);
+  const normalizedHeight = normalizeBannerImageHeight(imageHeight, variant);
+  const normalizedCustomHeight = normalizeCustomBannerImageHeight(customImageHeight);
   const normalizedPosition = normalizeBannerContentPosition(contentPosition);
   const normalizedFit = normalizeBannerImageFit(imageFit);
   const normalizedOverlay = normalizeHeroOverlay(overlay);
@@ -114,31 +144,39 @@ export function FullWidthImageBannerBlock({
 
   if (!hasDesktopImage) return null;
 
+  const hasAutoHeight = normalizedHeight === "auto";
+  const hasCustomHeight = normalizedHeight === "custom";
+  const resolvedHeight = hasCustomHeight ? normalizedCustomHeight : null;
+  const shouldUseFixedHeight = !hasAutoHeight && (!hasCustomHeight || Boolean(resolvedHeight));
+
   return (
     <section
       className={classNames(
-        "relative flex overflow-hidden bg-muted",
-        heightClasses[normalizedVariant],
+        "relative overflow-hidden bg-muted",
+        shouldUseFixedHeight && !hasCustomHeight && heightClasses[normalizedHeight],
       )}
+      style={resolvedHeight ? { height: `${resolvedHeight}px` } : undefined}
     >
       <MediaImage
         className={classNames(
+          shouldUseFixedHeight ? "" : "block h-auto w-full",
           normalizedFit === "cover" ? "object-cover" : "object-contain",
           focalPointClasses[normalizedFocalPoint],
           hasMobileImage && "hidden sm:block",
         )}
-        fill
+        fill={shouldUseFixedHeight}
         media={desktopImage}
         sizes="100vw"
       />
       {hasMobileImage ? (
         <MediaImage
           className={classNames(
+            shouldUseFixedHeight ? "" : "block h-auto w-full",
             normalizedFit === "cover" ? "object-cover" : "object-contain",
             focalPointClasses[normalizedFocalPoint],
             "sm:hidden",
           )}
-          fill
+          fill={shouldUseFixedHeight}
           media={mobileImage}
           sizes="100vw"
         />
@@ -147,10 +185,10 @@ export function FullWidthImageBannerBlock({
         <div aria-hidden="true" className={classNames("absolute inset-0", overlayClasses[normalizedOverlay])} />
       ) : null}
       {hasContent ? (
-        <Container size="lg">
+        <div className="absolute inset-0 z-10 mx-auto flex w-full max-w-container-lg px-container sm:px-container-wide">
           <div
             className={classNames(
-              "relative z-10 flex h-full max-w-container-sm flex-col justify-center py-16",
+              "flex max-w-container-sm flex-col justify-center py-8 sm:py-16",
               normalizedPosition === "center" && "mx-auto",
               normalizedPosition === "right" && "ml-auto",
               positionClasses[normalizedPosition],
@@ -178,7 +216,7 @@ export function FullWidthImageBannerBlock({
                         : "start"
                   }
                   level={2}
-                  size={normalizedVariant === "compact" ? "lg" : "display"}
+                  size={normalizedHeight === "compact" ? "lg" : "display"}
                   tone={contentTone}
                 >
                   <span className="text-balance break-words">{content.title}</span>
@@ -200,7 +238,7 @@ export function FullWidthImageBannerBlock({
               </div>
             ) : null}
           </div>
-        </Container>
+        </div>
       ) : null}
     </section>
   );
