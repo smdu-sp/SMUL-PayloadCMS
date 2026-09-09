@@ -1,25 +1,32 @@
 :root {
-  --color-background: #f7f9f7;
-  --color-foreground: #24302f;
+  --color-background: #ffffff;
+  --color-foreground: #1e293b;
   --color-surface: #ffffff;
-  --color-surface-muted: #eef4f1;
-  --color-primary: #007a73;
+  --color-surface-muted: #d4defb;
+  --color-primary: #0a3299;
   --color-primary-foreground: #ffffff;
-  --color-primary-hover: #00645f;
-  --color-secondary: #103b3f;
+  --color-primary-hover: #08277a;
+  --color-primary-light: #517bee;
+  --color-primary-soft: #a8bdf7;
+  --color-secondary: #0a3299;
   --color-secondary-foreground: #ffffff;
-  --color-accent: #fff4cc;
-  --color-accent-foreground: #142724;
-  --color-muted: #eef4f1;
-  --color-muted-foreground: #5e7069;
-  --color-border: #cad8d2;
-  --color-focus: #d9a441;
+  --color-accent: #5cd6c9;
+  --color-accent-foreground: #08277a;
+  --color-accent-pink: #f94668;
+  --color-muted: #f1f5f9;
+  --color-muted-foreground: #475569;
+  --color-border: #cbd5e1;
+  --color-border-brand: #a8bdf7;
+  --color-focus: #14b1f2;
   --color-success: #167c4a;
   --color-warning: #b86e00;
   --color-danger: #b42318;
+  --color-secondary-green: #2eed89;
+  --color-secondary-purple: #8800e0;
+  --color-secondary-orange: #f26e14;
 
-  --font-family-sans: Arial, Helvetica, sans-serif;
-  --font-family-heading: Arial, Helvetica, sans-serif;
+  --font-family-sans: var(--font-lato), "Lato", Arial, sans-serif;
+  --font-family-heading: var(--font-pangram), "Pangram", var(--font-lato), Arial, sans-serif;
   --font-family-mono: "Courier New", monospace;
 
   --font-size-xs: 0.75rem;

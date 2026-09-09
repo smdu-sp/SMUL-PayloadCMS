@@ -17,7 +17,7 @@ export const adminHelpSections: AdminHelpSection[] = [
     id: "primeiros-passos",
     title: "Primeiros passos",
     body: [
-      "O Admin serve para manter paginas, imagens, navegacao e configuracoes editoriais do portal.",
+      "O Admin serve para manter paginas, imagens, navegacao e configuracoes editoriais do portal para perfis como Editor e Admin.",
       "Antes de publicar, revise se o conteudo informa, orienta e encaminha para servicos oficiais sem prometer deferimento ou regularidade definitiva.",
       "Use rascunhos e preview para revisar a pagina antes de deixa-la publica.",
     ],
@@ -62,7 +62,8 @@ export const adminHelpSections: AdminHelpSection[] = [
     id: "estilos",
     title: "Estilos disponiveis",
     body: [
-      "As opcoes visuais sao controladas pelo Design System. Escolha o modelo ou tom oferecido pelo Block.",
+      "As opcoes visuais sao controladas pelo Design System. Escolha o modelo ou tom oferecido pelo Block no grupo Aparencia e estilo.",
+      "Use Tom (tone) para definir enfase visual, Espacamento (spacing) para controlar o respiro vertical e Largura (width) para o conforto de leitura.",
       "Nao tente simular estilos com textos, imagens ou variacoes improvisadas.",
       "Se a identidade visual precisar mudar, a alteracao deve acontecer nos tokens e configuracoes aprovadas, nao em cada pagina.",
     ],

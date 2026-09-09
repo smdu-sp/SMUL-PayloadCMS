@@ -15,7 +15,13 @@ type HeroBackground = {
   overlay?: HeroOverlay | string | null;
 };
 
+type HeroAppearance = {
+  alignment?: "center" | "left" | string | null;
+  tone?: "brand" | "default" | "muted" | "surface" | string | null;
+};
+
 type HeroBlockWithBackgroundProps = HeroBlockProps & {
+  appearance?: HeroAppearance | null;
   background?: HeroBackground | null;
 };
 
@@ -25,6 +31,21 @@ export function normalizeHeroVariant(
   if (variant === "centered" || variant === "split") return variant;
   if (variant === "image") return "split";
   return "default";
+}
+
+export function normalizeHeroTone(
+  tone?: string | null,
+): "brand" | "default" | "muted" | "surface" {
+  if (tone === "default" || tone === "surface" || tone === "muted") return tone;
+  return "brand";
+}
+
+export function normalizeHeroAlignment(
+  alignment?: string | null,
+  fallbackCentered = false,
+): "center" | "left" {
+  if (alignment === "center" || (!alignment && fallbackCentered)) return "center";
+  return "left";
 }
 
 export function normalizeHeroOverlay(
@@ -63,6 +84,7 @@ const overlayClasses: Record<HeroOverlay, string> = {
 };
 
 export function HeroBlock({
+  appearance,
   background,
   cta,
   description,
@@ -72,7 +94,12 @@ export function HeroBlock({
   variant,
 }: HeroBlockWithBackgroundProps) {
   const normalizedVariant = normalizeHeroVariant(variant);
-  const centered = normalizedVariant === "centered";
+  const normalizedAlignment = normalizeHeroAlignment(
+    appearance?.alignment,
+    normalizedVariant === "centered",
+  );
+  const centered = normalizedAlignment === "center";
+  const normalizedTone = normalizeHeroTone(appearance?.tone);
   const hasImage = Boolean(image && typeof image === "object" && image.url);
   const split = normalizedVariant === "split" && hasImage;
   const backgroundImage = background?.image;
@@ -90,10 +117,13 @@ export function HeroBlock({
   const focalPoint = normalizeFocalPoint(background?.focalPoint);
   const contentAlignment = centered ? "items-center text-center" : "items-start";
   const contentWidth = split ? "max-w-container-md" : "max-w-container-sm";
-  const contentTone = hasBackground && overlay === "light" ? "default" : "inverse";
+  const toneForSection = hasBackground ? "brand" : normalizedTone;
+  const isDarkTone =
+    toneForSection === "brand" || (hasBackground && overlay !== "light");
+  const contentTone = isDarkTone ? "inverse" : "default";
 
   return (
-    <Section spacing={hasBackground ? "sm" : "xl"} tone="brand">
+    <Section spacing={hasBackground ? "sm" : "xl"} tone={toneForSection}>
       <div
         className={classNames(
           "relative overflow-hidden",

@@ -320,6 +320,19 @@ export interface HeroBlock {
    * Padrao alinha o conteudo a esquerda; Centralizado destaca uma mensagem curta; Imagem lateral exibe texto e imagem lado a lado no desktop. Este bloco nao possui contador nem timer automatico.
    */
   variant: 'default' | 'centered' | 'split';
+  /**
+   * Opcoes semanticas de apresentacao controladas pelo Design System. Nao permite CSS arbitrario.
+   */
+  appearance?: {
+    /**
+     * Define a cor de fundo e a enfase visual do bloco respeitando as diretrizes da SMUL.
+     */
+    tone?: ('default' | 'surface' | 'muted' | 'brand') | null;
+    /**
+     * Controla se os elementos de texto e botoes ficam alinhados a esquerda ou centralizados.
+     */
+    alignment?: ('left' | 'center') | null;
+  };
   id?: string | null;
   blockName?: string | null;
   blockType: 'hero';
@@ -351,6 +364,19 @@ export interface RichTextBlock {
    * Padrao usa largura ampla para conteudos variados. Leitura estreita favorece textos corridos longos.
    */
   variant: 'default' | 'narrow';
+  /**
+   * Opcoes semanticas de apresentacao controladas pelo Design System. Nao permite CSS arbitrario.
+   */
+  appearance?: {
+    /**
+     * Define o limite de largura maxima para acomodar leitura ou visao panoramica.
+     */
+    width?: ('narrow' | 'default' | 'wide') | null;
+    /**
+     * Controla a distancia vertical do bloco em relacao aos blocos adjacentes.
+     */
+    spacing?: ('compact' | 'default' | 'spacious') | null;
+  };
   id?: string | null;
   blockName?: string | null;
   blockType: 'richText';
@@ -415,6 +441,19 @@ export interface ImageTextBlock {
      */
     newTab?: boolean | null;
   };
+  /**
+   * Opcoes semanticas de apresentacao controladas pelo Design System. Nao permite CSS arbitrario.
+   */
+  appearance?: {
+    /**
+     * Define a cor de fundo e a enfase visual do bloco respeitando as diretrizes da SMUL.
+     */
+    tone?: ('default' | 'surface' | 'muted') | null;
+    /**
+     * Controla a distancia vertical do bloco em relacao aos blocos adjacentes.
+     */
+    spacing?: ('compact' | 'default' | 'spacious') | null;
+  };
   id?: string | null;
   blockName?: string | null;
   blockType: 'imageText';
@@ -436,6 +475,19 @@ export interface CardsBlock {
    * Padrao cobre listas editoriais gerais; modalidades destaca opcoes de regularizacao sem criar outro tipo de bloco.
    */
   variant: 'default' | 'modalities';
+  /**
+   * Opcoes semanticas de apresentacao controladas pelo Design System. Nao permite CSS arbitrario.
+   */
+  appearance?: {
+    /**
+     * Define a cor de fundo e a enfase visual do bloco respeitando as diretrizes da SMUL.
+     */
+    tone?: ('default' | 'surface' | 'muted') | null;
+    /**
+     * Controla a distancia vertical do bloco em relacao aos blocos adjacentes.
+     */
+    spacing?: ('compact' | 'default' | 'spacious') | null;
+  };
   /**
    * Adicione de 1 a 12 cards. O layout ajusta a quantidade de colunas conforme a largura da tela.
    */
@@ -534,6 +586,19 @@ export interface CTABlock {
    * Padrao serve para chamadas gerais; Destaque institucional usa fundo forte; Compacta funciona melhor em encerramentos repetidos.
    */
   variant: 'default' | 'brand' | 'compact';
+  /**
+   * Opcoes semanticas de apresentacao controladas pelo Design System. Nao permite CSS arbitrario.
+   */
+  appearance?: {
+    /**
+     * Define a cor de fundo e a enfase visual do bloco respeitando as diretrizes da SMUL.
+     */
+    tone?: ('default' | 'muted' | 'brand' | 'accent') | null;
+    /**
+     * Controla a distancia vertical do bloco em relacao aos blocos adjacentes.
+     */
+    spacing?: ('compact' | 'default' | 'spacious') | null;
+  };
   id?: string | null;
   blockName?: string | null;
   blockType: 'cta';
@@ -555,6 +620,19 @@ export interface IconGridBlock {
    * Padrao destaca descricoes; compacto favorece listas mais densas.
    */
   variant: 'default' | 'compact';
+  /**
+   * Opcoes semanticas de apresentacao controladas pelo Design System. Nao permite CSS arbitrario.
+   */
+  appearance?: {
+    /**
+     * Define a cor de fundo e a enfase visual do bloco respeitando as diretrizes da SMUL.
+     */
+    tone?: ('default' | 'surface' | 'muted') | null;
+    /**
+     * Controla a distancia vertical do bloco em relacao aos blocos adjacentes.
+     */
+    spacing?: ('compact' | 'default' | 'spacious') | null;
+  };
   /**
    * Adicione itens curtos com icone. Reordene conforme a prioridade editorial.
    */
@@ -1038,6 +1116,12 @@ export interface HeroBlockSelect<T extends boolean = true> {
         focalPoint?: T;
       };
   variant?: T;
+  appearance?:
+    | T
+    | {
+        tone?: T;
+        alignment?: T;
+      };
   id?: T;
   blockName?: T;
 }
@@ -1048,6 +1132,12 @@ export interface HeroBlockSelect<T extends boolean = true> {
 export interface RichTextBlockSelect<T extends boolean = true> {
   content?: T;
   variant?: T;
+  appearance?:
+    | T
+    | {
+        width?: T;
+        spacing?: T;
+      };
   id?: T;
   blockName?: T;
 }
@@ -1069,6 +1159,12 @@ export interface ImageTextBlockSelect<T extends boolean = true> {
         url?: T;
         newTab?: T;
       };
+  appearance?:
+    | T
+    | {
+        tone?: T;
+        spacing?: T;
+      };
   id?: T;
   blockName?: T;
 }
@@ -1080,6 +1176,12 @@ export interface CardsBlockSelect<T extends boolean = true> {
   title?: T;
   description?: T;
   variant?: T;
+  appearance?:
+    | T
+    | {
+        tone?: T;
+        spacing?: T;
+      };
   items?:
     | T
     | {
@@ -1123,6 +1225,12 @@ export interface CTABlockSelect<T extends boolean = true> {
         newTab?: T;
       };
   variant?: T;
+  appearance?:
+    | T
+    | {
+        tone?: T;
+        spacing?: T;
+      };
   id?: T;
   blockName?: T;
 }
@@ -1134,6 +1242,12 @@ export interface IconGridBlockSelect<T extends boolean = true> {
   title?: T;
   description?: T;
   variant?: T;
+  appearance?:
+    | T
+    | {
+        tone?: T;
+        spacing?: T;
+      };
   items?:
     | T
     | {
@@ -1440,15 +1554,15 @@ export interface SiteSetting {
    */
   branding?: {
     /**
-     * Cor principal de botoes, links e destaques. Use hexadecimal curto ou longo, como #007a73.
+     * Cor principal de botoes, links e destaques. Use hexadecimal curto ou longo, como #0a3299.
      */
     primaryColor?: string | null;
     /**
-     * Cor de fundos fortes, como areas de destaque. Use hexadecimal curto ou longo.
+     * Cor de fundos fortes, como areas de destaque. Use hexadecimal curto ou longo, como #0a3299.
      */
     secondaryColor?: string | null;
     /**
-     * Cor suave para superficies de apoio e chamadas secundarias. Use hexadecimal curto ou longo.
+     * Cor suave para superficies de apoio e chamadas secundarias. Use hexadecimal curto ou longo, como #5cd6c9.
      */
     accentColor?: string | null;
   };

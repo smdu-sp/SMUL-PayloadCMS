@@ -1,7 +1,7 @@
 ---
 spec: SPEC-036
 title: Controlled Block Styling
-status: planned
+status: implemented
 source: Specs030–041—MaturidadeEditorialeGovernançadoCMS.md
 ---
 
@@ -127,13 +127,13 @@ Não crie um mega `styleConfig` universal com vinte propriedades.
 
 ## Critérios de aceite
 
-- [ ] editor consegue variar visual de Blocks.
-- [ ] opções são fechadas.
-- [ ] nenhum CSS arbitrário é armazenado.
-- [ ] Design Tokens continuam sendo fonte do estilo.
-- [ ] combinações inválidas são evitadas.
-- [ ] mobile não depende de configuração manual.
-- [ ] defaults preservam páginas antigas.
+- [x] editor consegue variar visual de Blocks.
+- [x] opções são fechadas.
+- [x] nenhum CSS arbitrário é armazenado.
+- [x] Design Tokens continuam sendo fonte do estilo.
+- [x] combinações inválidas são evitadas.
+- [x] mobile não depende de configuração manual.
+- [x] defaults preservam páginas antigas.
 
 ---
 

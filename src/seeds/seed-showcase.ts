@@ -54,6 +54,10 @@ export const seedShowcaseLayout = (
       "O Destaque principal abre a página com título, resumo e uma ação opcional. Este exemplo usa o modelo centralizado.",
     cta: internalLink("Explorar o catálogo", seedPageId),
     variant: "centered",
+    appearance: {
+      tone: "brand",
+      alignment: "center",
+    },
   },
   {
     blockType: "richText",
@@ -63,6 +67,10 @@ export const seedShowcaseLayout = (
       "Neste exemplo, a largura de leitura estreita reduz o comprimento das linhas e favorece textos corridos mais longos.",
     ),
     variant: "narrow",
+    appearance: {
+      width: "narrow",
+      spacing: "default",
+    },
   },
   {
     blockType: "imageText",
@@ -74,6 +82,10 @@ export const seedShowcaseLayout = (
     image: mediaId,
     variant: "image-left",
     cta: internalLink("Voltar ao início do catálogo", seedPageId),
+    appearance: {
+      tone: "default",
+      spacing: "default",
+    },
   },
   {
     blockType: "cards",
@@ -82,6 +94,10 @@ export const seedShowcaseLayout = (
     description:
       "O modelo Modalidades destaca caminhos editoriais sem criar um tipo de bloco separado.",
     variant: "modalities",
+    appearance: {
+      tone: "surface",
+      spacing: "default",
+    },
     items: [
       {
         title: "Card com ação",
@@ -188,6 +204,10 @@ export const seedShowcaseLayout = (
     description:
       "A variante compacta é adequada para listas curtas que precisam ser percorridas rapidamente.",
     variant: "compact",
+    appearance: {
+      tone: "default",
+      spacing: "compact",
+    },
     items: [
       {
         icon: mediaId,
@@ -211,5 +231,9 @@ export const seedShowcaseLayout = (
       "A Chamada de ação combina uma mensagem final com um destino obrigatório. Este exemplo usa o destaque institucional.",
     action: internalLink("Voltar ao início do catálogo", seedPageId),
     variant: "brand",
+    appearance: {
+      tone: "brand",
+      spacing: "default",
+    },
   },
 ];

@@ -3,6 +3,10 @@ import type { ReactNode } from "react";
 import { classNames } from "./classNames";
 
 const containerSizes = {
+  narrow: "max-w-container-sm",
+  default: "max-w-container-lg",
+  wide: "max-w-container-xl",
+  full: "max-w-none",
   sm: "max-w-container-sm",
   md: "max-w-container-md",
   lg: "max-w-container-lg",

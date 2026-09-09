@@ -1,5 +1,11 @@
 import type { Block } from "payload";
 import { characterLimitAdmin } from "../../fields/character-limit";
+import {
+  createAlignmentField,
+  createAppearanceGroup,
+  createToneField,
+} from "../../fields/block-appearance";
+
 import { closedSelect, requiredText } from "../../fields/editorial-validation";
 import { createLinkFields } from "../../fields/link";
 import { createBlockAdmin } from "../shared/admin";
@@ -157,5 +163,9 @@ export const HeroBlock: Block = {
         { label: "Imagem lateral", value: "split" },
       ],
     },
+    createAppearanceGroup([
+      createToneField(["brand", "default", "surface", "muted"], "brand"),
+      createAlignmentField(["left", "center"], "left"),
+    ]),
   ],
 };

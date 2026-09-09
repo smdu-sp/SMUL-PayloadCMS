@@ -1,6 +1,11 @@
 import type { Block, UploadFieldSingleValidation } from "payload";
 import { characterLimitAdmin } from "../../fields/character-limit";
 import {
+  createAppearanceGroup,
+  createSpacingField,
+  createToneField,
+} from "../../fields/block-appearance";
+import {
   closedSelect,
   requiredText,
   requiredTextarea,
@@ -88,6 +93,10 @@ export const CardsBlock: Block = {
         { label: "Modalidades", value: "modalities" },
       ],
     },
+    createAppearanceGroup([
+      createToneField(["default", "surface", "muted"], "default"),
+      createSpacingField(["compact", "default", "spacious"], "default"),
+    ]),
     {
       name: "items",
       type: "array",

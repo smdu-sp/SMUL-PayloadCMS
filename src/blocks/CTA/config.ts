@@ -1,5 +1,11 @@
 import type { Block } from "payload";
 import { characterLimitAdmin } from "../../fields/character-limit";
+import {
+  createAppearanceGroup,
+  createSpacingField,
+  createToneField,
+} from "../../fields/block-appearance";
+
 import { closedSelect, requiredText } from "../../fields/editorial-validation";
 import { createLinkFields } from "../../fields/link";
 import { createBlockAdmin } from "../shared/admin";
@@ -67,5 +73,9 @@ export const CTABlock: Block = {
         { label: "Compacta", value: "compact" },
       ],
     },
+    createAppearanceGroup([
+      createToneField(["default", "brand", "accent", "muted"], "default"),
+      createSpacingField(["compact", "default", "spacious"], "default"),
+    ]),
   ],
 };

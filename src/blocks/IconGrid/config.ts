@@ -1,5 +1,11 @@
 import type { Block } from "payload";
 import { characterLimitAdmin } from "../../fields/character-limit";
+import {
+  createAppearanceGroup,
+  createSpacingField,
+  createToneField,
+} from "../../fields/block-appearance";
+
 import { closedSelect, requiredText } from "../../fields/editorial-validation";
 import { createLinkFields } from "../../fields/link";
 import { createBlockAdmin } from "../shared/admin";
@@ -56,6 +62,10 @@ export const IconGridBlock: Block = {
         { label: "Compacto", value: "compact" },
       ],
     },
+    createAppearanceGroup([
+      createToneField(["default", "surface", "muted"], "default"),
+      createSpacingField(["compact", "default", "spacious"], "default"),
+    ]),
     {
       name: "items",
       type: "array",

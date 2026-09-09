@@ -6,8 +6,16 @@ import {
   normalizeActionBannersVariant,
 } from "./ActionBanners/Component";
 import { normalizeAlertBoxType } from "./AlertBox/Component";
-import { normalizeCTAVariant } from "./CTA/Component";
-import { normalizeCardsVariant } from "./Cards/Component";
+import {
+  normalizeCTASpacing,
+  normalizeCTATone,
+  normalizeCTAVariant,
+} from "./CTA/Component";
+import {
+  normalizeCardsSpacing,
+  normalizeCardsTone,
+  normalizeCardsVariant,
+} from "./Cards/Component";
 import { normalizeFAQVariant } from "./FAQ/Component";
 import {
   normalizeBannerContentPosition,
@@ -15,10 +23,26 @@ import {
   normalizeBannerImageFit,
   normalizeCustomBannerImageHeight,
 } from "./FullWidthImageBanner/Component";
-import { normalizeHeroVariant } from "./Hero/Component";
-import { normalizeIconGridVariant } from "./IconGrid/Component";
-import { normalizeImageTextVariant } from "./ImageText/Component";
-import { normalizeRichTextVariant } from "./RichText/Component";
+import {
+  normalizeHeroAlignment,
+  normalizeHeroTone,
+  normalizeHeroVariant,
+} from "./Hero/Component";
+import {
+  normalizeIconGridSpacing,
+  normalizeIconGridTone,
+  normalizeIconGridVariant,
+} from "./IconGrid/Component";
+import {
+  normalizeImageTextSpacing,
+  normalizeImageTextTone,
+  normalizeImageTextVariant,
+} from "./ImageText/Component";
+import {
+  normalizeRichTextSpacing,
+  normalizeRichTextVariant,
+  normalizeRichTextWidth,
+} from "./RichText/Component";
 
 describe("block variant fallbacks", () => {
   it("keeps known Hero variants and maps the legacy image variant to split", () => {
@@ -101,5 +125,74 @@ describe("block variant fallbacks", () => {
     assert.equal(normalizeBannerContentPosition("unknown"), "left");
     assert.equal(normalizeBannerImageFit("contain"), "contain");
     assert.equal(normalizeBannerImageFit("stretch"), "cover");
+  });
+
+  it("normalizes SPEC-036 controlled block styling appearance attributes", () => {
+    // Hero tone & alignment
+    assert.equal(normalizeHeroTone("brand"), "brand");
+    assert.equal(normalizeHeroTone("surface"), "surface");
+    assert.equal(normalizeHeroTone("muted"), "muted");
+    assert.equal(normalizeHeroTone("default"), "default");
+    assert.equal(normalizeHeroTone("invalid"), "brand");
+    assert.equal(normalizeHeroTone(undefined), "brand");
+
+    assert.equal(normalizeHeroAlignment("center"), "center");
+    assert.equal(normalizeHeroAlignment("left"), "left");
+    assert.equal(normalizeHeroAlignment("invalid"), "left");
+    assert.equal(normalizeHeroAlignment(undefined, true), "center");
+
+    // CTA tone & spacing
+    assert.equal(normalizeCTATone("brand"), "brand");
+    assert.equal(normalizeCTATone("accent"), "accent");
+    assert.equal(normalizeCTATone("muted"), "muted");
+    assert.equal(normalizeCTATone("invalid", "accent"), "accent");
+    assert.equal(normalizeCTATone(undefined, "brand"), "brand");
+
+    assert.equal(normalizeCTASpacing("compact"), "compact");
+    assert.equal(normalizeCTASpacing("spacious"), "spacious");
+    assert.equal(normalizeCTASpacing("invalid", "compact"), "compact");
+    assert.equal(normalizeCTASpacing(undefined), "default");
+
+    // RichText width & spacing
+    assert.equal(normalizeRichTextWidth("narrow"), "narrow");
+    assert.equal(normalizeRichTextWidth("wide"), "wide");
+    assert.equal(normalizeRichTextWidth("default"), "default");
+    assert.equal(normalizeRichTextWidth("unknown", "narrow"), "narrow");
+    assert.equal(normalizeRichTextWidth(undefined, "default"), "default");
+
+    assert.equal(normalizeRichTextSpacing("compact"), "compact");
+    assert.equal(normalizeRichTextSpacing("spacious"), "spacious");
+    assert.equal(normalizeRichTextSpacing(undefined), "default");
+
+    // Cards tone & spacing
+    assert.equal(normalizeCardsTone("surface"), "surface");
+    assert.equal(normalizeCardsTone("muted"), "muted");
+    assert.equal(normalizeCardsTone("default"), "default");
+    assert.equal(normalizeCardsTone("invalid", "muted"), "muted");
+    assert.equal(normalizeCardsTone(undefined), "default");
+
+    assert.equal(normalizeCardsSpacing("compact"), "compact");
+    assert.equal(normalizeCardsSpacing("spacious"), "spacious");
+    assert.equal(normalizeCardsSpacing("unknown"), "default");
+
+    // ImageText tone & spacing
+    assert.equal(normalizeImageTextTone("surface"), "surface");
+    assert.equal(normalizeImageTextTone("muted"), "muted");
+    assert.equal(normalizeImageTextTone("default"), "default");
+    assert.equal(normalizeImageTextTone("unknown"), "default");
+
+    assert.equal(normalizeImageTextSpacing("compact"), "compact");
+    assert.equal(normalizeImageTextSpacing("spacious"), "spacious");
+    assert.equal(normalizeImageTextSpacing("unknown"), "default");
+
+    // IconGrid tone & spacing
+    assert.equal(normalizeIconGridTone("surface"), "surface");
+    assert.equal(normalizeIconGridTone("muted"), "muted");
+    assert.equal(normalizeIconGridTone("default"), "default");
+    assert.equal(normalizeIconGridTone("unknown"), "default");
+
+    assert.equal(normalizeIconGridSpacing("compact"), "compact");
+    assert.equal(normalizeIconGridSpacing("spacious"), "spacious");
+    assert.equal(normalizeIconGridSpacing("unknown"), "default");
   });
 });
