@@ -5,23 +5,53 @@ import { MediaImage } from "../shared/MediaImage";
 
 type IconGridVariant = "compact" | "default";
 
+type IconGridAppearance = {
+  spacing?: "compact" | "default" | "spacious" | string | null;
+  tone?: "default" | "muted" | "surface" | string | null;
+};
+
+type IconGridBlockWithAppearanceProps = IconGridBlockProps & {
+  appearance?: IconGridAppearance | null;
+};
+
 export function normalizeIconGridVariant(
   variant: IconGridBlockProps["variant"] | string | null | undefined,
 ): IconGridVariant {
   return variant === "compact" ? "compact" : "default";
 }
 
+export function normalizeIconGridTone(
+  tone?: string | null,
+): "default" | "muted" | "surface" {
+  if (tone === "muted" || tone === "surface" || tone === "default") return tone;
+  return "default";
+}
+
+export function normalizeIconGridSpacing(
+  spacing?: string | null,
+  fallbackSpacing: "compact" | "default" = "default",
+): "compact" | "default" | "spacious" {
+  if (spacing === "compact" || spacing === "spacious" || spacing === "default") return spacing;
+  return fallbackSpacing;
+}
+
 export function IconGridBlock({
+  appearance,
   description,
   items,
   title,
   variant,
-}: IconGridBlockProps) {
+}: IconGridBlockWithAppearanceProps) {
   const normalizedVariant = normalizeIconGridVariant(variant);
   const compact = normalizedVariant === "compact";
+  const effectiveTone = normalizeIconGridTone(appearance?.tone);
+  const effectiveSpacing = normalizeIconGridSpacing(
+    appearance?.spacing,
+    compact ? "compact" : "default",
+  );
 
   return (
-    <Section spacing={compact ? "sm" : "md"} tone="default">
+    <Section spacing={effectiveSpacing} tone={effectiveTone}>
       <Container size="lg">
         <Heading level={2} size="lg">
           <span className="text-balance break-words">{title}</span>

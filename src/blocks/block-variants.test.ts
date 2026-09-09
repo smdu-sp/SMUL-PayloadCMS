@@ -27,7 +27,11 @@ import {
   normalizeHeroTone,
   normalizeHeroVariant,
 } from "./Hero/Component";
-import { normalizeIconGridVariant } from "./IconGrid/Component";
+import {
+  normalizeIconGridSpacing,
+  normalizeIconGridTone,
+  normalizeIconGridVariant,
+} from "./IconGrid/Component";
 import {
   normalizeImageTextSpacing,
   normalizeImageTextTone,
@@ -170,5 +174,15 @@ describe("block variant fallbacks", () => {
     assert.equal(normalizeImageTextSpacing("compact"), "compact");
     assert.equal(normalizeImageTextSpacing("spacious"), "spacious");
     assert.equal(normalizeImageTextSpacing("unknown"), "default");
+
+    // IconGrid tone & spacing
+    assert.equal(normalizeIconGridTone("surface"), "surface");
+    assert.equal(normalizeIconGridTone("muted"), "muted");
+    assert.equal(normalizeIconGridTone("default"), "default");
+    assert.equal(normalizeIconGridTone("unknown"), "default");
+
+    assert.equal(normalizeIconGridSpacing("compact"), "compact");
+    assert.equal(normalizeIconGridSpacing("spacious"), "spacious");
+    assert.equal(normalizeIconGridSpacing("unknown"), "default");
   });
 });

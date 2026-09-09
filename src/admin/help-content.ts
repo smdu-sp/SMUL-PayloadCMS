@@ -62,7 +62,8 @@ export const adminHelpSections: AdminHelpSection[] = [
     id: "estilos",
     title: "Estilos disponiveis",
     body: [
-      "As opcoes visuais sao controladas pelo Design System. Escolha o modelo ou tom oferecido pelo Block.",
+      "As opcoes visuais sao controladas pelo Design System. Escolha o modelo ou tom oferecido pelo Block no grupo Aparencia e estilo.",
+      "Use Tom (tone) para definir enfase visual, Espacamento (spacing) para controlar o respiro vertical e Largura (width) para o conforto de leitura.",
       "Nao tente simular estilos com textos, imagens ou variacoes improvisadas.",
       "Se a identidade visual precisar mudar, a alteracao deve acontecer nos tokens e configuracoes aprovadas, nao em cada pagina.",
     ],

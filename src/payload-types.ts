@@ -629,6 +629,19 @@ export interface IconGridBlock {
    */
   variant: 'default' | 'compact';
   /**
+   * Opcoes semanticas de apresentacao controladas pelo Design System. Nao permite CSS arbitrario.
+   */
+  appearance?: {
+    /**
+     * Define a cor de fundo e a enfase visual do bloco respeitando as diretrizes da SMUL.
+     */
+    tone?: ('default' | 'surface' | 'muted') | null;
+    /**
+     * Controla a distancia vertical do bloco em relacao aos blocos adjacentes.
+     */
+    spacing?: ('compact' | 'default' | 'spacious') | null;
+  };
+  /**
    * Adicione itens curtos com icone. Reordene conforme a prioridade editorial.
    */
   items: {
@@ -1234,6 +1247,12 @@ export interface IconGridBlockSelect<T extends boolean = true> {
   title?: T;
   description?: T;
   variant?: T;
+  appearance?:
+    | T
+    | {
+        tone?: T;
+        spacing?: T;
+      };
   items?:
     | T
     | {
