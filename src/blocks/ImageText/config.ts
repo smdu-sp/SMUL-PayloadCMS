@@ -1,4 +1,5 @@
 import type { Block } from "payload";
+import { characterLimitAdmin } from "../../fields/character-limit";
 import {
   closedSelect,
   requiredRichText,
@@ -21,8 +22,10 @@ export const ImageTextBlock: Block = {
       type: "text",
       label: "Titulo",
       required: true,
+      maxLength: 100,
       validate: requiredText("Informe o titulo da secao com midia."),
       admin: {
+        ...characterLimitAdmin(100),
         description:
           "Titulo da secao que acompanha a imagem.",
       },

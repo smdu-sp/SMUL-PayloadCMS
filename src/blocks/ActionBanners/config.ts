@@ -1,4 +1,5 @@
 import type { Block } from "payload";
+import { characterLimitAdmin } from "../../fields/character-limit";
 import { closedSelect, requiredText } from "../../fields/editorial-validation";
 import { createLinkFields } from "../../fields/link";
 import { createBlockAdmin } from "../shared/admin";
@@ -16,7 +17,9 @@ export const ActionBannersBlock: Block = {
       name: "title",
       type: "text",
       label: "Titulo da secao",
+      maxLength: 100,
       admin: {
+        ...characterLimitAdmin(100),
         description:
           "Opcional. Use quando o conjunto de faixas precisar de contexto.",
       },
@@ -58,8 +61,10 @@ export const ActionBannersBlock: Block = {
           type: "text",
           label: "Titulo da faixa",
           required: true,
+          maxLength: 80,
           validate: requiredText("Informe o titulo deste banner."),
           admin: {
+            ...characterLimitAdmin(80),
             description: "Mensagem curta da faixa de acao.",
           },
         },
@@ -67,7 +72,9 @@ export const ActionBannersBlock: Block = {
           name: "description",
           type: "textarea",
           label: "Descricao da faixa",
+          maxLength: 160,
           admin: {
+            ...characterLimitAdmin(160, "textarea"),
             description:
               "Opcional. Use para explicar a acao antes do botao.",
           },

@@ -202,7 +202,7 @@ export function FullWidthImageBannerBlock({
                 variant="small"
                 weight="semibold"
               >
-                {content.eyebrow}
+                <span className="whitespace-pre-line break-words">{content.eyebrow}</span>
               </Text>
             ) : null}
             {content?.title ? (
@@ -219,14 +219,14 @@ export function FullWidthImageBannerBlock({
                   size={normalizedHeight === "compact" ? "lg" : "display"}
                   tone={contentTone}
                 >
-                  <span className="text-balance break-words">{content.title}</span>
+                  <span className="whitespace-pre-line text-balance break-words">{content.title}</span>
                 </Heading>
               </div>
             ) : null}
             {content?.description ? (
               <div className="mt-5">
                 <Text tone={contentTone} variant="lead">
-                  {content.description}
+                  <span className="whitespace-pre-line break-words">{content.description}</span>
                 </Text>
               </div>
             ) : null}

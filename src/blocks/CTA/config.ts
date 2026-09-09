@@ -1,4 +1,5 @@
 import type { Block } from "payload";
+import { characterLimitAdmin } from "../../fields/character-limit";
 import { closedSelect, requiredText } from "../../fields/editorial-validation";
 import { createLinkFields } from "../../fields/link";
 import { createBlockAdmin } from "../shared/admin";
@@ -17,8 +18,10 @@ export const CTABlock: Block = {
       type: "text",
       label: "Titulo",
       required: true,
+      maxLength: 100,
       validate: requiredText("Informe o titulo da chamada de acao."),
       admin: {
+        ...characterLimitAdmin(100),
         description:
           "Mensagem curta que encerra uma secao ou orienta o proximo passo.",
       },
@@ -27,7 +30,9 @@ export const CTABlock: Block = {
       name: "description",
       type: "textarea",
       label: "Descricao",
+      maxLength: 180,
       admin: {
+        ...characterLimitAdmin(180, "textarea"),
         description:
           "Texto opcional para explicar o contexto da chamada.",
       },

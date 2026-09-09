@@ -1,4 +1,5 @@
 import type { Block } from "payload";
+import { characterLimitAdmin } from "../../fields/character-limit";
 import { closedSelect, requiredRichText } from "../../fields/editorial-validation";
 import { createLinkFields } from "../../fields/link";
 import { createBlockAdmin } from "../shared/admin";
@@ -16,7 +17,9 @@ export const AlertBoxBlock: Block = {
       name: "title",
       type: "text",
       label: "Titulo do aviso",
+      maxLength: 80,
       admin: {
+        ...characterLimitAdmin(80),
         description:
           "Opcional. Use quando o aviso precisar de uma chamada curta.",
       },

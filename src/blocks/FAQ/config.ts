@@ -1,4 +1,5 @@
 import type { Block } from "payload";
+import { characterLimitAdmin } from "../../fields/character-limit";
 import {
   closedSelect,
   requiredRichText,
@@ -20,8 +21,10 @@ export const FAQBlock: Block = {
       type: "text",
       label: "Titulo da secao",
       required: true,
+      maxLength: 100,
       validate: requiredText("Informe o titulo das perguntas frequentes."),
       admin: {
+        ...characterLimitAdmin(100),
         description:
           "Titulo exibido antes da lista de perguntas.",
       },
@@ -30,7 +33,9 @@ export const FAQBlock: Block = {
       name: "description",
       type: "textarea",
       label: "Resumo da secao",
+      maxLength: 180,
       admin: {
+        ...characterLimitAdmin(180, "textarea"),
         description:
           "Texto opcional para contextualizar as perguntas.",
       },
@@ -72,8 +77,10 @@ export const FAQBlock: Block = {
           type: "text",
           label: "Pergunta",
           required: true,
+          maxLength: 140,
           validate: requiredText("Informe a pergunta deste item."),
           admin: {
+            ...characterLimitAdmin(140),
             description: "Pergunta clara e direta exibida no acordeao.",
           },
         },

@@ -1,4 +1,5 @@
 import type { Block } from "payload";
+import { characterLimitAdmin } from "../../fields/character-limit";
 import { closedSelect, requiredText } from "../../fields/editorial-validation";
 import { createLinkFields } from "../../fields/link";
 import { createBlockAdmin } from "../shared/admin";
@@ -30,7 +31,9 @@ export const HeroBlock: Block = {
       name: "eyebrow",
       type: "text",
       label: "Chamada superior",
+      maxLength: 50,
       admin: {
+        ...characterLimitAdmin(50),
         description:
           "Texto curto acima do titulo, usado para contextualizar a pagina.",
       },
@@ -40,8 +43,10 @@ export const HeroBlock: Block = {
       type: "text",
       label: "Titulo principal",
       required: true,
+      maxLength: 120,
       validate: requiredText("Informe o titulo principal do destaque."),
       admin: {
+        ...characterLimitAdmin(120),
         description:
           "Mensagem principal da pagina. Pode ser longo, mas prefira uma frase clara.",
       },
@@ -50,7 +55,9 @@ export const HeroBlock: Block = {
       name: "description",
       type: "textarea",
       label: "Resumo",
+      maxLength: 220,
       admin: {
+        ...characterLimitAdmin(220, "textarea"),
         description:
           "Texto opcional abaixo do titulo para orientar o usuario antes da acao.",
       },

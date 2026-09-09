@@ -1,4 +1,5 @@
 import type { Block, NumberFieldSingleValidation, UploadFieldSingleValidation } from "payload";
+import { characterLimitAdmin } from "../../fields/character-limit";
 import { closedSelect } from "../../fields/editorial-validation";
 import { createLinkFields } from "../../fields/link";
 import { createBlockAdmin } from "../shared/admin";
@@ -102,16 +103,30 @@ export const FullWidthImageBannerBlock: Block = {
           name: "eyebrow",
           type: "text",
           label: "Chamada superior",
+          maxLength: 50,
+          admin: {
+            ...characterLimitAdmin(50),
+          },
         },
         {
           name: "title",
-          type: "text",
+          type: "textarea",
           label: "Titulo",
+          maxLength: 100,
+          admin: {
+            ...characterLimitAdmin(100, "textarea"),
+            rows: 2,
+          },
         },
         {
           name: "description",
           type: "textarea",
           label: "Descricao",
+          maxLength: 200,
+          admin: {
+            ...characterLimitAdmin(200, "textarea"),
+            rows: 3,
+          },
         },
         {
           name: "actions",

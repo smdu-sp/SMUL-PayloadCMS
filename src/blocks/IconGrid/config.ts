@@ -1,4 +1,5 @@
 import type { Block } from "payload";
+import { characterLimitAdmin } from "../../fields/character-limit";
 import { closedSelect, requiredText } from "../../fields/editorial-validation";
 import { createLinkFields } from "../../fields/link";
 import { createBlockAdmin } from "../shared/admin";
@@ -17,8 +18,10 @@ export const IconGridBlock: Block = {
       type: "text",
       label: "Titulo da secao",
       required: true,
+      maxLength: 100,
       validate: requiredText("Informe o titulo da grade de icones."),
       admin: {
+        ...characterLimitAdmin(100),
         description:
           "Titulo curto que contextualiza o conjunto de itens com icones.",
       },
@@ -27,7 +30,9 @@ export const IconGridBlock: Block = {
       name: "description",
       type: "textarea",
       label: "Resumo da secao",
+      maxLength: 180,
       admin: {
+        ...characterLimitAdmin(180, "textarea"),
         description:
           "Texto opcional para orientar a leitura antes da grade.",
       },
@@ -79,8 +84,10 @@ export const IconGridBlock: Block = {
           type: "text",
           label: "Texto do item",
           required: true,
+          maxLength: 120,
           validate: requiredText("Informe a descricao deste item."),
           admin: {
+            ...characterLimitAdmin(120),
             description:
               "Texto curto exibido junto ao icone. Evite paragrafos longos.",
           },

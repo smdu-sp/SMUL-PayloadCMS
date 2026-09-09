@@ -1,4 +1,5 @@
 import type { Block, UploadFieldSingleValidation } from "payload";
+import { characterLimitAdmin } from "../../fields/character-limit";
 import {
   closedSelect,
   requiredText,
@@ -50,7 +51,9 @@ export const CardsBlock: Block = {
       name: "title",
       type: "text",
       label: "Titulo da lista",
+      maxLength: 100,
       admin: {
+        ...characterLimitAdmin(100),
         description:
           "Titulo opcional exibido antes dos cards.",
       },
@@ -59,7 +62,9 @@ export const CardsBlock: Block = {
       name: "description",
       type: "textarea",
       label: "Resumo da lista",
+      maxLength: 180,
       admin: {
+        ...characterLimitAdmin(180, "textarea"),
         description:
           "Texto opcional para explicar o conjunto de cards.",
       },
@@ -168,8 +173,10 @@ export const CardsBlock: Block = {
           type: "text",
           label: "Titulo do card",
           required: true,
+          maxLength: 80,
           validate: requiredText("Informe o titulo deste card."),
           admin: {
+            ...characterLimitAdmin(80),
             description:
               "Texto principal do card. Pode quebrar linha sem afetar os demais itens.",
           },
@@ -179,8 +186,10 @@ export const CardsBlock: Block = {
           type: "textarea",
           label: "Descricao do card",
           required: true,
+          maxLength: 160,
           validate: requiredTextarea("Informe a descricao deste card."),
           admin: {
+            ...characterLimitAdmin(160, "textarea"),
             description:
               "Resumo ou orientacao exibida dentro do card.",
           },
