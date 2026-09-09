@@ -281,15 +281,15 @@ export interface HeroBlock {
    */
   imagePresentation?: {
     /**
-     * Controla a largura da imagem dentro do espaço do bloco. Em celulares, a imagem sempre ocupa a largura total.
+     * Controla a largura da imagem dentro do espaco do bloco. Em celulares, a imagem sempre ocupa a largura total.
      */
     size: 'small' | 'medium' | 'large' | 'full';
     /**
-     * Original preserva as proporções do arquivo enviado. As demais opções recortam a imagem para a proporção escolhida.
+     * Original preserva as proporcoes do arquivo enviado. As demais opcoes recortam a imagem para a proporcao escolhida.
      */
     aspectRatio: 'original' | '1:1' | '4:3' | '16:9' | 'portrait';
     /**
-     * Preencher recorta a imagem para cobrir o espaço; Conter mostra a imagem inteira, podendo sobrar espaço vazio. Usa o ponto focal definido na Mídia quando disponível.
+     * Preencher recorta a imagem para cobrir o espaco; Conter mostra a imagem inteira, podendo sobrar espaco vazio. Usa o ponto focal definido na Midia quando disponivel.
      */
     fit?: ('cover' | 'contain') | null;
   };
@@ -434,15 +434,15 @@ export interface ImageTextBlock {
    */
   imagePresentation: {
     /**
-     * Controla a largura da imagem dentro do espaço do bloco. Em celulares, a imagem sempre ocupa a largura total.
+     * Controla a largura da imagem dentro do espaco do bloco. Em celulares, a imagem sempre ocupa a largura total.
      */
     size: 'small' | 'medium' | 'large' | 'full';
     /**
-     * Original preserva as proporções do arquivo enviado. As demais opções recortam a imagem para a proporção escolhida.
+     * Original preserva as proporcoes do arquivo enviado. As demais opcoes recortam a imagem para a proporcao escolhida.
      */
     aspectRatio: 'original' | '1:1' | '4:3' | '16:9' | 'portrait';
     /**
-     * Preencher recorta a imagem para cobrir o espaço; Conter mostra a imagem inteira, podendo sobrar espaço vazio. Usa o ponto focal definido na Mídia quando disponível.
+     * Preencher recorta a imagem para cobrir o espaco; Conter mostra a imagem inteira, podendo sobrar espaco vazio. Usa o ponto focal definido na Midia quando disponivel.
      */
     fit?: ('cover' | 'contain') | null;
   };
@@ -528,9 +528,23 @@ export interface CardsBlock {
   items: {
     mediaSource?: ('none' | 'icon' | 'image') | null;
     mediaPosition?: ('top' | 'left' | 'right') | null;
-    imageSize?: ('small' | 'medium' | 'large') | null;
-    imageAspect?: ('original' | 'square' | '4:3' | '16:9') | null;
-    fit?: ('cover' | 'contain') | null;
+    /**
+     * Define como esta imagem aparece neste card sem alterar o arquivo original na Midia.
+     */
+    imagePresentation?: {
+      /**
+       * Controla a largura da imagem dentro do espaco do bloco. Em celulares, a imagem sempre ocupa a largura total.
+       */
+      size: 'small' | 'medium' | 'large';
+      /**
+       * Original preserva as proporcoes do arquivo enviado. As demais opcoes recortam a imagem para a proporcao escolhida.
+       */
+      aspectRatio: 'original' | '1:1' | '4:3' | '16:9';
+      /**
+       * Preencher recorta a imagem para cobrir o espaco; Conter mostra a imagem inteira, podendo sobrar espaco vazio. Usa o ponto focal definido na Midia quando disponivel.
+       */
+      fit?: ('cover' | 'contain') | null;
+    };
     /**
      * Texto principal do card. Pode quebrar linha sem afetar os demais itens.
      */
@@ -1235,9 +1249,13 @@ export interface CardsBlockSelect<T extends boolean = true> {
     | {
         mediaSource?: T;
         mediaPosition?: T;
-        imageSize?: T;
-        imageAspect?: T;
-        fit?: T;
+        imagePresentation?:
+          | T
+          | {
+              size?: T;
+              aspectRatio?: T;
+              fit?: T;
+            };
         title?: T;
         description?: T;
         icon?: T;

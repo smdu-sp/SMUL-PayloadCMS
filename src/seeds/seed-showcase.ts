@@ -80,6 +80,11 @@ export const seedShowcaseLayout = (
       "Mídia e texto organiza uma imagem, um título, conteúdo formatado e uma ação opcional. A variante escolhida posiciona a imagem à esquerda em telas maiores.",
     ),
     image: mediaId,
+    imagePresentation: {
+      size: "medium",
+      aspectRatio: "original",
+      fit: "cover",
+    },
     variant: "image-left",
     cta: internalLink("Voltar ao início do catálogo", seedPageId),
     appearance: {

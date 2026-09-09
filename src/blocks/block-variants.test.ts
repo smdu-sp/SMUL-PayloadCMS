@@ -16,6 +16,7 @@ import {
   normalizeCardsTone,
   normalizeCardsVariant,
 } from "./Cards/Component";
+import { CardsBlock } from "./Cards/config";
 import { normalizeFAQVariant } from "./FAQ/Component";
 import {
   normalizeBannerContentPosition,
@@ -56,20 +57,30 @@ describe("block variant fallbacks", () => {
     assert.equal(normalizeHeroVariant(undefined), "default");
   });
 
-  it("adds a safe presentation group to Hero and ImageText blocks without arbitrary numeric controls", () => {
+  it("adds safe presentation groups without arbitrary numeric controls", () => {
     const heroPresentation = HeroBlock.fields.find(
       (field) => "name" in field && field.name === "imagePresentation",
     );
     const imageTextPresentation = ImageTextBlock.fields.find(
       (field) => "name" in field && field.name === "imagePresentation",
     );
+    const cardsItems = CardsBlock.fields.find(
+      (field) => "name" in field && field.name === "items",
+    );
+    const cardsPresentation =
+      cardsItems && "fields" in cardsItems
+        ? cardsItems.fields.find(
+            (field) => "name" in field && field.name === "imagePresentation",
+          )
+        : undefined;
 
     assert.ok(heroPresentation && "type" in heroPresentation && heroPresentation.type === "group");
     assert.ok(
       imageTextPresentation && "type" in imageTextPresentation && imageTextPresentation.type === "group",
     );
+    assert.ok(cardsPresentation && "type" in cardsPresentation && cardsPresentation.type === "group");
 
-    for (const presentation of [heroPresentation, imageTextPresentation]) {
+    for (const presentation of [heroPresentation, imageTextPresentation, cardsPresentation]) {
       assert.ok(presentation && "fields" in presentation);
       const nestedTypes = presentation.fields
         .filter((field) => "type" in field)
@@ -77,6 +88,18 @@ describe("block variant fallbacks", () => {
       assert.ok(!nestedTypes.includes("number"));
       assert.ok(!nestedTypes.includes("text"));
     }
+
+    assert.ok(cardsPresentation && "fields" in cardsPresentation);
+    const cardRatioField = cardsPresentation.fields.find(
+      (field) => "name" in field && field.name === "aspectRatio",
+    );
+
+    assert.ok(cardRatioField && "options" in cardRatioField);
+    assert.ok(
+      cardRatioField.options.every(
+        (option) => typeof option !== "string" && option.value !== "square",
+      ),
+    );
   });
 
   it("keeps known CTA variants and maps legacy values without breaking rendering", () => {

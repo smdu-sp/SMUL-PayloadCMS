@@ -53,4 +53,16 @@ describe("image presentation helpers", () => {
       { objectPosition: "25% 80%" },
     );
   });
+
+  it("allows block-specific size classes while keeping shared ratio and fit presets", () => {
+    const className = getImagePresentationClassName(
+      { size: "small", aspectRatio: "1:1", fit: "cover" },
+      { sizeClassNames: { small: "w-28 max-w-full mx-auto" } },
+    );
+
+    assert.match(className, /w-28/);
+    assert.match(className, /aspect-square/);
+    assert.match(className, /object-cover/);
+    assert.doesNotMatch(className, /lg:max-w-xs/);
+  });
 });

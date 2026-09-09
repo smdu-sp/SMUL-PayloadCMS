@@ -10,6 +10,10 @@ export type ImagePresentation = {
   fit?: ImagePresentationFit | null;
 } | null | undefined;
 
+type ImagePresentationClassNameOptions = {
+  sizeClassNames?: Partial<Record<ImagePresentationSize, string>>;
+};
+
 const SIZE_CLASSNAMES: Record<ImagePresentationSize, string> = {
   small: "w-full lg:max-w-xs lg:mx-auto",
   medium: "w-full lg:max-w-md lg:mx-auto",
@@ -32,13 +36,18 @@ const FIT_CLASSNAMES: Record<ImagePresentationFit, string> = {
 
 export function getImagePresentationClassName(
   presentation: ImagePresentation,
+  options?: ImagePresentationClassNameOptions,
 ): string {
   const size = presentation?.size ?? "full";
   const aspectRatio = presentation?.aspectRatio ?? "16:9";
   const fit = aspectRatio === "original" ? null : presentation?.fit ?? "cover";
+  const sizeClassNames = {
+    ...SIZE_CLASSNAMES,
+    ...options?.sizeClassNames,
+  };
 
   return [
-    SIZE_CLASSNAMES[size],
+    sizeClassNames[size],
     ASPECT_CLASSNAMES[aspectRatio],
     fit ? FIT_CLASSNAMES[fit] : "",
   ]

@@ -1,21 +1,18 @@
 import type { CardsBlock as CardsBlockProps } from "../../payload-types";
 import { Card, Container, Heading, Section, Text } from "../../components/ui";
 import { classNames } from "../../components/ui/classNames";
+import type { ImagePresentation } from "../shared/image-presentation";
+import { getImagePresentationClassName } from "../shared/image-presentation";
 import { MediaImage } from "../shared/MediaImage";
 import { BlockLink } from "../shared/BlockLink";
 
 type CardsVariant = "default" | "modalities";
 type CardMediaSource = "icon" | "image" | "none";
 type CardMediaPosition = "left" | "right" | "top";
-type CardImageSize = "large" | "medium" | "small";
-type CardImageAspect = "16:9" | "4:3" | "original" | "square";
-type CardImageFit = "contain" | "cover";
 
 type CardsItem = CardsBlockProps["items"][number] & {
-  fit?: CardImageFit | string | null;
   image?: CardsBlockProps["items"][number]["icon"];
-  imageAspect?: CardImageAspect | string | null;
-  imageSize?: CardImageSize | string | null;
+  imagePresentation?: ImagePresentation;
   mediaPosition?: CardMediaPosition | string | null;
   mediaSource?: CardMediaSource | string | null;
 };
@@ -64,26 +61,6 @@ export function normalizeCardMediaPosition(
   return "top";
 }
 
-export function normalizeCardImageSize(
-  size: CardImageSize | string | null | undefined,
-): CardImageSize {
-  if (size === "small" || size === "large") return size;
-  return "medium";
-}
-
-export function normalizeCardImageAspect(
-  aspect: CardImageAspect | string | null | undefined,
-): CardImageAspect {
-  if (aspect === "square" || aspect === "4:3" || aspect === "16:9") return aspect;
-  return "original";
-}
-
-export function normalizeCardImageFit(
-  fit: CardImageFit | string | null | undefined,
-): CardImageFit {
-  return fit === "contain" ? "contain" : "cover";
-}
-
 const iconSizeClasses = {
   default: {
     modalities: "h-14 w-14",
@@ -95,23 +72,18 @@ const iconSizeClasses = {
   },
 } as const;
 
-const imageSizeClasses: Record<CardImageSize, string> = {
-  large: "w-full",
-  medium: "w-full",
-  small: "w-28",
-};
-
-const imageAspectClasses: Record<CardImageAspect, string> = {
-  "16:9": "aspect-video",
-  "4:3": "aspect-[4/3]",
-  original: "aspect-auto",
-  square: "aspect-square",
-};
-
-const imageFitClasses: Record<CardImageFit, string> = {
-  contain: "object-contain",
-  cover: "object-cover",
-};
+const cardImageSizeClasses = {
+  top: {
+    small: "w-28 max-w-full mx-auto",
+    medium: "w-3/4 max-w-full mx-auto",
+    large: "w-full",
+  },
+  side: {
+    small: "w-20 shrink-0",
+    medium: "w-28 shrink-0",
+    large: "w-32 shrink-0",
+  },
+} as const;
 
 function CardMedia({
   item,
@@ -144,17 +116,13 @@ function CardMedia({
     );
   }
 
-  const size = normalizeCardImageSize(item.imageSize);
-  const aspect = normalizeCardImageAspect(item.imageAspect);
-  const fit = normalizeCardImageFit(item.fit);
-
   return (
     <MediaImage
       className={classNames(
-        side ? "mt-1 shrink-0 sm:w-32" : "mb-5",
-        imageSizeClasses[size],
-        imageAspectClasses[aspect],
-        imageFitClasses[fit],
+        side ? "mt-1" : "mb-5",
+        getImagePresentationClassName(item.imagePresentation, {
+          sizeClassNames: side ? cardImageSizeClasses.side : cardImageSizeClasses.top,
+        }),
         "rounded-md border border-border bg-background",
       )}
       media={item.image}

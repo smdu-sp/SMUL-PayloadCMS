@@ -10,6 +10,7 @@ import {
   requiredText,
   requiredTextarea,
 } from "../../fields/editorial-validation";
+import { createImagePresentationFields } from "../../fields/image-presentation";
 import { createLinkFields } from "../../fields/link";
 import { createBlockAdmin } from "../shared/admin";
 
@@ -23,24 +24,6 @@ const mediaPositionOptions = [
   { label: "Acima do texto", value: "top" },
   { label: "A esquerda", value: "left" },
   { label: "A direita", value: "right" },
-];
-
-const imageSizeOptions = [
-  { label: "Pequena", value: "small" },
-  { label: "Media", value: "medium" },
-  { label: "Grande", value: "large" },
-];
-
-const imageAspectOptions = [
-  { label: "Original", value: "original" },
-  { label: "Quadrada", value: "square" },
-  { label: "4:3", value: "4:3" },
-  { label: "16:9", value: "16:9" },
-];
-
-const fitOptions = [
-  { label: "Cobrir", value: "cover" },
-  { label: "Conter", value: "contain" },
 ];
 
 export const CardsBlock: Block = {
@@ -136,46 +119,26 @@ export const CardsBlock: Block = {
           options: mediaPositionOptions,
         },
         {
-          name: "imageSize",
-          type: "select",
-          label: "Tamanho da imagem",
-          defaultValue: "medium",
-          validate: closedSelect(
-            ["small", "medium", "large"],
-            "Escolha um tamanho de imagem aprovado.",
-          ),
+          name: "imagePresentation",
+          type: "group",
+          label: "Apresentacao da imagem",
           admin: {
             condition: (_, siblingData) => siblingData?.mediaSource === "image",
+            description:
+              "Define como esta imagem aparece neste card sem alterar o arquivo original na Midia.",
           },
-          options: imageSizeOptions,
-        },
-        {
-          name: "imageAspect",
-          type: "select",
-          label: "Proporcao da imagem",
-          defaultValue: "original",
-          validate: closedSelect(
-            ["original", "square", "4:3", "16:9"],
-            "Escolha uma proporcao de imagem aprovada.",
-          ),
-          admin: {
-            condition: (_, siblingData) => siblingData?.mediaSource === "image",
-          },
-          options: imageAspectOptions,
-        },
-        {
-          name: "fit",
-          type: "select",
-          label: "Enquadramento da imagem",
-          defaultValue: "cover",
-          validate: closedSelect(
-            ["cover", "contain"],
-            "Escolha um enquadramento aprovado.",
-          ),
-          admin: {
-            condition: (_, siblingData) => siblingData?.mediaSource === "image",
-          },
-          options: fitOptions,
+          fields: createImagePresentationFields({
+            sizes: ["small", "medium", "large"],
+            aspectRatios: ["original", "1:1", "4:3", "16:9"],
+            defaultSize: "medium",
+            defaultAspectRatio: "original",
+            defaultFit: "cover",
+            dbNames: {
+              size: "sz",
+              aspectRatio: "asp",
+              fit: "fit",
+            },
+          }),
         },
         {
           name: "title",
