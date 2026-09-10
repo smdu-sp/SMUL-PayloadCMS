@@ -277,23 +277,6 @@ export interface HeroBlock {
    */
   image?: (number | null) | Media;
   /**
-   * Define como esta imagem é exibida neste bloco. O arquivo original na Mídia não é alterado.
-   */
-  imagePresentation?: {
-    /**
-     * Controla a largura da imagem dentro do espaco do bloco. Em celulares, a imagem sempre ocupa a largura total.
-     */
-    size: 'small' | 'medium' | 'large' | 'full';
-    /**
-     * Original preserva as proporcoes do arquivo enviado. As demais opcoes recortam a imagem para a proporcao escolhida.
-     */
-    aspectRatio: 'original' | '1:1' | '4:3' | '16:9' | 'portrait';
-    /**
-     * Preencher recorta a imagem para cobrir o espaco; Conter mostra a imagem inteira, podendo sobrar espaco vazio. Usa o ponto focal definido na Midia quando disponivel.
-     */
-    fit?: ('cover' | 'contain') | null;
-  };
-  /**
    * Link opcional exibido como botao principal da abertura.
    */
   cta?: {
@@ -430,23 +413,6 @@ export interface ImageTextBlock {
    */
   image: number | Media;
   /**
-   * Define como esta imagem é exibida neste bloco. O arquivo original na Mídia não é alterado.
-   */
-  imagePresentation: {
-    /**
-     * Controla a largura da imagem dentro do espaco do bloco. Em celulares, a imagem sempre ocupa a largura total.
-     */
-    size: 'small' | 'medium' | 'large' | 'full';
-    /**
-     * Original preserva as proporcoes do arquivo enviado. As demais opcoes recortam a imagem para a proporcao escolhida.
-     */
-    aspectRatio: 'original' | '1:1' | '4:3' | '16:9' | 'portrait';
-    /**
-     * Preencher recorta a imagem para cobrir o espaco; Conter mostra a imagem inteira, podendo sobrar espaco vazio. Usa o ponto focal definido na Midia quando disponivel.
-     */
-    fit?: ('cover' | 'contain') | null;
-  };
-  /**
    * Escolha o lado da imagem em telas grandes. Em dispositivos moveis, imagem e texto ficam empilhados.
    */
   variant: 'image-left' | 'image-right';
@@ -528,23 +494,9 @@ export interface CardsBlock {
   items: {
     mediaSource?: ('none' | 'icon' | 'image') | null;
     mediaPosition?: ('top' | 'left' | 'right') | null;
-    /**
-     * Define como esta imagem aparece neste card sem alterar o arquivo original na Midia.
-     */
-    imagePresentation?: {
-      /**
-       * Controla a largura da imagem dentro do espaco do bloco. Em celulares, a imagem sempre ocupa a largura total.
-       */
-      size: 'small' | 'medium' | 'large';
-      /**
-       * Original preserva as proporcoes do arquivo enviado. As demais opcoes recortam a imagem para a proporcao escolhida.
-       */
-      aspectRatio: 'original' | '1:1' | '4:3' | '16:9';
-      /**
-       * Preencher recorta a imagem para cobrir o espaco; Conter mostra a imagem inteira, podendo sobrar espaco vazio. Usa o ponto focal definido na Midia quando disponivel.
-       */
-      fit?: ('cover' | 'contain') | null;
-    };
+    imageSize?: ('small' | 'medium' | 'large') | null;
+    imageAspect?: ('original' | 'square' | '4:3' | '16:9') | null;
+    fit?: ('cover' | 'contain') | null;
     /**
      * Texto principal do card. Pode quebrar linha sem afetar os demais itens.
      */
@@ -1146,13 +1098,6 @@ export interface HeroBlockSelect<T extends boolean = true> {
   title?: T;
   description?: T;
   image?: T;
-  imagePresentation?:
-    | T
-    | {
-        size?: T;
-        aspectRatio?: T;
-        fit?: T;
-      };
   cta?:
     | T
     | {
@@ -1204,13 +1149,6 @@ export interface ImageTextBlockSelect<T extends boolean = true> {
   title?: T;
   content?: T;
   image?: T;
-  imagePresentation?:
-    | T
-    | {
-        size?: T;
-        aspectRatio?: T;
-        fit?: T;
-      };
   variant?: T;
   cta?:
     | T
@@ -1249,13 +1187,9 @@ export interface CardsBlockSelect<T extends boolean = true> {
     | {
         mediaSource?: T;
         mediaPosition?: T;
-        imagePresentation?:
-          | T
-          | {
-              size?: T;
-              aspectRatio?: T;
-              fit?: T;
-            };
+        imageSize?: T;
+        imageAspect?: T;
+        fit?: T;
         title?: T;
         description?: T;
         icon?: T;
