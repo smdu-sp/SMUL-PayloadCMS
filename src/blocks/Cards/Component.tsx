@@ -2,7 +2,10 @@ import type { CardsBlock as CardsBlockProps } from "../../payload-types";
 import { Card, Container, Heading, Section, Text } from "../../components/ui";
 import { classNames } from "../../components/ui/classNames";
 import type { ImagePresentation } from "../shared/image-presentation";
-import { getImagePresentationClassName } from "../shared/image-presentation";
+import {
+  getFocalPointStyle,
+  getImagePresentationClassName,
+} from "../shared/image-presentation";
 import { MediaImage } from "../shared/MediaImage";
 import { BlockLink } from "../shared/BlockLink";
 
@@ -116,16 +119,26 @@ function CardMedia({
     );
   }
 
+  const presentation: NonNullable<ImagePresentation> = {
+    size: item.imagePresentation?.size ?? "medium",
+    aspectRatio: item.imagePresentation?.aspectRatio ?? "original",
+    fit: item.imagePresentation?.fit ?? "cover",
+  };
+
   return (
     <MediaImage
       className={classNames(
         side ? "mt-1" : "mb-5",
-        getImagePresentationClassName(item.imagePresentation, {
+        getImagePresentationClassName(presentation, {
           sizeClassNames: side ? cardImageSizeClasses.side : cardImageSizeClasses.top,
         }),
         "rounded-md border border-border bg-background",
       )}
       media={item.image}
+      style={getFocalPointStyle(
+        typeof item.image === "object" ? item.image : null,
+        presentation,
+      )}
       sizes={side ? "128px" : "(min-width: 1024px) 33vw, 100vw"}
     />
   );
