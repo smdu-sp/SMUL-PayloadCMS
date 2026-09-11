@@ -1,7 +1,7 @@
 import type { IconGridBlock as IconGridBlockProps } from "../../payload-types";
 import { Card, Container, Heading, Section, Text } from "../../components/ui";
+import { BlockIcon } from "../shared/BlockIcon";
 import { BlockLink } from "../shared/BlockLink";
-import { MediaImage } from "../shared/MediaImage";
 
 type IconGridVariant = "compact" | "default";
 
@@ -12,6 +12,12 @@ type IconGridAppearance = {
 
 type IconGridBlockWithAppearanceProps = IconGridBlockProps & {
   appearance?: IconGridAppearance | null;
+};
+
+type IconGridItem = IconGridBlockProps["items"][number] & {
+  iconSource?: "custom" | "none" | "standard" | string | null;
+  standardIcon?: string | null;
+};
 };
 
 export function normalizeIconGridVariant(
@@ -64,29 +70,35 @@ export function IconGridBlock({
         <ul
           className={`mt-8 grid gap-4 ${compact ? "sm:grid-cols-2 lg:grid-cols-4" : "sm:grid-cols-2 lg:grid-cols-3"}`}
         >
-          {items.map((item) => (
-            <li key={item.id}>
-              <Card fullHeight padding={compact ? "sm" : "md"}>
-                <div className="flex gap-4">
-                  <MediaImage
-                    className={`${compact ? "h-9 w-9" : "h-11 w-11"} shrink-0 object-contain`}
-                    media={item.icon}
-                    sizes={compact ? "36px" : "44px"}
-                  />
-                  <div className="min-w-0">
-                    <Text weight="semibold">
-                      <span className="break-words">{item.description}</span>
-                    </Text>
-                    {item.link?.label ? (
-                      <div className="mt-4">
-                        <BlockLink link={item.link} size="sm" />
-                      </div>
-                    ) : null}
+          {items.map((rawItem) => {
+            const item = rawItem as IconGridItem;
+            return (
+              <li key={item.id}>
+                <Card fullHeight padding={compact ? "sm" : "md"}>
+                  <div className="flex gap-4">
+                    <BlockIcon
+                      className={`${compact ? "h-9 w-9" : "h-11 w-11"} shrink-0 object-contain`}
+                      icon={item.icon}
+                      iconSource={item.iconSource}
+                      sizes={compact ? "36px" : "44px"}
+                      standardIcon={item.standardIcon}
+                      tone="primary"
+                    />
+                    <div className="min-w-0">
+                      <Text weight="semibold">
+                        <span className="break-words">{item.description}</span>
+                      </Text>
+                      {item.link?.label ? (
+                        <div className="mt-4">
+                          <BlockLink link={item.link} size="sm" />
+                        </div>
+                      ) : null}
+                    </div>
                   </div>
-                </div>
-              </Card>
-            </li>
-          ))}
+                </Card>
+              </li>
+            );
+          })}
         </ul>
       </Container>
     </Section>

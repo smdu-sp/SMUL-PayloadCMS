@@ -83,7 +83,7 @@ export const adminHelpSections: AdminHelpSection[] = [
     body: [
       "Desativar remove uma Page do acesso publico sem apagar seu historico.",
       "Use Inativo quando a pagina nao deve ser encontrada por visitantes, mesmo que esteja publicada.",
-      "Somente Admin altera o status de conteudo entre Ativo e Inativo.",
+      "Editor e Admin podem gerenciar conteudo, mas somente Admin altera o status de conteudo entre Ativo e Inativo.",
     ],
   },
   {

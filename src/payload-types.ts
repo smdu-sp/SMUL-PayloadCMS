@@ -554,7 +554,28 @@ export interface CardsBlock {
      */
     description: string;
     /**
-     * Opcional para conteudo antigo; obrigatorio quando Tipo de midia for Icone.
+     * Escolha um icone padrao do catalogo ou uma midia personalizada.
+     */
+    iconSource?: ('standard' | 'custom') | null;
+    /**
+     * Icone visual do catalogo central aprovado pelo Design System.
+     */
+    standardIcon?:
+      | (
+          | 'info'
+          | 'warning'
+          | 'document'
+          | 'building'
+          | 'location'
+          | 'phone'
+          | 'email'
+          | 'check'
+          | 'arrow'
+          | 'external-link'
+        )
+      | null;
+    /**
+     * Opcional para conteudo antigo; obrigatorio quando Origem do icone for Midia personalizada.
      */
     icon?: (number | null) | Media;
     /**
@@ -686,7 +707,28 @@ export interface IconGridBlock {
    */
   items: {
     /**
-     * Opcional. Use imagens simples e com texto alternativo adequado.
+     * Escolha ícone padrão do catálogo visual ou mídia personalizada da biblioteca.
+     */
+    iconSource?: ('none' | 'standard' | 'custom') | null;
+    /**
+     * Selecione um ícone do catálogo central aprovado pelo Design System.
+     */
+    standardIcon?:
+      | (
+          | 'info'
+          | 'warning'
+          | 'document'
+          | 'building'
+          | 'location'
+          | 'phone'
+          | 'email'
+          | 'check'
+          | 'arrow'
+          | 'external-link'
+        )
+      | null;
+    /**
+     * Use apenas quando o catálogo padrão não atender à necessidade editorial.
      */
     icon?: (number | null) | Media;
     /**
@@ -1258,6 +1300,8 @@ export interface CardsBlockSelect<T extends boolean = true> {
             };
         title?: T;
         description?: T;
+        iconSource?: T;
+        standardIcon?: T;
         icon?: T;
         image?: T;
         link?:
@@ -1317,6 +1361,8 @@ export interface IconGridBlockSelect<T extends boolean = true> {
   items?:
     | T
     | {
+        iconSource?: T;
+        standardIcon?: T;
         icon?: T;
         description?: T;
         link?:

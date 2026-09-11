@@ -20,7 +20,12 @@ import { Footer } from "./globals/Footer";
 import { Header } from "./globals/Header";
 import { SiteSettings } from "./globals/SiteSettings";
 import { createSocialLinkFields } from "./globals/shared/social-link";
-import { adminHelpNavLink, adminHelpView } from "./payload.config";
+import {
+  adminHelpNavLink,
+  adminHelpView,
+  adminIconsNavLink,
+  adminIconsView,
+} from "./payload.config";
 
 type FieldLike = Field & {
   admin?: {
@@ -53,6 +58,18 @@ describe("CMS editing UX", () => {
     assert.equal(
       adminHelpView.Component,
       "/components/admin/AdminHelpPage#AdminHelpPage",
+    );
+  });
+
+  it("exposes standard icon system from the Admin navigation (SPEC-035)", () => {
+    assert.equal(
+      adminIconsNavLink,
+      "/components/admin/AdminIconsNavLink#AdminIconsNavLink",
+    );
+    assert.equal(adminIconsView.path, "/icones");
+    assert.equal(
+      adminIconsView.Component,
+      "/components/admin/AdminIconsPage#AdminIconsPage",
     );
   });
 

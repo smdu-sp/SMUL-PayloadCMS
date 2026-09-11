@@ -7,6 +7,7 @@ import {
 } from "../../fields/block-appearance";
 
 import { closedSelect, requiredText } from "../../fields/editorial-validation";
+import { createIconFields } from "../../fields/icon";
 import { createLinkFields } from "../../fields/link";
 import { createBlockAdmin } from "../shared/admin";
 
@@ -79,16 +80,7 @@ export const IconGridBlock: Block = {
         initCollapsed: true,
       },
       fields: [
-        {
-          name: "icon",
-          type: "upload",
-          relationTo: "media",
-          label: "Icone",
-          admin: {
-            description:
-              "Opcional. Use imagens simples e com texto alternativo adequado.",
-          },
-        },
+        ...createIconFields({ allowNone: true, defaultSource: "standard" }),
         {
           name: "description",
           type: "text",

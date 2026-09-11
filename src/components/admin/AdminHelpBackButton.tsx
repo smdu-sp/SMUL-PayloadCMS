@@ -1,18 +1,11 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export function AdminHelpBackButton() {
-  const router = useRouter();
-
   return (
-    <button
-      aria-label="Voltar"
-      className="admin-help__back-button"
-      onClick={() => router.back()}
-      type="button"
-    >
+    <Link aria-label="Voltar" className="admin-help__back-button" href="/admin" rel="noopener noreferrer" target="_self">
       <span aria-hidden="true">&larr;</span>
-    </button>
+    </Link>
   );
 }

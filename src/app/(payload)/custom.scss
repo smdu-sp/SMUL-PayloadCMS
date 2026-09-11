@@ -1,9 +1,12 @@
-
 .admin-help-nav-link {
   color: var(--theme-text);
   display: block;
+  font-size: 14px;
   padding: 8px var(--base);
   text-decoration: none;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
 }
 
 .admin-help-nav-link:hover,
@@ -46,6 +49,7 @@
   justify-content: center;
   line-height: 1;
   padding: 0;
+  text-decoration: none;
   width: 36px;
 }
 
@@ -98,7 +102,7 @@
 
 .admin-help__section {
   border-top: 1px solid var(--theme-elevation-150);
-  padding-top: 20px;
+  padding: 20px 0 20px 0;
 }
 
 .admin-help__section h2 {
@@ -109,6 +113,7 @@
   display: grid;
   gap: 16px;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  margin-top: 16px;
 }
 
 .admin-help__block {
@@ -133,4 +138,168 @@
 
 .admin-help__block dd {
   margin: 4px 0 0;
+}
+
+/* Admin Icons Page Styling — SPEC-035 */
+.admin-icons__header-row {
+  align-items: flex-start;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: space-between;
+}
+
+.admin-icons__btn-secondary {
+  align-items: center;
+  background: var(--theme-elevation-100);
+  border: 1px solid var(--theme-elevation-200);
+  border-radius: 6px;
+  color: var(--theme-text);
+  display: inline-flex;
+  font-size: 13px;
+  font-weight: 500;
+  gap: 6px;
+  padding: 8px 14px;
+  text-decoration: none;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.admin-icons__btn-secondary:hover,
+.admin-icons__btn-secondary:focus-visible {
+  background: var(--theme-elevation-150);
+  border-color: #007a73;
+  color: #007a73;
+}
+
+.admin-icons__section-intro {
+  color: var(--theme-elevation-600);
+  font-size: 14px;
+  margin: 8px 0 12px 0;
+}
+
+.admin-icons__grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+
+.admin-icons__card {
+  align-items: flex-start;
+  background: var(--theme-elevation-50);
+  border: 1px solid var(--theme-elevation-150);
+  border-radius: 8px;
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.admin-icons__card:hover {
+  border-color: #007a73;
+  box-shadow: 0 4px 12px rgba(0, 122, 115, 0.08);
+}
+
+.admin-icons__icon-wrapper {
+  align-items: center;
+  background: var(--theme-elevation-100);
+  border: 1px solid var(--theme-elevation-200);
+  border-radius: 8px;
+  color: #007a73;
+  display: flex;
+  flex-shrink: 0;
+  height: 52px;
+  justify-content: center;
+  width: 52px;
+}
+
+.admin-icons__content {
+  flex: 1;
+  min-width: 0;
+}
+
+.admin-icons__card-header {
+  align-items: baseline;
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.admin-icons__name {
+  color: var(--theme-text);
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.admin-icons__code {
+  background: var(--theme-elevation-150);
+  border-radius: 4px;
+  color: var(--theme-elevation-800);
+  font-family: monospace;
+  font-size: 12px;
+  padding: 2px 6px;
+}
+
+.admin-icons__purpose {
+  color: var(--theme-elevation-700);
+  font-size: 13px;
+  line-height: 1.4;
+  margin: 0 0 8px;
+}
+
+.admin-icons__example {
+  color: var(--theme-elevation-500);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.admin-icons__example-label {
+  color: var(--theme-elevation-700);
+  font-weight: 600;
+}
+
+.admin-icons__tokens-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+}
+
+.admin-icons__token-card {
+  align-items: center;
+  background: var(--theme-elevation-50);
+  border: 1px solid var(--theme-elevation-150);
+  border-radius: 6px;
+  display: flex;
+  gap: 14px;
+  padding: 12px 14px;
+}
+
+.admin-icons__token-icon {
+  align-items: center;
+  display: flex;
+  flex-shrink: 0;
+  justify-content: center;
+  min-width: 52px;
+  width: 52px;
+}
+
+.admin-icons__token-info {
+  display: flex;
+  flex-direction: column;
+  font-size: 13px;
+  gap: 2px;
+}
+
+.admin-icons__token-info strong {
+  color: var(--theme-text);
+  font-weight: 600;
+}
+
+.admin-icons__token-info span {
+  color: var(--theme-elevation-600);
+  font-size: 12px;
 }
