@@ -1,5 +1,9 @@
 import type { Block, UploadFieldSingleValidation } from "payload";
 import {
+  STANDARD_ICONS,
+  STANDARD_ICON_OPTIONS,
+} from "../../domain/icons";
+import {
   closedSelect,
   requiredText,
   requiredTextarea,
@@ -186,22 +190,67 @@ export const CardsBlock: Block = {
           },
         },
         {
+          name: "iconSource",
+          type: "select",
+          label: "Origem do icone",
+          defaultValue: "standard",
+          validate: closedSelect(
+            ["standard", "custom"],
+            "Escolha uma origem de icone aprovada.",
+          ),
+          admin: {
+            condition: (_, siblingData) => siblingData?.mediaSource === "icon",
+            description: "Escolha um icone padrao do catalogo ou uma midia personalizada.",
+          },
+          options: [
+            { label: "Icone padrao", value: "standard" },
+            { label: "Midia personalizada", value: "custom" },
+          ],
+        },
+        {
+          name: "standardIcon",
+          type: "select",
+          label: "Icone padrao",
+          defaultValue: "info",
+          validate: closedSelect(
+            STANDARD_ICONS,
+            "Escolha um icone padrao aprovado.",
+          ),
+          admin: {
+            condition: (_, siblingData) =>
+              siblingData?.mediaSource === "icon" &&
+              (!siblingData?.iconSource || siblingData?.iconSource === "standard"),
+            description: "Icone visual do catalogo central aprovado pelo Design System.",
+          },
+          options: STANDARD_ICON_OPTIONS,
+        },
+        {
           name: "icon",
           type: "upload",
           relationTo: "media",
-          label: "Icone",
+          label: "Icone personalizado",
           admin: {
             condition: (_, siblingData) =>
-              !siblingData?.mediaSource || siblingData?.mediaSource === "icon",
+              (!siblingData?.mediaSource || siblingData?.mediaSource === "icon") &&
+              siblingData?.iconSource === "custom",
             description:
-              "Opcional para conteudo antigo; obrigatorio quando Tipo de midia for Icone.",
+              "Opcional para conteudo antigo; obrigatorio quando Origem do icone for Midia personalizada.",
           },
           validate: ((value, { siblingData }) => {
-            const data = siblingData as { image?: unknown; mediaSource?: string };
+            const data = siblingData as {
+              iconSource?: string;
+              image?: unknown;
+              mediaSource?: string;
+              standardIcon?: string;
+            };
             if (data.mediaSource === "image" && value) {
               return "Use icone ou imagem, nao ambos no mesmo card.";
             }
-            if (data.mediaSource === "icon" && !value) {
+            if (
+              data.mediaSource === "icon" &&
+              (data.iconSource === "custom" || (!data.iconSource && !data.standardIcon)) &&
+              !value
+            ) {
               return "Selecione um icone para este card.";
             }
             return true;

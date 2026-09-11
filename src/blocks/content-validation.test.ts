@@ -135,4 +135,62 @@ describe("SPEC-026 content validation", () => {
       "Use icone ou imagem, nao ambos no mesmo card.",
     );
   });
+
+  it("validates SPEC-035 standard icon system rules for blocks", async () => {
+    // 1. Rejects arbitrary values in standardIcon
+    const cardsItems = fieldByName(CardsBlock.fields, "items");
+    assert.ok("fields" in cardsItems);
+    const cardStandardIcon = fieldByName(cardsItems.fields, "standardIcon");
+    assert.ok("validate" in cardStandardIcon && cardStandardIcon.validate);
+
+    assert.equal(
+      await cardStandardIcon.validate("location", validationArgs()),
+      true,
+    );
+    assert.equal(
+      await cardStandardIcon.validate("<svg><path/></svg>", validationArgs()),
+      "Escolha um icone padrao aprovado.",
+    );
+    assert.equal(
+      await cardStandardIcon.validate("custom-unapproved", validationArgs()),
+      "Escolha um icone padrao aprovado.",
+    );
+
+    // 2. IconGridBlock supports standard icons and controlled source
+    const gridItems = fieldByName(IconGridBlock.fields, "items");
+    assert.ok("fields" in gridItems);
+    const gridIconSource = fieldByName(gridItems.fields, "iconSource");
+    const gridStandardIcon = fieldByName(gridItems.fields, "standardIcon");
+    const gridCustomIcon = fieldByName(gridItems.fields, "icon");
+
+    assert.ok("validate" in gridIconSource && gridIconSource.validate);
+    assert.ok("validate" in gridStandardIcon && gridStandardIcon.validate);
+    assert.ok("validate" in gridCustomIcon);
+
+    assert.equal(await gridIconSource.validate("standard", validationArgs()), true);
+    assert.equal(await gridIconSource.validate("custom", validationArgs()), true);
+    assert.equal(await gridIconSource.validate("none", validationArgs()), true);
+    assert.equal(
+      await gridIconSource.validate("arbitrary", validationArgs()),
+      "Escolha uma origem de ícone aprovada.",
+    );
+
+    assert.equal(
+      await gridStandardIcon.validate("building", validationArgs({ iconSource: "standard" })),
+      true,
+    );
+    assert.equal(
+      await gridStandardIcon.validate("<svg>", validationArgs({ iconSource: "standard" })),
+      "Escolha um ícone padrão aprovado.",
+    );
+
+    // 3. Ensure no block exposes arbitrary text/textarea for raw SVG
+    for (const block of blocks) {
+      for (const field of block.fields) {
+        if ("name" in field) {
+          assert.notEqual(field.name, "svg");
+        }
+      }
+    }
+  });
 });

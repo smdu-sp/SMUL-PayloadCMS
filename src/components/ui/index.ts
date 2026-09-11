@@ -10,3 +10,5 @@ export { Section } from "./Section";
 export type { SectionSpacing, SectionTone } from "./Section";
 export { Text } from "./Text";
 export type { TextTone, TextVariant, TextWeight } from "./Text";
+export { Icon } from "./Icon";
+export type { IconProps, IconSize, IconTone } from "./Icon";

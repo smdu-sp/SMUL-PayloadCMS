@@ -27,14 +27,23 @@ export const adminHelpView = {
 export const adminHelpNavLink =
   "/components/admin/AdminHelpNavLink#AdminHelpNavLink";
 
+export const adminIconsView = {
+  Component: "/components/admin/AdminIconsPage#AdminIconsPage",
+  path: "/icones",
+} as const;
+
+export const adminIconsNavLink =
+  "/components/admin/AdminIconsNavLink#AdminIconsNavLink";
+
 export default buildConfig({
   editor: lexicalEditor(),
   admin: {
     user: Users.slug,
     components: {
-      afterNavLinks: [adminHelpNavLink],
+      afterNavLinks: [adminHelpNavLink, adminIconsNavLink],
       views: {
         ajuda: adminHelpView,
+        icones: adminIconsView,
       },
     },
     importMap: {
