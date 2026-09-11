@@ -6,18 +6,21 @@ import {
   getFocalPointStyle,
   getImagePresentationClassName,
 } from "../shared/image-presentation";
-import { MediaImage } from "../shared/MediaImage";
+import { BlockIcon } from "../shared/BlockIcon";
 import { BlockLink } from "../shared/BlockLink";
+import { MediaImage } from "../shared/MediaImage";
 
 type CardsVariant = "default" | "modalities";
 type CardMediaSource = "icon" | "image" | "none";
 type CardMediaPosition = "left" | "right" | "top";
 
 type CardsItem = CardsBlockProps["items"][number] & {
+  iconSource?: "custom" | "standard" | string | null;
   image?: CardsBlockProps["items"][number]["icon"];
   imagePresentation?: ImagePresentation;
   mediaPosition?: CardMediaPosition | string | null;
   mediaSource?: CardMediaSource | string | null;
+  standardIcon?: string | null;
 };
 
 type CardsAppearance = {
@@ -53,7 +56,8 @@ export function normalizeCardsSpacing(
 
 export function normalizeCardMediaSource(item: CardsItem): CardMediaSource {
   if (item.mediaSource === "image" && item.image) return "image";
-  if ((item.mediaSource === "icon" || !item.mediaSource) && item.icon) return "icon";
+  if (item.mediaSource === "icon") return "icon";
+  if (!item.mediaSource && (item.icon || item.standardIcon)) return "icon";
   return "none";
 }
 
@@ -105,7 +109,7 @@ function CardMedia({
 
   if (source === "icon") {
     return (
-      <MediaImage
+      <BlockIcon
         className={classNames(
           side
             ? iconSizeClasses.side[modalities ? "modalities" : "standard"]
@@ -113,8 +117,11 @@ function CardMedia({
           side ? "mt-1" : "mb-5",
           "shrink-0 object-contain",
         )}
-        media={item.icon}
+        icon={item.icon}
+        iconSource={item.iconSource}
         sizes="56px"
+        standardIcon={item.standardIcon}
+        tone="primary"
       />
     );
   }

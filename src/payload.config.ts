@@ -34,15 +34,24 @@ export const adminHelpNavLink =
 export const ldapLoginFormComponent =
   "/components/admin/LdapLoginForm#LdapLoginForm";
 
+export const adminIconsView = {
+  Component: "/components/admin/AdminIconsPage#AdminIconsPage",
+  path: "/icones",
+} as const;
+
+export const adminIconsNavLink =
+  "/components/admin/AdminIconsNavLink#AdminIconsNavLink";
+
 export default buildConfig({
   editor: lexicalEditor(),
   admin: {
     user: Users.slug,
     components: {
-      afterNavLinks: [adminHelpNavLink],
+      afterNavLinks: [adminHelpNavLink, adminIconsNavLink],
       beforeLogin: [ldapLoginFormComponent],
       views: {
         ajuda: adminHelpView,
+        icones: adminIconsView,
       },
     },
     importMap: {
