@@ -1,9 +1,6 @@
 import type { CardsBlock as CardsBlockProps } from "../../payload-types";
 import { Card, Container, Heading, Section, Text } from "../../components/ui";
 import { classNames } from "../../components/ui/classNames";
-import type { CardsBlock as CardsBlockProps } from "../../payload-types";
-import { Card, Container, Heading, Section, Text } from "../../components/ui";
-import { classNames } from "../../components/ui/classNames";
 import type { ImagePresentation } from "../shared/image-presentation";
 import {
   getFocalPointStyle,
@@ -12,23 +9,13 @@ import {
 import { BlockIcon } from "../shared/BlockIcon";
 import { BlockLink } from "../shared/BlockLink";
 import { MediaImage } from "../shared/MediaImage";
-import { BlockLink } from "../shared/BlockLink";
-import { MediaImage } from "../shared/MediaImage";
 
 type CardsVariant = "default" | "modalities";
 type CardMediaSource = "icon" | "image" | "none";
 type CardMediaPosition = "left" | "right" | "top";
 
 type CardsItem = CardsBlockProps["items"][number] & {
-type CardMediaPosition = "left" | "right" | "top";
-
-type CardsItem = CardsBlockProps["items"][number] & {
-  fit?: CardImageFit | string | null;
   iconSource?: "custom" | "standard" | string | null;
-  image?: CardsBlockProps["items"][number]["icon"];
-  imagePresentation?: ImagePresentation;
-  mediaPosition?: CardMediaPosition | string | null;
-};
   image?: CardsBlockProps["items"][number]["icon"];
   imagePresentation?: ImagePresentation;
   mediaPosition?: CardMediaPosition | string | null;

@@ -18,7 +18,6 @@ type IconGridItem = IconGridBlockProps["items"][number] & {
   iconSource?: "custom" | "none" | "standard" | string | null;
   standardIcon?: string | null;
 };
-};
 
 export function normalizeIconGridVariant(
   variant: IconGridBlockProps["variant"] | string | null | undefined,

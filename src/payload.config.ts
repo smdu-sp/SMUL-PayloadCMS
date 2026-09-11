@@ -31,9 +31,6 @@ export const adminHelpView = {
 export const adminHelpNavLink =
   "/components/admin/AdminHelpNavLink#AdminHelpNavLink";
 
-export const adminHelpNavLink =
-  "/components/admin/AdminHelpNavLink#AdminHelpNavLink";
-
 export const ldapLoginFormComponent =
   "/components/admin/LdapLoginForm#LdapLoginForm";
 
@@ -52,9 +49,6 @@ export default buildConfig({
     components: {
       afterNavLinks: [adminHelpNavLink, adminIconsNavLink],
       beforeLogin: [ldapLoginFormComponent],
-      views: {
-        ajuda: adminHelpView,
-        icones: adminIconsView,
       views: {
         ajuda: adminHelpView,
         icones: adminIconsView,
