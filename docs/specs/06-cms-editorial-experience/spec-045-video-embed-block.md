@@ -1,7 +1,7 @@
 ---
 spec: SPEC-045
 title: Video Embed Block
-status: planned
+status: implemented
 source: CMS-NOVO-CICLO-SPECS-042-050.md
 ---
 

@@ -212,6 +212,7 @@ export interface Page {
         | ImageBlock
         | GalleryBlock
         | CarouselBlock
+        | VideoBlock
         | ImageTextBlock
         | CardsBlock
         | CTABlock
@@ -535,6 +536,32 @@ export interface CarouselBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'carousel';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VideoBlock".
+ */
+export interface VideoBlock {
+  /**
+   * Cole apenas a URL publica do YouTube ou Vimeo. Nao cole iframe, embed code ou HTML.
+   */
+  url: string;
+  /**
+   * Opcional, mas recomendado. Usado como titulo acessivel do player.
+   */
+  title?: string | null;
+  /**
+   * Opcional. Texto exibido abaixo do video para contextualizar o conteudo.
+   */
+  caption?: string | null;
+  /**
+   * Preenchido automaticamente a partir da URL. O frontend valida novamente antes de renderizar.
+   */
+  provider: 'youtube' | 'vimeo';
+  aspectRatio: '16:9' | '4:3' | '1:1';
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'videoBlock';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1294,6 +1321,7 @@ export interface PagesSelect<T extends boolean = true> {
         imageBlock?: T | ImageBlockSelect<T>;
         gallery?: T | GalleryBlockSelect<T>;
         carousel?: T | CarouselBlockSelect<T>;
+        videoBlock?: T | VideoBlockSelect<T>;
         imageText?: T | ImageTextBlockSelect<T>;
         cards?: T | CardsBlockSelect<T>;
         cta?: T | CTABlockSelect<T>;
@@ -1453,6 +1481,19 @@ export interface CarouselBlockSelect<T extends boolean = true> {
     | {
         autoplay?: T;
       };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VideoBlock_select".
+ */
+export interface VideoBlockSelect<T extends boolean = true> {
+  url?: T;
+  title?: T;
+  caption?: T;
+  provider?: T;
+  aspectRatio?: T;
   id?: T;
   blockName?: T;
 }

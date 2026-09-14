@@ -12,6 +12,7 @@ import { IconGridBlock } from "../blocks/IconGrid/config.ts";
 import { ImageBlock } from "../blocks/ImageBlock/config.ts";
 import { ImageTextBlock } from "../blocks/ImageText/config.ts";
 import { RichTextBlock } from "../blocks/RichText/config.ts";
+import { VideoBlock } from "../blocks/VideoBlock/config.ts";
 import {
   editorOrAdmin,
   pageHardDeleteAdminOnly,
@@ -146,6 +147,7 @@ export const Pages: CollectionConfig = {
         ImageBlock,
         GalleryBlock,
         CarouselBlock,
+        VideoBlock,
         ImageTextBlock,
         CardsBlock,
         CTABlock,

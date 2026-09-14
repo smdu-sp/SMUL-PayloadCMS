@@ -12,6 +12,7 @@ import { IconGridBlock } from "../../blocks/IconGrid/Component";
 import { ImageBlock } from "../../blocks/ImageBlock/Component";
 import { ImageTextBlock } from "../../blocks/ImageText/Component";
 import { RichTextBlock } from "../../blocks/RichText/Component";
+import { VideoBlock } from "../../blocks/VideoBlock/Component";
 
 type PageBlock = NonNullable<Page["layout"]>[number];
 type RenderablePageBlock =
@@ -19,7 +20,8 @@ type RenderablePageBlock =
   | Parameters<typeof CarouselBlock>[0]
   | Parameters<typeof GalleryBlock>[0]
   | Parameters<typeof ImageBlock>[0]
-  | Parameters<typeof FullWidthImageBannerBlock>[0];
+  | Parameters<typeof FullWidthImageBannerBlock>[0]
+  | Parameters<typeof VideoBlock>[0];
 
 export function RenderBlocks({ blocks }: { blocks?: Page["layout"] | null }) {
   if (!blocks?.length) return null;
@@ -54,6 +56,8 @@ export function RenderBlocks({ blocks }: { blocks?: Page["layout"] | null }) {
         return <ActionBannersBlock {...block} key={key} />;
       case "fullWidthImageBanner":
         return <FullWidthImageBannerBlock {...block} key={key} />;
+      case "videoBlock":
+        return <VideoBlock {...block} key={key} />;
       default:
         return null;
     }
