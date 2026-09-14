@@ -7,8 +7,10 @@ import { CardsBlock } from "./blocks/Cards/config";
 import { CTABlock } from "./blocks/CTA/config";
 import { FAQBlock } from "./blocks/FAQ/config";
 import { FullWidthImageBannerBlock } from "./blocks/FullWidthImageBanner/config";
+import { GalleryBlock } from "./blocks/Gallery/config";
 import { HeroBlock } from "./blocks/Hero/config";
 import { IconGridBlock } from "./blocks/IconGrid/config";
+import { ImageBlock } from "./blocks/ImageBlock/config";
 import { ImageTextBlock } from "./blocks/ImageText/config";
 import { RichTextBlock } from "./blocks/RichText/config";
 import { AuditLogs } from "./collections/AuditLogs";
@@ -224,6 +226,8 @@ describe("SPEC-029 CMS foundation validation", () => {
     const configuredBlocks = [
       HeroBlock,
       RichTextBlock,
+      ImageBlock,
+      GalleryBlock,
       ImageTextBlock,
       CardsBlock,
       CTABlock,

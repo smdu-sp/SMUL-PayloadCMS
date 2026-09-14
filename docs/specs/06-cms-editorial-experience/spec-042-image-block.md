@@ -1,7 +1,7 @@
 ---
 spec: SPEC-042
 title: Image Block
-status: planned
+status: implemented
 source: CMS-NOVO-CICLO-SPECS-042-050.md
 ---
 

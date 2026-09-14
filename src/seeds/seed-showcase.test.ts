@@ -12,6 +12,8 @@ describe("complete block showcase seed", () => {
       [
         "hero",
         "richText",
+        "imageBlock",
+        "gallery",
         "imageText",
         "cards",
         "actionBanners",

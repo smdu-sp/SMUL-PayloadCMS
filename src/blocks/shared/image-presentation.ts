@@ -55,6 +55,16 @@ export function getImagePresentationClassName(
     .join(" ");
 }
 
+export function getImagePresentationFitClassName(
+  presentation: ImagePresentation,
+): string {
+  const aspectRatio = presentation?.aspectRatio ?? "16:9";
+  if (aspectRatio === "original") return "";
+
+  const fit = presentation?.fit ?? "cover";
+  return FIT_CLASSNAMES[fit];
+}
+
 export function getFocalPointStyle(
   media: { focalX?: number | null; focalY?: number | null } | null | undefined,
   presentation: ImagePresentation,

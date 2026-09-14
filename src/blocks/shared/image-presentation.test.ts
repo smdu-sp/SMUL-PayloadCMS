@@ -4,6 +4,7 @@ import { describe, it } from "node:test";
 import {
   getFocalPointStyle,
   getImagePresentationClassName,
+  getImagePresentationFitClassName,
 } from "./image-presentation";
 
 describe("image presentation helpers", () => {
@@ -64,5 +65,16 @@ describe("image presentation helpers", () => {
     assert.match(className, /aspect-square/);
     assert.match(className, /object-cover/);
     assert.doesNotMatch(className, /lg:max-w-xs/);
+  });
+
+  it("returns fit classes separately for fill-based renderers", () => {
+    assert.equal(
+      getImagePresentationFitClassName({ size: "full", aspectRatio: "16:9", fit: "contain" }),
+      "object-contain",
+    );
+    assert.equal(
+      getImagePresentationFitClassName({ size: "full", aspectRatio: "original", fit: "cover" }),
+      "",
+    );
   });
 });

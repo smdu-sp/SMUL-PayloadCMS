@@ -60,6 +60,7 @@ export function MediaImage({
         preload={eager}
         sizes={sizes}
         src={src}
+        style={style}
       />
     );
   }

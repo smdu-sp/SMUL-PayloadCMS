@@ -9,8 +9,10 @@ import { CardsBlock } from "./Cards/config";
 import { CTABlock } from "./CTA/config";
 import { FAQBlock } from "./FAQ/config";
 import { FullWidthImageBannerBlock } from "./FullWidthImageBanner/config";
+import { GalleryBlock } from "./Gallery/config";
 import { HeroBlock } from "./Hero/config";
 import { IconGridBlock } from "./IconGrid/config";
+import { ImageBlock } from "./ImageBlock/config";
 import { ImageTextBlock } from "./ImageText/config";
 import { RichTextBlock } from "./RichText/config";
 import { blockSummaryLabel } from "./shared/admin";
@@ -19,6 +21,8 @@ import { getBlockSummary } from "./shared/get-block-summary";
 const blocks = [
   HeroBlock,
   RichTextBlock,
+  ImageBlock,
+  GalleryBlock,
   ImageTextBlock,
   CardsBlock,
   CTABlock,
@@ -49,6 +53,8 @@ describe("SPEC-024 admin UX and block visualization", () => {
       [
         HeroBlock.admin?.group,
         RichTextBlock.admin?.group,
+        ImageBlock.admin?.group,
+        GalleryBlock.admin?.group,
         ImageTextBlock.admin?.group,
         CardsBlock.admin?.group,
         CTABlock.admin?.group,

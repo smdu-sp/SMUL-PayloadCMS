@@ -24,6 +24,11 @@ import {
   normalizeBannerImageFit,
   normalizeCustomBannerImageHeight,
 } from "./FullWidthImageBanner/Component";
+import { GalleryBlock } from "./Gallery/config";
+import {
+  normalizeGalleryColumns,
+  normalizeGalleryPreset,
+} from "./Gallery/Component";
 import { HeroBlock } from "./Hero/config";
 import {
   normalizeHeroAlignment,
@@ -35,6 +40,8 @@ import {
   normalizeIconGridTone,
   normalizeIconGridVariant,
 } from "./IconGrid/Component";
+import { ImageBlock as ImageBlockConfig } from "./ImageBlock/config";
+import { normalizeImageBlockAlignment } from "./ImageBlock/Component";
 import { ImageTextBlock } from "./ImageText/config";
 import {
   normalizeImageTextSpacing,
@@ -64,6 +71,9 @@ describe("block variant fallbacks", () => {
     const imageTextPresentation = ImageTextBlock.fields.find(
       (field) => "name" in field && field.name === "imagePresentation",
     );
+    const imageBlockPresentation = ImageBlockConfig.fields.find(
+      (field) => "name" in field && field.name === "imagePresentation",
+    );
     const cardsItems = CardsBlock.fields.find(
       (field) => "name" in field && field.name === "items",
     );
@@ -80,7 +90,12 @@ describe("block variant fallbacks", () => {
     );
     assert.ok(cardsPresentation && "type" in cardsPresentation && cardsPresentation.type === "group");
 
-    for (const presentation of [heroPresentation, imageTextPresentation, cardsPresentation]) {
+    for (const presentation of [
+      heroPresentation,
+      imageBlockPresentation,
+      imageTextPresentation,
+      cardsPresentation,
+    ]) {
       assert.ok(presentation && "fields" in presentation);
       const nestedTypes = presentation.fields
         .filter((field) => "type" in field)
@@ -117,6 +132,37 @@ describe("block variant fallbacks", () => {
     assert.equal(normalizeImageTextVariant("left"), "image-left");
     assert.equal(normalizeImageTextVariant("right"), "image-right");
     assert.equal(normalizeImageTextVariant("unknown"), "image-left");
+  });
+
+  it("normalizes SPEC-042 image block alignment presets", () => {
+    assert.equal(normalizeImageBlockAlignment("left"), "left");
+    assert.equal(normalizeImageBlockAlignment("center"), "center");
+    assert.equal(normalizeImageBlockAlignment("right"), "right");
+    assert.equal(normalizeImageBlockAlignment("unknown"), "center");
+    assert.equal(normalizeImageBlockAlignment(undefined), "center");
+  });
+
+  it("normalizes SPEC-043 gallery layout presets", () => {
+    assert.equal(normalizeGalleryColumns("2"), "2");
+    assert.equal(normalizeGalleryColumns("3"), "3");
+    assert.equal(normalizeGalleryColumns("4"), "4");
+    assert.equal(normalizeGalleryColumns("5"), "3");
+    assert.equal(normalizeGalleryColumns(undefined), "3");
+    assert.equal(normalizeGalleryPreset("grid"), "grid");
+    assert.equal(normalizeGalleryPreset("masonry"), "grid");
+
+    const layout = GalleryBlock.fields.find(
+      (field) => "name" in field && field.name === "layout",
+    );
+    assert.ok(layout && "fields" in layout);
+    const columns = layout.fields.find(
+      (field) => "name" in field && field.name === "columns",
+    );
+    assert.ok(columns && "options" in columns && Array.isArray(columns.options));
+    assert.deepEqual(
+      columns.options.map((option) => typeof option === "object" ? option.value : option),
+      ["2", "3", "4"],
+    );
   });
 
   it("keeps RichText variants and maps legacy widths", () => {

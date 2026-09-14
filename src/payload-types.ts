@@ -209,6 +209,8 @@ export interface Page {
     | (
         | HeroBlock
         | RichTextBlock
+        | ImageBlock
+        | GalleryBlock
         | ImageTextBlock
         | CardsBlock
         | CTABlock
@@ -397,6 +399,83 @@ export interface RichTextBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'richText';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ImageBlock".
+ */
+export interface ImageBlock {
+  /**
+   * Imagem exibida como bloco editorial unico. O arquivo original permanece preservado na biblioteca de midia.
+   */
+  media: number | Media;
+  /**
+   * Opcional. Use para contextualizar a imagem quando a informacao nao estiver no texto da pagina.
+   */
+  caption?: string | null;
+  /**
+   * Define como esta imagem e exibida neste bloco. O arquivo original na Midia nao e alterado.
+   */
+  imagePresentation: {
+    /**
+     * Controla a largura da imagem dentro do espaco do bloco. Em celulares, a imagem sempre ocupa a largura total.
+     */
+    size: 'small' | 'medium' | 'large' | 'full';
+    /**
+     * Original preserva as proporcoes do arquivo enviado. As demais opcoes recortam a imagem para a proporcao escolhida.
+     */
+    aspectRatio: 'original' | '1:1' | '4:3' | '16:9' | 'portrait';
+    /**
+     * Preencher recorta a imagem para cobrir o espaco; Conter mostra a imagem inteira, podendo sobrar espaco vazio. Usa o ponto focal definido na Midia quando disponivel.
+     */
+    fit?: ('cover' | 'contain') | null;
+  };
+  /**
+   * Opcoes semanticas de apresentacao controladas pelo Design System. Nao permite CSS arbitrario.
+   */
+  appearance?: {
+    /**
+     * Controla a posicao horizontal da imagem quando o tamanho escolhido nao ocupa toda a largura.
+     */
+    alignment?: ('left' | 'center' | 'right') | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'imageBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "GalleryBlock".
+ */
+export interface GalleryBlock {
+  /**
+   * Opcional. Use quando a galeria precisar de um titulo editorial na pagina.
+   */
+  title?: string | null;
+  /**
+   * Adicione imagens da biblioteca de midia. Cada item pode ter legenda propria para a miniatura e o lightbox.
+   */
+  images: {
+    /**
+     * Imagem exibida na galeria e ampliada no lightbox. O arquivo original permanece preservado.
+     */
+    media: number | Media;
+    /**
+     * Opcional. Texto exibido abaixo da imagem ampliada e como contexto da miniatura.
+     */
+    caption?: string | null;
+    id?: string | null;
+  }[];
+  /**
+   * Controla a composicao responsiva com opcoes fechadas. Masonry nao esta disponivel nesta spec.
+   */
+  layout: {
+    columns: '2' | '3' | '4';
+    preset: 'grid';
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'gallery';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1153,6 +1232,8 @@ export interface PagesSelect<T extends boolean = true> {
     | {
         hero?: T | HeroBlockSelect<T>;
         richText?: T | RichTextBlockSelect<T>;
+        imageBlock?: T | ImageBlockSelect<T>;
+        gallery?: T | GalleryBlockSelect<T>;
         imageText?: T | ImageTextBlockSelect<T>;
         cards?: T | CardsBlockSelect<T>;
         cta?: T | CTABlockSelect<T>;
@@ -1234,6 +1315,50 @@ export interface RichTextBlockSelect<T extends boolean = true> {
     | {
         width?: T;
         spacing?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ImageBlock_select".
+ */
+export interface ImageBlockSelect<T extends boolean = true> {
+  media?: T;
+  caption?: T;
+  imagePresentation?:
+    | T
+    | {
+        size?: T;
+        aspectRatio?: T;
+        fit?: T;
+      };
+  appearance?:
+    | T
+    | {
+        alignment?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "GalleryBlock_select".
+ */
+export interface GalleryBlockSelect<T extends boolean = true> {
+  title?: T;
+  images?:
+    | T
+    | {
+        media?: T;
+        caption?: T;
+        id?: T;
+      };
+  layout?:
+    | T
+    | {
+        columns?: T;
+        preset?: T;
       };
   id?: T;
   blockName?: T;

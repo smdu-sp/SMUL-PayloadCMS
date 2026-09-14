@@ -5,8 +5,10 @@ import { CardsBlock } from "../blocks/Cards/config.ts";
 import { CTABlock } from "../blocks/CTA/config.ts";
 import { FAQBlock } from "../blocks/FAQ/config.ts";
 import { FullWidthImageBannerBlock } from "../blocks/FullWidthImageBanner/config.ts";
+import { GalleryBlock } from "../blocks/Gallery/config.ts";
 import { HeroBlock } from "../blocks/Hero/config.ts";
 import { IconGridBlock } from "../blocks/IconGrid/config.ts";
+import { ImageBlock } from "../blocks/ImageBlock/config.ts";
 import { ImageTextBlock } from "../blocks/ImageText/config.ts";
 import { RichTextBlock } from "../blocks/RichText/config.ts";
 import {
@@ -140,6 +142,8 @@ export const Pages: CollectionConfig = {
       blocks: [
         HeroBlock,
         RichTextBlock,
+        ImageBlock,
+        GalleryBlock,
         ImageTextBlock,
         CardsBlock,
         CTABlock,

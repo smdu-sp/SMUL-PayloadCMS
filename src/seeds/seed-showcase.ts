@@ -73,6 +73,40 @@ export const seedShowcaseLayout = (
     },
   },
   {
+    blockType: "imageBlock",
+    blockName: "Demonstracao - Imagem unica",
+    media: mediaId,
+    caption:
+      "Imagem editorial unica com legenda opcional e controles fechados de apresentacao.",
+    imagePresentation: {
+      size: "large",
+      aspectRatio: "original",
+      fit: "cover",
+    },
+    appearance: {
+      alignment: "center",
+    },
+  },
+  {
+    blockType: "gallery",
+    blockName: "Demonstracao - Galeria de imagens",
+    title: "Reuna imagens relacionadas em uma galeria",
+    images: [
+      {
+        media: mediaId,
+        caption: "Miniaturas abrem a imagem ampliada em um dialog acessivel.",
+      },
+      {
+        media: mediaId,
+        caption: "A galeria permite navegacao anterior e proxima pelo teclado.",
+      },
+    ],
+    layout: {
+      columns: "3",
+      preset: "grid",
+    },
+  },
+  {
     blockType: "imageText",
     blockName: "Demonstração — Mídia e texto",
     title: "Combine uma imagem com conteúdo explicativo",

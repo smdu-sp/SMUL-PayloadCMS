@@ -15,14 +15,18 @@ import { CardsBlock } from "./Cards/config";
 import { CTABlock } from "./CTA/config";
 import { FAQBlock } from "./FAQ/config";
 import { FullWidthImageBannerBlock } from "./FullWidthImageBanner/config";
+import { GalleryBlock } from "./Gallery/config";
 import { HeroBlock } from "./Hero/config";
 import { IconGridBlock } from "./IconGrid/config";
+import { ImageBlock } from "./ImageBlock/config";
 import { ImageTextBlock } from "./ImageText/config";
 import { RichTextBlock } from "./RichText/config";
 
 const blocks = [
   HeroBlock,
   RichTextBlock,
+  ImageBlock,
+  GalleryBlock,
   ImageTextBlock,
   CardsBlock,
   CTABlock,
@@ -107,7 +111,23 @@ describe("SPEC-026 content validation", () => {
     }
   });
 
-  it("validates SPEC-033 media rules for cards and full-width banners", async () => {
+  it("validates SPEC-033, SPEC-042 and SPEC-043 media rules for image blocks, gallery, cards and banners", async () => {
+    const imageBlockMedia = fieldByName(ImageBlock.fields, "media");
+    assert.ok("validate" in imageBlockMedia && imageBlockMedia.validate);
+    assert.equal(
+      await imageBlockMedia.validate(null, validationArgs()),
+      "Selecione uma imagem da biblioteca de midia.",
+    );
+
+    const galleryImages = fieldByName(GalleryBlock.fields, "images");
+    assert.ok("fields" in galleryImages);
+    const galleryMedia = fieldByName(galleryImages.fields, "media");
+    assert.ok("validate" in galleryMedia && galleryMedia.validate);
+    assert.equal(
+      await galleryMedia.validate(null, validationArgs()),
+      "Selecione uma imagem para a galeria.",
+    );
+
     const bannerImage = fieldByName(FullWidthImageBannerBlock.fields, "desktopImage");
     assert.ok("validate" in bannerImage && bannerImage.validate);
     assert.equal(

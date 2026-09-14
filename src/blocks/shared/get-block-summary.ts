@@ -1,6 +1,7 @@
 export type BlockSummaryData = {
   banners?: unknown[];
   blockType?: string;
+  images?: unknown[];
   items?: unknown[];
   title?: string;
 };
@@ -12,7 +13,9 @@ const blockLabels: Record<string, string> = {
   cta: "Chamada para ação",
   faqAccordion: "Perguntas frequentes",
   fullWidthImageBanner: "Banner de imagem full-width",
+  gallery: "Galeria de imagens",
   hero: "Destaque principal",
+  imageBlock: "Imagem",
   iconGrid: "Grade de ícones e informações",
   imageText: "Mídia e texto / imagem de destaque",
   richText: "Texto editorial",
@@ -22,6 +25,7 @@ const countLabels: Record<string, [string, string, keyof BlockSummaryData]> = {
   actionBanners: ["chamada", "chamadas", "banners"],
   cards: ["item", "itens", "items"],
   faqAccordion: ["pergunta", "perguntas", "items"],
+  gallery: ["imagem", "imagens", "images"],
   iconGrid: ["item", "itens", "items"],
 };
 
