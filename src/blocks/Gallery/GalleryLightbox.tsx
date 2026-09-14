@@ -5,12 +5,18 @@ import type { Media } from "../../payload-types";
 import { Text } from "../../components/ui";
 import { classNames } from "../../components/ui/classNames";
 import { MediaImage } from "../shared/MediaImage";
-import type { GalleryColumns, GalleryItem, GalleryPreset } from "./Component";
+import type {
+  GalleryColumns,
+  GalleryItem,
+  GalleryPreset,
+  GalleryThumbnailEffect,
+} from "./Component";
 
 type GalleryLightboxProps = {
   columns: GalleryColumns;
   images: GalleryItem[];
   preset: GalleryPreset;
+  thumbnailEffect: GalleryThumbnailEffect;
 };
 
 const columnClasses: Record<GalleryColumns, string> = {
@@ -33,7 +39,11 @@ function mediaLabel(item: GalleryItem, index: number): string {
   return item.caption || media.alt || `Imagem ${index + 1}`;
 }
 
-export function GalleryLightbox({ columns, images }: GalleryLightboxProps) {
+export function GalleryLightbox({
+  columns,
+  images,
+  thumbnailEffect,
+}: GalleryLightboxProps) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
   const openerRef = useRef<HTMLElement | null>(null);
@@ -124,23 +134,29 @@ export function GalleryLightbox({ columns, images }: GalleryLightboxProps) {
             <li key={item.id ?? `${media.id}-${index}`}>
               <button
                 aria-label={`Abrir imagem ampliada: ${label}`}
-                className="group block w-full overflow-hidden rounded-lg border border-border bg-muted text-left transition hover:border-primary focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-focus"
+                className="group block w-full overflow-hidden rounded-lg border border-border bg-transparent text-left focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-focus"
                 onClick={(event) => {
                   openerRef.current = event.currentTarget;
                   setActiveIndex(index);
                 }}
                 type="button"
               >
-                <span className="relative block aspect-[4/3] w-full overflow-hidden">
+                <span
+                  className={classNames(
+                    "relative block aspect-[4/3] w-full overflow-hidden",
+                    thumbnailEffect === "grow" &&
+                      "transition-transform duration-700 ease-out group-hover:scale-[1.03]",
+                  )}
+                >
                   <MediaImage
-                    className="object-cover transition duration-200 group-hover:scale-[1.03]"
+                    className="object-cover"
                     fill
                     media={media}
                     sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
                   />
                 </span>
                 {item.caption ? (
-                  <span className="block bg-surface px-4 py-3 text-sm leading-normal text-muted-foreground">
+                  <span className="block px-4 py-3 text-sm leading-normal text-muted-foreground">
                     {item.caption}
                   </span>
                 ) : null}
@@ -154,7 +170,7 @@ export function GalleryLightbox({ columns, images }: GalleryLightboxProps) {
         <div
           aria-labelledby={titleId}
           aria-modal="true"
-          className="fixed inset-0 z-50 flex items-center justify-center bg-secondary/90 p-4 text-secondary-foreground"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/55 p-4 text-white backdrop-blur-md"
           ref={dialogRef}
           role="dialog"
           tabIndex={-1}
@@ -166,7 +182,7 @@ export function GalleryLightbox({ columns, images }: GalleryLightboxProps) {
               </h2>
               <button
                 aria-label="Fechar galeria"
-                className="rounded-md border border-secondary-foreground/40 px-4 py-2 text-sm font-semibold text-secondary-foreground hover:bg-secondary-foreground/10 focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-focus"
+                className="rounded-md border border-white/50 px-4 py-2 text-sm font-semibold text-white hover:bg-white/10 focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-white"
                 onClick={close}
                 type="button"
               >
@@ -178,7 +194,7 @@ export function GalleryLightbox({ columns, images }: GalleryLightboxProps) {
               {hasMultiple ? (
                 <button
                   aria-label="Imagem anterior"
-                  className="rounded-md border border-secondary-foreground/40 px-4 py-3 font-semibold hover:bg-secondary-foreground/10 focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-focus"
+                  className="rounded-md border border-white/50 px-4 py-3 font-semibold text-white hover:bg-white/10 focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-white"
                   onClick={showPrevious}
                   type="button"
                 >
@@ -187,7 +203,7 @@ export function GalleryLightbox({ columns, images }: GalleryLightboxProps) {
               ) : null}
 
               <figure className="min-h-0">
-                <div className="relative mx-auto h-[70vh] max-h-[70vh] min-h-64 w-full overflow-hidden rounded-lg bg-black/30">
+                <div className="relative mx-auto h-[70vh] max-h-[70vh] min-h-64 w-full overflow-hidden">
                   <MediaImage
                     className="object-contain"
                     fill
@@ -196,9 +212,9 @@ export function GalleryLightbox({ columns, images }: GalleryLightboxProps) {
                   />
                 </div>
                 {activeItem.caption ? (
-                  <figcaption className="mt-3">
+                  <figcaption className="mt-3 text-center">
                     <Text tone="inverse" variant="small">
-                      <span className="whitespace-pre-line break-words">
+                      <span className="whitespace-pre-line break-words text-white">
                         {activeItem.caption}
                       </span>
                     </Text>
@@ -209,7 +225,7 @@ export function GalleryLightbox({ columns, images }: GalleryLightboxProps) {
               {hasMultiple ? (
                 <button
                   aria-label="Proxima imagem"
-                  className="rounded-md border border-secondary-foreground/40 px-4 py-3 font-semibold hover:bg-secondary-foreground/10 focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-focus"
+                  className="rounded-md border border-white/50 px-4 py-3 font-semibold text-white hover:bg-white/10 focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-white"
                   onClick={showNext}
                   type="button"
                 >

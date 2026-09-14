@@ -28,6 +28,7 @@ import { GalleryBlock } from "./Gallery/config";
 import {
   normalizeGalleryColumns,
   normalizeGalleryPreset,
+  normalizeGalleryThumbnailEffect,
 } from "./Gallery/Component";
 import { HeroBlock } from "./Hero/config";
 import {
@@ -150,6 +151,9 @@ describe("block variant fallbacks", () => {
     assert.equal(normalizeGalleryColumns(undefined), "3");
     assert.equal(normalizeGalleryPreset("grid"), "grid");
     assert.equal(normalizeGalleryPreset("masonry"), "grid");
+    assert.equal(normalizeGalleryThumbnailEffect("grow"), "grow");
+    assert.equal(normalizeGalleryThumbnailEffect("none"), "none");
+    assert.equal(normalizeGalleryThumbnailEffect("fade"), "grow");
 
     const layout = GalleryBlock.fields.find(
       (field) => "name" in field && field.name === "layout",
@@ -162,6 +166,18 @@ describe("block variant fallbacks", () => {
     assert.deepEqual(
       columns.options.map((option) => typeof option === "object" ? option.value : option),
       ["2", "3", "4"],
+    );
+    const thumbnailEffect = layout.fields.find(
+      (field) => "name" in field && field.name === "thumbnailEffect",
+    );
+    assert.ok(
+      thumbnailEffect &&
+        "options" in thumbnailEffect &&
+        Array.isArray(thumbnailEffect.options),
+    );
+    assert.deepEqual(
+      thumbnailEffect.options.map((option) => typeof option === "object" ? option.value : option),
+      ["none", "grow"],
     );
   });
 

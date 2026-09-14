@@ -83,9 +83,6 @@ export const seedShowcaseLayout = (
       aspectRatio: "original",
       fit: "cover",
     },
-    appearance: {
-      alignment: "center",
-    },
   },
   {
     blockType: "gallery",
@@ -104,6 +101,7 @@ export const seedShowcaseLayout = (
     layout: {
       columns: "3",
       preset: "grid",
+      thumbnailEffect: "grow",
     },
   },
   {

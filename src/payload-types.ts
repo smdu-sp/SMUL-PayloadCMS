@@ -430,15 +430,6 @@ export interface ImageBlock {
      */
     fit?: ('cover' | 'contain') | null;
   };
-  /**
-   * Opcoes semanticas de apresentacao controladas pelo Design System. Nao permite CSS arbitrario.
-   */
-  appearance?: {
-    /**
-     * Controla a posicao horizontal da imagem quando o tamanho escolhido nao ocupa toda a largura.
-     */
-    alignment?: ('left' | 'center' | 'right') | null;
-  };
   id?: string | null;
   blockName?: string | null;
   blockType: 'imageBlock';
@@ -472,6 +463,7 @@ export interface GalleryBlock {
   layout: {
     columns: '2' | '3' | '4';
     preset: 'grid';
+    thumbnailEffect: 'none' | 'grow';
   };
   id?: string | null;
   blockName?: string | null;
@@ -1333,11 +1325,6 @@ export interface ImageBlockSelect<T extends boolean = true> {
         aspectRatio?: T;
         fit?: T;
       };
-  appearance?:
-    | T
-    | {
-        alignment?: T;
-      };
   id?: T;
   blockName?: T;
 }
@@ -1359,6 +1346,7 @@ export interface GalleryBlockSelect<T extends boolean = true> {
     | {
         columns?: T;
         preset?: T;
+        thumbnailEffect?: T;
       };
   id?: T;
   blockName?: T;

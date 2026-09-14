@@ -11,7 +11,7 @@ Este catalogo registra a base real encontrada no projeto durante a SPEC-018. Ele
 | Hero | `src/blocks/Hero/config.ts` | `src/blocks/Hero/Component.tsx` | `default`, `centered`, `split`; fallback legado `image` para `split` | Abertura editorial de pagina com chamada superior, titulo, resumo, imagem opcional e acao principal. |
 | RichText | `src/blocks/RichText/config.ts` | `src/blocks/RichText/Component.tsx` | `default`, `narrow`; fallbacks legados `content` e `wide` | Conteudo editorial livre com Lexical, adequado para introducoes, explicacoes e textos institucionais. |
 | Image Block | `src/blocks/ImageBlock/config.ts` | `src/blocks/ImageBlock/Component.tsx` | Presets de tamanho, proporcao, ajuste e alinhamento | Imagem editorial unica, responsiva, com legenda opcional e sem dimensoes numericas livres. |
-| Gallery | `src/blocks/Gallery/config.ts` | `src/blocks/Gallery/Component.tsx` e `src/blocks/Gallery/GalleryLightbox.tsx` | Colunas `2`, `3`, `4`; preset `grid` | Galeria de imagens com miniaturas responsivas e lightbox/dialog acessivel com teclado. |
+| Gallery | `src/blocks/Gallery/config.ts` | `src/blocks/Gallery/Component.tsx` e `src/blocks/Gallery/GalleryLightbox.tsx` | Colunas `2`, `3`, `4`; preset `grid`; efeito `none` ou `grow` | Galeria de imagens com miniaturas responsivas e lightbox/dialog acessivel com teclado. |
 | ImageText | `src/blocks/ImageText/config.ts` | `src/blocks/ImageText/Component.tsx` | `image-left`, `image-right`; fallbacks legados `left` e `right` | Secoes de duas colunas com midia, titulo, rich text e acao complementar opcional. |
 | Cards | `src/blocks/Cards/config.ts` | `src/blocks/Cards/Component.tsx` | `default`, `modalities` | Listas editoriais em grade com titulo, resumo, itens, icone, descricao e link opcional; a variant `modalities` cobre modalidades sem duplicar Block. |
 | CTA | `src/blocks/CTA/config.ts` | `src/blocks/CTA/Component.tsx` | `default`, `brand`, `compact`; fallback legado `primary` para `brand` | Chamadas de acao pontuais ou finais com titulo, descricao e link obrigatorio. |
@@ -104,6 +104,6 @@ Este catalogo registra a base real encontrada no projeto durante a SPEC-018. Ele
 
 ## Decisoes da SPEC-043
 
-- Implementado: `gallery`, com titulo opcional, lista de imagens, legenda por imagem, colunas fechadas e preset `grid`.
+- Implementado: `gallery`, com titulo opcional, lista de imagens, legenda por imagem, colunas fechadas, preset `grid` e efeito de miniatura controlado.
 - Implementado: lightbox como Dialog acessivel com `Esc`, foco inicial, trap de foco, retorno ao acionador e navegacao anterior/proxima por teclado.
 - Mantido fora do escopo: masonry, carousel automatico, metadados editoriais adicionais e edicao/crop persistente das imagens.

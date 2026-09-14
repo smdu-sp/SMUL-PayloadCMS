@@ -4,6 +4,7 @@ import { GalleryLightbox } from "./GalleryLightbox";
 
 export type GalleryColumns = "2" | "3" | "4";
 export type GalleryPreset = "grid";
+export type GalleryThumbnailEffect = "grow" | "none";
 
 export type GalleryItem = {
   caption?: string | null;
@@ -18,6 +19,7 @@ export type GalleryBlockProps = {
   layout?: {
     columns?: GalleryColumns | string | null;
     preset?: GalleryPreset | string | null;
+    thumbnailEffect?: GalleryThumbnailEffect | string | null;
   } | null;
   title?: string | null;
 };
@@ -35,6 +37,12 @@ export function normalizeGalleryPreset(
   return preset === "grid" ? "grid" : "grid";
 }
 
+export function normalizeGalleryThumbnailEffect(
+  effect: GalleryThumbnailEffect | string | null | undefined,
+): GalleryThumbnailEffect {
+  return effect === "none" ? "none" : "grow";
+}
+
 export function GalleryBlock({ images, layout, title }: GalleryBlockProps) {
   const usableImages =
     images?.filter((item) => item.media && typeof item.media === "object" && item.media.url) ?? [];
@@ -43,6 +51,7 @@ export function GalleryBlock({ images, layout, title }: GalleryBlockProps) {
 
   const columns = normalizeGalleryColumns(layout?.columns);
   const preset = normalizeGalleryPreset(layout?.preset);
+  const thumbnailEffect = normalizeGalleryThumbnailEffect(layout?.thumbnailEffect);
 
   return (
     <Section spacing="default" tone="default">
@@ -54,7 +63,12 @@ export function GalleryBlock({ images, layout, title }: GalleryBlockProps) {
             </Heading>
           </div>
         ) : null}
-        <GalleryLightbox columns={columns} images={usableImages} preset={preset} />
+        <GalleryLightbox
+          columns={columns}
+          images={usableImages}
+          preset={preset}
+          thumbnailEffect={thumbnailEffect}
+        />
       </Container>
     </Section>
   );

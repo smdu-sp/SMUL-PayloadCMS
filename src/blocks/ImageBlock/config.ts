@@ -1,15 +1,7 @@
 import type { Block, UploadFieldSingleValidation } from "payload";
 import { characterLimitAdmin } from "../../fields/character-limit";
-import { createAppearanceGroup } from "../../fields/block-appearance";
-import { closedSelect } from "../../fields/editorial-validation";
 import { createImagePresentationFields } from "../../fields/image-presentation";
 import { createBlockAdmin } from "../shared/admin";
-
-const alignmentOptions = [
-  { label: "A esquerda", value: "left" },
-  { label: "Centralizada", value: "center" },
-  { label: "A direita", value: "right" },
-];
 
 export const ImageBlock: Block = {
   slug: "imageBlock",
@@ -65,22 +57,5 @@ export const ImageBlock: Block = {
         },
       }),
     },
-    createAppearanceGroup([
-      {
-        name: "alignment",
-        type: "select",
-        label: "Alinhamento",
-        defaultValue: "center",
-        validate: closedSelect(
-          ["left", "center", "right"],
-          "Escolha um alinhamento aprovado.",
-        ),
-        admin: {
-          description:
-            "Controla a posicao horizontal da imagem quando o tamanho escolhido nao ocupa toda a largura.",
-        },
-        options: alignmentOptions,
-      },
-    ]),
   ],
 };

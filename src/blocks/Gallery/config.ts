@@ -11,6 +11,11 @@ const columnOptions = [
 
 const presetOptions = [{ label: "Grade uniforme", value: "grid" }];
 
+const thumbnailEffectOptions = [
+  { label: "Sem efeito", value: "none" },
+  { label: "Crescimento suave", value: "grow" },
+];
+
 export const GalleryBlock: Block = {
   slug: "gallery",
   dbName: "gal",
@@ -110,6 +115,19 @@ export const GalleryBlock: Block = {
             "Escolha um modelo de galeria aprovado.",
           ),
           options: presetOptions,
+        },
+        {
+          name: "thumbnailEffect",
+          type: "select",
+          dbName: "thumbFx",
+          label: "Efeito ao passar o mouse",
+          required: true,
+          defaultValue: "grow",
+          validate: closedSelect(
+            ["none", "grow"],
+            "Escolha um efeito de miniatura aprovado.",
+          ),
+          options: thumbnailEffectOptions,
         },
       ],
     },
