@@ -14,6 +14,7 @@ describe("complete block showcase seed", () => {
         "richText",
         "imageBlock",
         "gallery",
+        "carousel",
         "imageText",
         "cards",
         "actionBanners",

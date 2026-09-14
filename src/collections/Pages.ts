@@ -2,6 +2,7 @@ import type { CollectionConfig } from "payload";
 import { ActionBannersBlock } from "../blocks/ActionBanners/config.ts";
 import { AlertBoxBlock } from "../blocks/AlertBox/config.ts";
 import { CardsBlock } from "../blocks/Cards/config.ts";
+import { CarouselBlock } from "../blocks/Carousel/config.ts";
 import { CTABlock } from "../blocks/CTA/config.ts";
 import { FAQBlock } from "../blocks/FAQ/config.ts";
 import { FullWidthImageBannerBlock } from "../blocks/FullWidthImageBanner/config.ts";
@@ -144,6 +145,7 @@ export const Pages: CollectionConfig = {
         RichTextBlock,
         ImageBlock,
         GalleryBlock,
+        CarouselBlock,
         ImageTextBlock,
         CardsBlock,
         CTABlock,

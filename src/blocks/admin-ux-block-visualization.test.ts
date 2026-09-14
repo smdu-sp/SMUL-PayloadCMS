@@ -6,6 +6,7 @@ import { Pages } from "../collections/Pages";
 import { ActionBannersBlock } from "./ActionBanners/config";
 import { AlertBoxBlock } from "./AlertBox/config";
 import { CardsBlock } from "./Cards/config";
+import { CarouselBlock } from "./Carousel/config";
 import { CTABlock } from "./CTA/config";
 import { FAQBlock } from "./FAQ/config";
 import { FullWidthImageBannerBlock } from "./FullWidthImageBanner/config";
@@ -23,6 +24,7 @@ const blocks = [
   RichTextBlock,
   ImageBlock,
   GalleryBlock,
+  CarouselBlock,
   ImageTextBlock,
   CardsBlock,
   CTABlock,
@@ -55,6 +57,7 @@ describe("SPEC-024 admin UX and block visualization", () => {
         RichTextBlock.admin?.group,
         ImageBlock.admin?.group,
         GalleryBlock.admin?.group,
+        CarouselBlock.admin?.group,
         ImageTextBlock.admin?.group,
         CardsBlock.admin?.group,
         CTABlock.admin?.group,

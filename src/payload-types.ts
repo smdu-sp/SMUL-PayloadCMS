@@ -211,6 +211,7 @@ export interface Page {
         | RichTextBlock
         | ImageBlock
         | GalleryBlock
+        | CarouselBlock
         | ImageTextBlock
         | CardsBlock
         | CTABlock
@@ -468,6 +469,72 @@ export interface GalleryBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'gallery';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CarouselBlock".
+ */
+export interface CarouselBlock {
+  /**
+   * Opcional. Use para nomear o conjunto sequencial apresentado no carrossel.
+   */
+  title?: string | null;
+  /**
+   * Adicione slides em ordem sequencial. Cada slide pode ter imagem, texto e link opcional.
+   */
+  items: {
+    /**
+     * Imagem principal do slide. O arquivo original permanece preservado na biblioteca de midia.
+     */
+    image: number | Media;
+    /**
+     * Opcional. Titulo curto exibido junto da imagem.
+     */
+    title?: string | null;
+    /**
+     * Opcional. Texto de apoio para explicar o slide sem transformar o carrossel em texto longo.
+     */
+    description?: string | null;
+    /**
+     * Opcional. Use quando o slide deve encaminhar para outra pagina ou servico.
+     */
+    link?: {
+      /**
+       * Texto visivel para o usuario. Use uma acao clara, como Abrir pagina ou Saiba mais.
+       */
+      label?: string | null;
+      /**
+       * Escolha pagina interna para navegar no portal ou URL externa para encaminhar a servico oficial.
+       */
+      type?: ('internal' | 'external') | null;
+      /**
+       * Pagina publicada ou em rascunho dentro deste CMS. Mudancas de slug nao quebram este relacionamento.
+       */
+      page?: (number | null) | Page;
+      /**
+       * Informe o endereco completo, incluindo http:// ou https://.
+       */
+      url?: string | null;
+      /**
+       * Recomendado para links externos, mantendo o portal aberto na aba atual.
+       */
+      newTab?: boolean | null;
+    };
+    id?: string | null;
+  }[];
+  display: {
+    slidesPerView: '1' | '2' | '3';
+    navigation: 'arrows' | 'arrows-dots';
+  };
+  behavior: {
+    /**
+     * Desligado e o padrao. Quando ligado, o usuario pode pausar e a rotacao para ao interagir.
+     */
+    autoplay: 'off' | 'on';
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'carousel';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1226,6 +1293,7 @@ export interface PagesSelect<T extends boolean = true> {
         richText?: T | RichTextBlockSelect<T>;
         imageBlock?: T | ImageBlockSelect<T>;
         gallery?: T | GalleryBlockSelect<T>;
+        carousel?: T | CarouselBlockSelect<T>;
         imageText?: T | ImageTextBlockSelect<T>;
         cards?: T | CardsBlockSelect<T>;
         cta?: T | CTABlockSelect<T>;
@@ -1347,6 +1415,43 @@ export interface GalleryBlockSelect<T extends boolean = true> {
         columns?: T;
         preset?: T;
         thumbnailEffect?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CarouselBlock_select".
+ */
+export interface CarouselBlockSelect<T extends boolean = true> {
+  title?: T;
+  items?:
+    | T
+    | {
+        image?: T;
+        title?: T;
+        description?: T;
+        link?:
+          | T
+          | {
+              label?: T;
+              type?: T;
+              page?: T;
+              url?: T;
+              newTab?: T;
+            };
+        id?: T;
+      };
+  display?:
+    | T
+    | {
+        slidesPerView?: T;
+        navigation?: T;
+      };
+  behavior?:
+    | T
+    | {
+        autoplay?: T;
       };
   id?: T;
   blockName?: T;

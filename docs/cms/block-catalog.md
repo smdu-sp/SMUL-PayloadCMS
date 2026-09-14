@@ -4,7 +4,7 @@ Este catalogo registra a base real encontrada no projeto durante a SPEC-018. Ele
 
 ## Blocks registrados em Pages
 
-`src/collections/Pages.ts` registra doze Blocks no campo `layout`: `hero`, `richText`, `imageBlock`, `gallery`, `imageText`, `cards`, `cta`, `iconGrid`, `faqAccordion`, `alertBox`, `actionBanners` e `fullWidthImageBanner`. A renderizacao publica passa por `src/components/RenderBlocks/index.tsx`.
+`src/collections/Pages.ts` registra treze Blocks no campo `layout`: `hero`, `richText`, `imageBlock`, `gallery`, `carousel`, `imageText`, `cards`, `cta`, `iconGrid`, `faqAccordion`, `alertBox`, `actionBanners` e `fullWidthImageBanner`. A renderizacao publica passa por `src/components/RenderBlocks/index.tsx`.
 
 | Block atual | Schema | Component | Variants | Uso |
 |---|---|---|---|---|
@@ -12,6 +12,7 @@ Este catalogo registra a base real encontrada no projeto durante a SPEC-018. Ele
 | RichText | `src/blocks/RichText/config.ts` | `src/blocks/RichText/Component.tsx` | `default`, `narrow`; fallbacks legados `content` e `wide` | Conteudo editorial livre com Lexical, adequado para introducoes, explicacoes e textos institucionais. |
 | Image Block | `src/blocks/ImageBlock/config.ts` | `src/blocks/ImageBlock/Component.tsx` | Presets de tamanho, proporcao, ajuste e alinhamento | Imagem editorial unica, responsiva, com legenda opcional e sem dimensoes numericas livres. |
 | Gallery | `src/blocks/Gallery/config.ts` | `src/blocks/Gallery/Component.tsx` e `src/blocks/Gallery/GalleryLightbox.tsx` | Colunas `2`, `3`, `4`; preset `grid`; efeito `none` ou `grow` | Galeria de imagens com miniaturas responsivas e lightbox/dialog acessivel com teclado. |
+| Carousel | `src/blocks/Carousel/config.ts` | `src/blocks/Carousel/Component.tsx` e `src/blocks/Carousel/CarouselClient.tsx` | Slides por visualizacao `1`, `2`, `3`; navegacao `arrows` ou `arrows-dots`; autoplay `off` ou `on` | Conteudo sequencial com navegacao manual acessivel e autoplay opcional pausavel. |
 | ImageText | `src/blocks/ImageText/config.ts` | `src/blocks/ImageText/Component.tsx` | `image-left`, `image-right`; fallbacks legados `left` e `right` | Secoes de duas colunas com midia, titulo, rich text e acao complementar opcional. |
 | Cards | `src/blocks/Cards/config.ts` | `src/blocks/Cards/Component.tsx` | `default`, `modalities` | Listas editoriais em grade com titulo, resumo, itens, icone, descricao e link opcional; a variant `modalities` cobre modalidades sem duplicar Block. |
 | CTA | `src/blocks/CTA/config.ts` | `src/blocks/CTA/Component.tsx` | `default`, `brand`, `compact`; fallback legado `primary` para `brand` | Chamadas de acao pontuais ou finais com titulo, descricao e link obrigatorio. |
@@ -107,3 +108,11 @@ Este catalogo registra a base real encontrada no projeto durante a SPEC-018. Ele
 - Implementado: `gallery`, com titulo opcional, lista de imagens, legenda por imagem, colunas fechadas, preset `grid` e efeito de miniatura controlado.
 - Implementado: lightbox como Dialog acessivel com `Esc`, foco inicial, trap de foco, retorno ao acionador e navegacao anterior/proxima por teclado.
 - Mantido fora do escopo: masonry, carousel automatico, metadados editoriais adicionais e edicao/crop persistente das imagens.
+
+## Decisoes da SPEC-044
+
+- Implementado: `carousel`, separado de `gallery`, para conteudo sequencial com imagem, textos e link opcional por slide.
+- Controlado: slides por visualizacao, navegacao e autoplay usam presets fechados.
+- Acessibilidade: regiao com `aria-roledescription`, slides identificados, foco visivel e controles anterior/proximo por botao.
+- Autoplay: desligado por padrao; quando ligado, respeita `prefers-reduced-motion`, possui botao de pausa e para apos interacao do usuario.
+- Mantido fora do escopo: swipe gestual customizado, loop infinito visual complexo, temporizador configuravel e efeitos livres.

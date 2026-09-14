@@ -1,7 +1,7 @@
 ---
 spec: SPEC-044
 title: Carousel Block
-status: planned
+status: implemented
 source: CMS-NOVO-CICLO-SPECS-042-050.md
 ---
 

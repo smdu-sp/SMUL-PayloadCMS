@@ -4,6 +4,7 @@ import { describe, it } from "node:test";
 import { ActionBannersBlock } from "./blocks/ActionBanners/config";
 import { AlertBoxBlock } from "./blocks/AlertBox/config";
 import { CardsBlock } from "./blocks/Cards/config";
+import { CarouselBlock } from "./blocks/Carousel/config";
 import { CTABlock } from "./blocks/CTA/config";
 import { FAQBlock } from "./blocks/FAQ/config";
 import { FullWidthImageBannerBlock } from "./blocks/FullWidthImageBanner/config";
@@ -228,6 +229,7 @@ describe("SPEC-029 CMS foundation validation", () => {
       RichTextBlock,
       ImageBlock,
       GalleryBlock,
+      CarouselBlock,
       ImageTextBlock,
       CardsBlock,
       CTABlock,

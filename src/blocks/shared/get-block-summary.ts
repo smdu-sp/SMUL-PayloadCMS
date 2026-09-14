@@ -9,6 +9,7 @@ export type BlockSummaryData = {
 const blockLabels: Record<string, string> = {
   actionBanners: "Faixas de ação",
   alertBox: "Caixa de aviso",
+  carousel: "Carrossel",
   cards: "Cards e grades de benefícios",
   cta: "Chamada para ação",
   faqAccordion: "Perguntas frequentes",
@@ -23,6 +24,7 @@ const blockLabels: Record<string, string> = {
 
 const countLabels: Record<string, [string, string, keyof BlockSummaryData]> = {
   actionBanners: ["chamada", "chamadas", "banners"],
+  carousel: ["slide", "slides", "items"],
   cards: ["item", "itens", "items"],
   faqAccordion: ["pergunta", "perguntas", "items"],
   gallery: ["imagem", "imagens", "images"],

@@ -12,6 +12,7 @@ import {
 import { ActionBannersBlock } from "./ActionBanners/config";
 import { AlertBoxBlock } from "./AlertBox/config";
 import { CardsBlock } from "./Cards/config";
+import { CarouselBlock } from "./Carousel/config";
 import { CTABlock } from "./CTA/config";
 import { FAQBlock } from "./FAQ/config";
 import { FullWidthImageBannerBlock } from "./FullWidthImageBanner/config";
@@ -27,6 +28,7 @@ const blocks = [
   RichTextBlock,
   ImageBlock,
   GalleryBlock,
+  CarouselBlock,
   ImageTextBlock,
   CardsBlock,
   CTABlock,
@@ -103,7 +105,7 @@ describe("SPEC-026 content validation", () => {
       assert.ok(validatedFields.length > 0, `${block.slug} must expose editorial validation`);
     }
 
-    for (const block of [CardsBlock, IconGridBlock, FAQBlock, ActionBannersBlock]) {
+    for (const block of [CardsBlock, CarouselBlock, IconGridBlock, FAQBlock, ActionBannersBlock]) {
       const repeatedField = block.fields.find(
         (field) => field.type === "array",
       );
@@ -111,7 +113,7 @@ describe("SPEC-026 content validation", () => {
     }
   });
 
-  it("validates SPEC-033, SPEC-042 and SPEC-043 media rules for image blocks, gallery, cards and banners", async () => {
+  it("validates SPEC-033, SPEC-042, SPEC-043 and SPEC-044 media rules for image blocks, gallery, carousel, cards and banners", async () => {
     const imageBlockMedia = fieldByName(ImageBlock.fields, "media");
     assert.ok("validate" in imageBlockMedia && imageBlockMedia.validate);
     assert.equal(
@@ -126,6 +128,15 @@ describe("SPEC-026 content validation", () => {
     assert.equal(
       await galleryMedia.validate(null, validationArgs()),
       "Selecione uma imagem para a galeria.",
+    );
+
+    const carouselItems = fieldByName(CarouselBlock.fields, "items");
+    assert.ok("fields" in carouselItems);
+    const carouselImage = fieldByName(carouselItems.fields, "image");
+    assert.ok("validate" in carouselImage && carouselImage.validate);
+    assert.equal(
+      await carouselImage.validate(null, validationArgs()),
+      "Selecione uma imagem para este slide.",
     );
 
     const bannerImage = fieldByName(FullWidthImageBannerBlock.fields, "desktopImage");

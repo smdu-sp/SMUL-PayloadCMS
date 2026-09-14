@@ -17,6 +17,12 @@ import {
   normalizeCardsVariant,
 } from "./Cards/Component";
 import { CardsBlock } from "./Cards/config";
+import { CarouselBlock } from "./Carousel/config";
+import {
+  normalizeCarouselAutoplay,
+  normalizeCarouselNavigation,
+  normalizeCarouselSlidesPerView,
+} from "./Carousel/Component";
 import { normalizeFAQVariant } from "./FAQ/Component";
 import {
   normalizeBannerContentPosition,
@@ -178,6 +184,37 @@ describe("block variant fallbacks", () => {
     assert.deepEqual(
       thumbnailEffect.options.map((option) => typeof option === "object" ? option.value : option),
       ["none", "grow"],
+    );
+  });
+
+  it("normalizes SPEC-044 carousel display and behavior presets", () => {
+    assert.equal(normalizeCarouselSlidesPerView("1"), "1");
+    assert.equal(normalizeCarouselSlidesPerView("2"), "2");
+    assert.equal(normalizeCarouselSlidesPerView("3"), "3");
+    assert.equal(normalizeCarouselSlidesPerView("4"), "1");
+    assert.equal(normalizeCarouselSlidesPerView(undefined), "1");
+    assert.equal(normalizeCarouselNavigation("arrows"), "arrows");
+    assert.equal(normalizeCarouselNavigation("arrows-dots"), "arrows-dots");
+    assert.equal(normalizeCarouselNavigation("dots"), "arrows-dots");
+    assert.equal(normalizeCarouselAutoplay("on"), "on");
+    assert.equal(normalizeCarouselAutoplay("off"), "off");
+    assert.equal(normalizeCarouselAutoplay("auto"), "off");
+
+    const display = CarouselBlock.fields.find(
+      (field) => "name" in field && field.name === "display",
+    );
+    assert.ok(display && "fields" in display);
+    const slidesPerView = display.fields.find(
+      (field) => "name" in field && field.name === "slidesPerView",
+    );
+    assert.ok(
+      slidesPerView &&
+        "options" in slidesPerView &&
+        Array.isArray(slidesPerView.options),
+    );
+    assert.deepEqual(
+      slidesPerView.options.map((option) => typeof option === "object" ? option.value : option),
+      ["1", "2", "3"],
     );
   });
 

@@ -105,6 +105,39 @@ export const seedShowcaseLayout = (
     },
   },
   {
+    blockType: "carousel",
+    blockName: "Demonstracao - Carrossel",
+    title: "Apresente conteudo em sequencia",
+    items: [
+      {
+        image: mediaId,
+        title: "Primeiro slide",
+        description:
+          "Use o carrossel para uma sequencia curta de conteudos relacionados.",
+        link: internalLink("Abrir primeiro slide", seedPageId),
+      },
+      {
+        image: mediaId,
+        title: "Segundo slide",
+        description:
+          "A navegacao manual funciona por botoes e teclado, sem depender de autoplay.",
+      },
+      {
+        image: mediaId,
+        title: "Terceiro slide",
+        description:
+          "Autoplay permanece desligado por padrao e pode ser habilitado quando fizer sentido editorial.",
+      },
+    ],
+    display: {
+      slidesPerView: "1",
+      navigation: "arrows-dots",
+    },
+    behavior: {
+      autoplay: "off",
+    },
+  },
+  {
     blockType: "imageText",
     blockName: "Demonstração — Mídia e texto",
     title: "Combine uma imagem com conteúdo explicativo",

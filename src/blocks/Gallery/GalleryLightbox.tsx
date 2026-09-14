@@ -25,6 +25,13 @@ const columnClasses: Record<GalleryColumns, string> = {
   "4": "sm:grid-cols-2 lg:grid-cols-4",
 };
 
+// Para adicionar efeitos, inclua o valor no schema do GalleryBlock,
+// normalize em Component.tsx e registre aqui as classes aplicadas a miniatura.
+const thumbnailEffectClasses: Record<GalleryThumbnailEffect, string> = {
+  grow: "transition-transform duration-700 ease-out group-hover:scale-[1.03]",
+  none: "",
+};
+
 const focusableSelector = [
   "a[href]",
   "button:not([disabled])",
@@ -144,8 +151,7 @@ export function GalleryLightbox({
                 <span
                   className={classNames(
                     "relative block aspect-[4/3] w-full overflow-hidden",
-                    thumbnailEffect === "grow" &&
-                      "transition-transform duration-700 ease-out group-hover:scale-[1.03]",
+                    thumbnailEffectClasses[thumbnailEffect],
                   )}
                 >
                   <MediaImage
