@@ -37,6 +37,14 @@ describe("complete block showcase seed", () => {
     assert.match(serialized, /"page":202/);
   });
 
+  it("enables carousel autoplay in the showcase example", () => {
+    const layout = seedShowcaseLayout(101, 202, 303);
+    const carousel = layout.find((block) => block.blockType === "carousel");
+
+    assert.ok(carousel);
+    assert.deepEqual(carousel.behavior, { autoplay: "on" });
+  });
+
   it("falls back to the shared demo media for the banner image", () => {
     const serialized = JSON.stringify(seedShowcaseLayout(101, 202));
 

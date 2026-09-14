@@ -120,13 +120,13 @@ export const seedShowcaseLayout = (
         image: mediaId,
         title: "Segundo slide",
         description:
-          "A navegacao manual funciona por botoes e teclado, sem depender de autoplay.",
+          "A navegacao manual funciona por botoes e teclado, e a rotacao para quando houver interacao.",
       },
       {
         image: mediaId,
         title: "Terceiro slide",
         description:
-          "Autoplay permanece desligado por padrao e pode ser habilitado quando fizer sentido editorial.",
+          "O schema mantem autoplay desligado por padrao; este exemplo liga a opcao para demonstracao.",
       },
     ],
     display: {
@@ -134,7 +134,7 @@ export const seedShowcaseLayout = (
       navigation: "arrows-dots",
     },
     behavior: {
-      autoplay: "off",
+      autoplay: "on",
     },
   },
   {
