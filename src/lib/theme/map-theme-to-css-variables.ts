@@ -1,31 +1,20 @@
 import type { SiteSetting } from "../../payload-types";
-import { normalizeHexColor } from "./colors";
+import { resolveThemeColors } from "./default-theme";
 
 export type ThemeCssVariables = Record<`--${string}`, string>;
 
 type ThemeSource = Pick<SiteSetting, "branding"> | null;
 
 export function mapThemeToCssVariables(theme: ThemeSource): ThemeCssVariables {
-  const primary = normalizeHexColor(theme?.branding?.primaryColor);
-  const secondary = normalizeHexColor(theme?.branding?.secondaryColor);
-  const accent = normalizeHexColor(theme?.branding?.accentColor);
-  const variables: ThemeCssVariables = {};
-
-  if (primary) {
-    variables["--color-primary"] = primary;
-    variables["--color-brand"] = primary;
-    variables["--color-link"] = primary;
-  }
-
-  if (secondary) {
-    variables["--color-secondary"] = secondary;
-    variables["--color-surface-strong"] = secondary;
-  }
-
-  if (accent) {
-    variables["--color-accent"] = accent;
-    variables["--color-accent-soft"] = accent;
-  }
-
-  return variables;
+  const { primaryColor: primary, secondaryColor: secondary, accentColor: accent } =
+    resolveThemeColors(theme?.branding);
+  return {
+    "--color-primary": primary,
+    "--color-brand": primary,
+    "--color-link": primary,
+    "--color-secondary": secondary,
+    "--color-surface-strong": secondary,
+    "--color-accent": accent,
+    "--color-accent-soft": accent,
+  };
 }

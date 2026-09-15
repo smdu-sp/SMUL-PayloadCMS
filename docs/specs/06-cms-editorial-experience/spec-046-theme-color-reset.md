@@ -1,9 +1,11 @@
 ---
 spec: SPEC-046
 title: Theme Color Reset
-status: planned
+status: implemented
 source: CMS-NOVO-CICLO-SPECS-042-050.md
 ---
+
+Implementação, ADR, compatibilidade e validações: [registro da SPEC-046](../../cms/theme-color-reset.md).
 
 > **Regra de execução:** implemente exclusivamente esta Spec. Não antecipe funcionalidades futuras. Ao finalizar, valide lint, typecheck, testes e build aplicáveis, registre decisões e declare explicitamente o que não foi implementado.
 

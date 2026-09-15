@@ -2,6 +2,8 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
 import { isHexColor } from "./colors";
+import { DEFAULT_THEME, resolveThemeColors } from "./default-theme";
+import { readFileSync } from "node:fs";
 import { mapThemeToCssVariables } from "./map-theme-to-css-variables";
 
 describe("theme mapping", () => {
@@ -20,7 +22,7 @@ describe("theme mapping", () => {
     assert.equal(variables["--color-accent"], "#fff4cc");
   });
 
-  it("ignores invalid branding values so css defaults can apply", () => {
+  it("falls back to SMUL defaults for invalid branding values", () => {
     const variables = mapThemeToCssVariables({
       branding: {
         primaryColor: "url(javascript:alert(1))",
@@ -29,7 +31,29 @@ describe("theme mapping", () => {
       },
     });
 
-    assert.deepEqual(variables, {});
+    assert.deepEqual(variables, mapThemeToCssVariables(null));
+    assert.equal(variables["--color-primary"], DEFAULT_THEME.primaryColor);
+  });
+
+  it("restores all default tokens after clearing legacy overrides", () => {
+    const resetBranding = { primaryColor: null, secondaryColor: null, accentColor: null };
+    assert.deepEqual(resolveThemeColors(resetBranding), DEFAULT_THEME);
+    assert.deepEqual(mapThemeToCssVariables({ branding: resetBranding }), mapThemeToCssVariables(null));
+    assert.deepEqual(resolveThemeColors({ primaryColor: "#ABC" }), {
+      ...DEFAULT_THEME,
+      primaryColor: "#abc",
+    });
+  });
+
+  it("keeps code defaults aligned with the standalone CSS fallback", () => {
+    const css = readFileSync(new URL("../../styles/tokens.css", import.meta.url), "utf8");
+    for (const [field, token] of [
+      ["primaryColor", "primary"],
+      ["secondaryColor", "secondary"],
+      ["accentColor", "accent"],
+    ] as const) {
+      assert.ok(css.includes(`--color-${token}: ${DEFAULT_THEME[field]};`));
+    }
   });
 
   it("accepts only short or long hex colors", () => {

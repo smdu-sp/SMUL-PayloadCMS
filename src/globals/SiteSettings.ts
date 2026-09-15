@@ -83,10 +83,9 @@ export const SiteSettings: GlobalConfig = {
           name: "primaryColor",
           type: "text",
           label: "Cor principal",
-          defaultValue: "#0a3299",
           admin: {
             description:
-              "Cor principal de botoes, links e destaques. Use hexadecimal curto ou longo, como #0a3299.",
+              "Cor principal de botoes, links e destaques. Use hexadecimal curto ou longo. Deixe vazio para usar o padrao SMUL.",
           },
           validate: validateOptionalHexColor,
         },
@@ -94,10 +93,9 @@ export const SiteSettings: GlobalConfig = {
           name: "secondaryColor",
           type: "text",
           label: "Cor institucional escura",
-          defaultValue: "#0a3299",
           admin: {
             description:
-              "Cor de fundos fortes, como areas de destaque. Use hexadecimal curto ou longo, como #0a3299.",
+              "Cor de fundos fortes, como areas de destaque. Use hexadecimal curto ou longo. Deixe vazio para usar o padrao SMUL.",
           },
           validate: validateOptionalHexColor,
         },
@@ -105,12 +103,20 @@ export const SiteSettings: GlobalConfig = {
           name: "accentColor",
           type: "text",
           label: "Cor de destaque",
-          defaultValue: "#5cd6c9",
           admin: {
             description:
-              "Cor suave para superficies de apoio e chamadas secundarias. Use hexadecimal curto ou longo, como #5cd6c9.",
+              "Cor suave para superficies de apoio e chamadas secundarias. Use hexadecimal curto ou longo. Deixe vazio para usar o padrao SMUL.",
           },
           validate: validateOptionalHexColor,
+        },
+        {
+          name: "resetThemeColors",
+          type: "ui",
+          admin: {
+            components: {
+              Field: "/components/admin/ThemeColorReset#ThemeColorReset",
+            },
+          },
         },
       ],
     },
