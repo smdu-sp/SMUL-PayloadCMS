@@ -1,4 +1,5 @@
 import type { CollectionConfig } from "payload";
+import { exec } from "child_process"; // IMPORTADO AQUI
 import { ActionBannersBlock } from "../blocks/ActionBanners/config.ts";
 import { AlertBoxBlock } from "../blocks/AlertBox/config.ts";
 import { CardsBlock } from "../blocks/Cards/config.ts";
@@ -24,6 +25,18 @@ import {
 } from "../lib/payload/revalidate-page.ts";
 
 const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3000";
+
+// Hook para gerar as fotos automaticamente após salvar
+const updateBlockPreviews = () => {
+  console.log("🔄 Atualizando previews dos blocos via Playwright...");
+  exec("node scripts/generate-previews.mjs", (error, stdout) => {
+    if (error) {
+      console.error("❌ Erro ao gerar preview dos blocos:", error);
+      return;
+    }
+    console.log("✅ Previews dos blocos geradas e atualizadas com sucesso!");
+  });
+};
 
 export const getPageLivePreviewUrl = (data: Record<string, unknown>): string | null => {
   if (typeof data.slug !== "string" || !data.slug.trim()) {
@@ -77,7 +90,8 @@ export const Pages: CollectionConfig = {
     useAsTitle: "title",
   },
   hooks: {
-    afterChange: [createPageAuditLog, revalidateChangedPage],
+    // ADICIONADO O HOOK updateBlockPreviews AQUI
+    afterChange: [createPageAuditLog, revalidateChangedPage, updateBlockPreviews],
     afterDelete: [revalidateDeletedPage],
   },
   versions: {

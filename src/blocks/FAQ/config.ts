@@ -14,6 +14,11 @@ export const FAQBlock: Block = {
     singular: "Perguntas frequentes",
     plural: "Perguntas frequentes",
   },
+
+imageURL: "/live-preview/faqAccordion",
+  imageAltText: "Prévia do bloco Perguntas frequentes",
+
+  
   fields: [
     {
       name: "title",

@@ -1,5 +1,7 @@
 import { sqliteAdapter } from "@payloadcms/db-sqlite";
 import { lexicalEditor } from "@payloadcms/richtext-lexical";
+import { en } from "@payloadcms/translations/languages/en";
+import { pt } from "@payloadcms/translations/languages/pt"; 
 import path from "path";
 import { buildConfig } from "payload";
 import { fileURLToPath } from "url";
@@ -27,12 +29,22 @@ export const adminHelpView = {
 export const adminHelpNavLink =
   "/components/admin/AdminHelpNavLink#AdminHelpNavLink";
 
+// Registramos o Pop-up apontando para a pasta certa
+export const adminBlockPreviewPopup =
+  "/components/admin/BlockPreviewPopup#BlockPreviewPopup";
+
 export default buildConfig({
   editor: lexicalEditor(),
+
+  i18n: {
+    supportedLanguages: { pt, en },
+    fallbackLanguage: "pt", // Português como padrão
+  },
+
   admin: {
     user: Users.slug,
     components: {
-      afterNavLinks: [adminHelpNavLink],
+      afterNavLinks: [adminHelpNavLink, adminBlockPreviewPopup],
       views: {
         ajuda: adminHelpView,
       },

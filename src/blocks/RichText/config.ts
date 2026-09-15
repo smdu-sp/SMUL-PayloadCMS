@@ -10,6 +10,13 @@ export const RichTextBlock: Block = {
     singular: "Texto editorial",
     plural: "Textos editoriais",
   },
+
+
+imageURL: "/live-preview/richText",
+imageAltText: "Prévia do bloco texto editorial",
+
+
+
   fields: [
     {
       name: "content",

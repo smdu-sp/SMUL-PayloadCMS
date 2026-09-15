@@ -11,6 +11,10 @@ export const AlertBoxBlock: Block = {
     singular: "Caixa de aviso",
     plural: "Caixas de aviso",
   },
+
+imageURL: "/live-preview/alertBox", // ← slug do blockType
+  imageAltText: "Prévia do bloco Caixa de aviso",
+
   fields: [
     {
       name: "title",

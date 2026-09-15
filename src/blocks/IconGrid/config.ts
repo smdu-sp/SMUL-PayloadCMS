@@ -11,6 +11,10 @@ export const IconGridBlock: Block = {
     singular: "Grade de ícones e informações",
     plural: "Grades de ícones e informações",
   },
+
+  imageURL: "/live-preview/iconGrid",
+  imageAltText: "Prévia do bloco Grade de ícones e informações",
+  
   fields: [
     {
       name: "title",

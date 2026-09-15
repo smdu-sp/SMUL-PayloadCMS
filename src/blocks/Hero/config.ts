@@ -11,6 +11,11 @@ export const HeroBlock: Block = {
     singular: "Destaque principal",
     plural: "Destaques principais",
   },
+   
+  
+  imageURL: "/live-preview/hero",
+  imageAltText: "Prévia do bloco Destaque Principal",
+
   fields: [
     {
       name: "eyebrow",

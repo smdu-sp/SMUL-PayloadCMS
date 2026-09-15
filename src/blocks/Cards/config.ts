@@ -15,6 +15,10 @@ export const CardsBlock: Block = {
     singular: "Cards e grades de benefícios",
     plural: "Cards e grades de benefícios",
   },
+
+imageURL: "/live-preview/cards",
+imageAltText: "Prévia do bloco Cards e grades de benefícios",
+
   fields: [
     {
       name: "title",

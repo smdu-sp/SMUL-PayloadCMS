@@ -11,6 +11,12 @@ export const CTABlock: Block = {
     singular: "Chamada de acao",
     plural: "Chamadas de acao",
   },
+
+imageURL: "/live-preview/cta", // ← slug do blockType
+  imageAltText: "Prévia do bloco Chamada de ação",
+
+
+
   fields: [
     {
       name: "title",

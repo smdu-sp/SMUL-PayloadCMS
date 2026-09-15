@@ -15,6 +15,12 @@ export const ImageTextBlock: Block = {
     singular: "Mídia e texto / imagem de destaque",
     plural: "Mídia e texto / imagens de destaque",
   },
+
+
+imageURL: "/live-preview/imageText",
+  imageAltText: "Prévia do bloco Mídia e texto / imagem de destaque",
+
+
   fields: [
     {
       name: "title",

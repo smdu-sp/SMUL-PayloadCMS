@@ -11,6 +11,11 @@ export const ActionBannersBlock: Block = {
     singular: "Faixas de ação",
     plural: "Faixas de ação",
   },
+
+
+imageURL: "/live-preview/actionBanners", // ← slug do blockType
+  imageAltText: "Prévia do bloco Faixas de ação",
+  
   fields: [
     {
       name: "title",

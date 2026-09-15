@@ -3,7 +3,7 @@ import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 
 import { RenderBlocks } from "../../../components/RenderBlocks";
-import { LivePreviewPage } from "../../../components/LivePreviewPage";
+import { LivePreviewPage } from "../../../components/admin/LivePreviewPage";
 import { HOME_SLUG, pathToPageSlug } from "../../../domain/slug";
 import {
   getPage,
