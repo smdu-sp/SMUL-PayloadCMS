@@ -16,10 +16,10 @@ const sectionTones = {
   default: "bg-background text-foreground",
   surface: "bg-surface text-foreground",
   muted: "bg-muted text-foreground",
-  brand: "bg-secondary text-secondary-foreground",
-  primary: "bg-primary text-primary-foreground",
-  secondary: "bg-secondary text-secondary-foreground",
-  accent: "bg-accent text-accent-foreground",
+  brand: "bg-brand text-brand-foreground",
+  primary: "bg-action text-action-foreground",
+  secondary: "bg-surface-strong text-surface-strong-foreground",
+  accent: "bg-highlight text-highlight-foreground",
 } as const;
 
 export type SectionSpacing = keyof typeof sectionSpacings;

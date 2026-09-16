@@ -836,6 +836,30 @@ export interface CTABlock {
      * Controla a distancia vertical do bloco em relacao aos blocos adjacentes.
      */
     spacing?: ('compact' | 'default' | 'spacious') | null;
+    background?: {
+      type?: ('preset' | 'custom') | null;
+      preset?: ('default' | 'surface' | 'primary' | 'secondary' | 'accent') | null;
+      /**
+       * Use hexadecimal curto ou longo. O contraste e validado antes de salvar.
+       */
+      customColor?: string | null;
+    };
+    foreground?: {
+      type?: ('preset' | 'custom') | null;
+      preset?: ('default' | 'surface' | 'primary' | 'secondary' | 'accent') | null;
+      /**
+       * Use hexadecimal curto ou longo. O contraste e validado antes de salvar.
+       */
+      customColor?: string | null;
+    };
+    accent?: {
+      type?: ('preset' | 'custom') | null;
+      preset?: ('default' | 'surface' | 'primary' | 'secondary' | 'accent') | null;
+      /**
+       * Use hexadecimal curto ou longo. O contraste e validado antes de salvar.
+       */
+      customColor?: string | null;
+    };
   };
   id?: string | null;
   blockName?: string | null;
@@ -1604,6 +1628,27 @@ export interface CTABlockSelect<T extends boolean = true> {
     | {
         tone?: T;
         spacing?: T;
+        background?:
+          | T
+          | {
+              type?: T;
+              preset?: T;
+              customColor?: T;
+            };
+        foreground?:
+          | T
+          | {
+              type?: T;
+              preset?: T;
+              customColor?: T;
+            };
+        accent?:
+          | T
+          | {
+              type?: T;
+              preset?: T;
+              customColor?: T;
+            };
       };
   id?: T;
   blockName?: T;
@@ -1941,6 +1986,51 @@ export interface SiteSetting {
      * Cor suave para superficies de apoio e chamadas secundarias. Use hexadecimal curto ou longo. Deixe vazio para usar o padrao SMUL.
      */
     accentColor?: string | null;
+    /**
+     * Fundo geral de paginas e secoes. Deixe vazio para usar o padrao SMUL.
+     */
+    backgroundColor?: string | null;
+    /**
+     * Cor dos titulos editoriais. Deixe vazio para usar o padrao SMUL.
+     */
+    headlineColor?: string | null;
+    /**
+     * Cor do texto corrido. Deixe vazio para usar o texto padrao do Design System.
+     */
+    paragraphColor?: string | null;
+    /**
+     * Cor de botoes principais e chamadas clicaveis. Deixe vazio para usar o padrao SMUL.
+     */
+    buttonColor?: string | null;
+    /**
+     * Cor do texto em botoes fortes. Deixe vazio para usar o contraste padrao.
+     */
+    buttonTextColor?: string | null;
+    /**
+     * Cor de contornos em ilustracoes e detalhes graficos futuros.
+     */
+    strokeColor?: string | null;
+    /**
+     * Cor principal de ilustracoes e areas graficas futuras.
+     */
+    mainColor?: string | null;
+    /**
+     * Cor de detalhes, icones e enfases menores. Deixe vazio para usar o padrao SMUL.
+     */
+    highlightColor?: string | null;
+    /**
+     * Cor secundaria para apoio visual e variacoes de enfase.
+     */
+    secondaryIllustrationColor?: string | null;
+    /**
+     * Cor terciaria para composicoes futuras e detalhes raros.
+     */
+    tertiaryColor?: string | null;
+    actionColor?: string | null;
+    actionForegroundColor?: string | null;
+    linkColor?: string | null;
+    secondaryAccentColor?: string | null;
+    tertiaryAccentColor?: string | null;
   };
   /**
    * Valores usados quando uma pagina nao possui SEO proprio configurado.
@@ -2029,6 +2119,21 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         primaryColor?: T;
         secondaryColor?: T;
         accentColor?: T;
+        backgroundColor?: T;
+        headlineColor?: T;
+        paragraphColor?: T;
+        buttonColor?: T;
+        buttonTextColor?: T;
+        strokeColor?: T;
+        mainColor?: T;
+        highlightColor?: T;
+        secondaryIllustrationColor?: T;
+        tertiaryColor?: T;
+        actionColor?: T;
+        actionForegroundColor?: T;
+        linkColor?: T;
+        secondaryAccentColor?: T;
+        tertiaryAccentColor?: T;
       };
   defaultSEO?:
     | T

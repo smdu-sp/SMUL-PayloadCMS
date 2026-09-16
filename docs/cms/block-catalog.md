@@ -15,7 +15,7 @@ Este catalogo registra a base real encontrada no projeto durante a SPEC-018. Ele
 | Carousel | `src/blocks/Carousel/config.ts` | `src/blocks/Carousel/Component.tsx` e `src/blocks/Carousel/CarouselClient.tsx` | Slides por visualizacao `1`, `2`, `3`; navegacao `arrows` ou `arrows-dots`; autoplay `off` ou `on` | Conteudo sequencial com navegacao manual acessivel e autoplay opcional pausavel. |
 | ImageText | `src/blocks/ImageText/config.ts` | `src/blocks/ImageText/Component.tsx` | `image-left`, `image-right`; fallbacks legados `left` e `right` | Secoes de duas colunas com midia, titulo, rich text e acao complementar opcional. |
 | Cards | `src/blocks/Cards/config.ts` | `src/blocks/Cards/Component.tsx` | `default`, `modalities` | Listas editoriais em grade com titulo, resumo, itens, icone, descricao e link opcional; a variant `modalities` cobre modalidades sem duplicar Block. |
-| CTA | `src/blocks/CTA/config.ts` | `src/blocks/CTA/Component.tsx` | `default`, `brand`, `compact`; fallback legado `primary` para `brand` | Chamadas de acao pontuais ou finais com titulo, descricao e link obrigatorio. |
+| CTA | `src/blocks/CTA/config.ts` | `src/blocks/CTA/Component.tsx` | `default`, `brand`, `compact`; fallback legado `primary` para `brand`; cores controladas por `background`, `foreground` e `accent` | Chamadas de acao pontuais ou finais com titulo, descricao e link obrigatorio. |
 | Icon Grid | `src/blocks/IconGrid/config.ts` | `src/blocks/IconGrid/Component.tsx` | `default`, `compact` | Grade compacta de itens com icone, texto curto e link opcional, priorizada para paginas de modalidades. |
 | FAQ / Accordion | `src/blocks/FAQ/config.ts` | `src/blocks/FAQ/Component.tsx` | `default`, `compact` | Lista acessivel de perguntas e respostas com rich text, renderizada com `details` e `summary`. |
 | Alert Box | `src/blocks/AlertBox/config.ts` | `src/blocks/AlertBox/Component.tsx` | `info`, `warning` | Aviso editorial com tom controlado pelo Design System, rich text e link opcional. |
@@ -43,6 +43,7 @@ Este catalogo registra a base real encontrada no projeto durante a SPEC-018. Ele
 | `MediaImage` | `src/blocks/shared/MediaImage.tsx` | Renderizacao de uploads de midia do Payload. |
 | `createSocialLinkFields` | `src/globals/shared/social-link.ts` | Campos reutilizaveis para redes sociais oficiais em Globals. |
 | `createSeoFields` | `src/fields/seo.ts` | Campos reutilizaveis para Page SEO e SEO padrao. |
+| Semantic color tokens | `docs/cms/semantic-color-tokens.md` | Matriz de papeis visuais usada por primitives e futuros color pickers. |
 
 ## Regras de uso
 

@@ -1,5 +1,10 @@
+import type { CSSProperties } from "react";
 import type { CTABlock as CTABlockProps } from "../../payload-types";
 import { Card, Container, Heading, Section, Text } from "../../components/ui";
+import {
+  resolveControlledColorCssValue,
+  type ControlledColorValue,
+} from "../../fields/block-appearance";
 import { BlockLink } from "../shared/BlockLink";
 
 type CTAVariant = "brand" | "compact" | "default";
@@ -47,6 +52,9 @@ const ctaVariantStyles = {
 } as const;
 
 type CTAAppearance = {
+  accent?: ControlledColorValue | null;
+  background?: ControlledColorValue | null;
+  foreground?: ControlledColorValue | null;
   spacing?: "compact" | "default" | "spacious" | string | null;
   tone?: "accent" | "brand" | "default" | "muted" | "surface" | string | null;
 };
@@ -86,6 +94,22 @@ export function normalizeCTASpacing(
   return fallbackSpacing;
 }
 
+function getControlledColorStyle(
+  appearance: CTAAppearance | null | undefined,
+): CSSProperties | undefined {
+  const background = resolveControlledColorCssValue(appearance?.background);
+  const foreground = resolveControlledColorCssValue(appearance?.foreground);
+  const accent = resolveControlledColorCssValue(appearance?.accent);
+
+  if (!background || !foreground || !accent) return undefined;
+
+  return {
+    "--block-accent": accent,
+    "--block-bg": background,
+    "--block-fg": foreground,
+  } as CSSProperties;
+}
+
 export function CTABlock({
   action,
   appearance,
@@ -104,21 +128,27 @@ export function CTABlock({
     appearance?.spacing,
     styles.sectionSpacing === "sm" ? "compact" : "default",
   );
+  const controlledColorStyle = getControlledColorStyle(appearance);
+  const usesControlledColors = Boolean(controlledColorStyle);
 
   return (
     <Section spacing={effectiveSpacing} tone="default">
       <Container size={styles.containerSize}>
-        <Card padding={styles.padding} tone={effectiveTone}>
+        <Card
+          padding={styles.padding}
+          style={controlledColorStyle}
+          tone={usesControlledColors ? "custom" : effectiveTone}
+        >
           <Heading
             level={2}
             size={styles.headingSize}
-            tone={isDarkTone ? "inverse" : "default"}
+            tone={isDarkTone && !usesControlledColors ? "inverse" : "default"}
           >
             <span className="text-balance break-words">{title}</span>
           </Heading>
           {description ? (
             <div className={`${styles.descriptionSpacing} max-w-container-sm`}>
-              <Text tone={isDarkTone ? "inverse" : "default"} variant="lead">
+              <Text tone={isDarkTone && !usesControlledColors ? "inverse" : "default"} variant="lead">
                 {description}
               </Text>
             </div>
@@ -126,7 +156,13 @@ export function CTABlock({
           {action?.label ? (
             <div className={styles.actionSpacing}>
               <BlockLink
-                appearance={isDarkTone ? "secondary" : styles.actionAppearance}
+                appearance={
+                  usesControlledColors
+                    ? "blockAccent"
+                    : isDarkTone
+                      ? "secondary"
+                      : styles.actionAppearance
+                }
                 link={action}
                 size={styles.linkSize}
               />

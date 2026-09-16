@@ -72,6 +72,34 @@ describe("SPEC-026 content validation", () => {
     assert.equal(await validate("warning", validationArgs()), true);
   });
 
+  it("validates SPEC-047 controlled custom color contrast", async () => {
+    const appearance = fieldByName(CTABlock.fields, "appearance");
+    assert.ok("validate" in appearance && appearance.validate);
+
+    assert.equal(
+      await appearance.validate(
+        {
+          accent: { preset: "primary", type: "preset" },
+          background: { preset: "default", type: "preset" },
+          foreground: { preset: "primary", type: "preset" },
+        },
+        validationArgs(),
+      ),
+      true,
+    );
+    assert.equal(
+      await appearance.validate(
+        {
+          accent: { customColor: "#5cd6c9", type: "custom" },
+          background: { customColor: "#ffffff", type: "custom" },
+          foreground: { customColor: "#ffffff", type: "custom" },
+        },
+        validationArgs(),
+      ),
+      "Foreground e background precisam atingir contraste minimo WCAG AA.",
+    );
+  });
+
   it("rejects partially completed optional and required links", async () => {
     const optional = createLinkFields();
     const optionalLabel = fieldByName(optional, "label");

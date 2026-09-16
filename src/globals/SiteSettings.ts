@@ -86,6 +86,7 @@ export const SiteSettings: GlobalConfig = {
           admin: {
             description:
               "Cor principal de botoes, links e destaques. Use hexadecimal curto ou longo. Deixe vazio para usar o padrao SMUL.",
+            hidden: true,
           },
           validate: validateOptionalHexColor,
         },
@@ -96,6 +97,7 @@ export const SiteSettings: GlobalConfig = {
           admin: {
             description:
               "Cor de fundos fortes, como areas de destaque. Use hexadecimal curto ou longo. Deixe vazio para usar o padrao SMUL.",
+            hidden: true,
           },
           validate: validateOptionalHexColor,
         },
@@ -106,8 +108,202 @@ export const SiteSettings: GlobalConfig = {
           admin: {
             description:
               "Cor suave para superficies de apoio e chamadas secundarias. Use hexadecimal curto ou longo. Deixe vazio para usar o padrao SMUL.",
+            hidden: true,
           },
           validate: validateOptionalHexColor,
+        },
+        {
+          type: "collapsible",
+          label: "Elements",
+          admin: {
+            description:
+              "Composicao principal do site inspirada no modelo Happy Hues.",
+          },
+          fields: [
+            {
+              type: "row",
+              fields: [
+                {
+                  name: "backgroundColor",
+                  type: "text",
+                  label: "Background",
+                  admin: {
+                    description:
+                      "Fundo geral de paginas e secoes. Deixe vazio para usar o padrao SMUL.",
+                    width: "50%",
+                  },
+                  validate: validateOptionalHexColor,
+                },
+                {
+                  name: "headlineColor",
+                  type: "text",
+                  label: "Headline",
+                  admin: {
+                    description:
+                      "Cor dos titulos editoriais. Deixe vazio para usar o padrao SMUL.",
+                    width: "50%",
+                  },
+                  validate: validateOptionalHexColor,
+                },
+              ],
+            },
+            {
+              type: "row",
+              fields: [
+                {
+                  name: "paragraphColor",
+                  type: "text",
+                  label: "Paragraph",
+                  admin: {
+                    description:
+                      "Cor do texto corrido. Deixe vazio para usar o texto padrao do Design System.",
+                    width: "50%",
+                  },
+                  validate: validateOptionalHexColor,
+                },
+                {
+                  name: "buttonColor",
+                  type: "text",
+                  label: "Button",
+                  admin: {
+                    description:
+                      "Cor de botoes principais e chamadas clicaveis. Deixe vazio para usar o padrao SMUL.",
+                    width: "50%",
+                  },
+                  validate: validateOptionalHexColor,
+                },
+              ],
+            },
+            {
+              name: "buttonTextColor",
+              type: "text",
+              label: "Button text",
+              admin: {
+                description:
+                  "Cor do texto em botoes fortes. Deixe vazio para usar o contraste padrao.",
+              },
+              validate: validateOptionalHexColor,
+            },
+          ],
+        },
+        {
+          type: "collapsible",
+          label: "Illustration",
+          admin: {
+            description:
+              "Cores de apoio para ilustracoes, detalhes e composicoes visuais.",
+          },
+          fields: [
+            {
+              type: "row",
+              fields: [
+                {
+                  name: "strokeColor",
+                  type: "text",
+                  label: "Stroke",
+                  admin: {
+                    description:
+                      "Cor de contornos em ilustracoes e detalhes graficos futuros.",
+                    width: "50%",
+                  },
+                  validate: validateOptionalHexColor,
+                },
+                {
+                  name: "mainColor",
+                  type: "text",
+                  label: "Main",
+                  admin: {
+                    description:
+                      "Cor principal de ilustracoes e areas graficas futuras.",
+                    width: "50%",
+                  },
+                  validate: validateOptionalHexColor,
+                },
+              ],
+            },
+            {
+              type: "row",
+              fields: [
+                {
+                  name: "highlightColor",
+                  type: "text",
+                  label: "Highlight",
+                  admin: {
+                    description:
+                      "Cor de detalhes, icones e enfases menores. Deixe vazio para usar o padrao SMUL.",
+                    width: "50%",
+                  },
+                  validate: validateOptionalHexColor,
+                },
+                {
+                  name: "secondaryIllustrationColor",
+                  type: "text",
+                  label: "Secondary",
+                  admin: {
+                    description:
+                      "Cor secundaria para apoio visual e variacoes de enfase.",
+                    width: "50%",
+                  },
+                  validate: validateOptionalHexColor,
+                },
+              ],
+            },
+            {
+              name: "tertiaryColor",
+              type: "text",
+              label: "Tertiary",
+              admin: {
+                description:
+                  "Cor terciaria para composicoes futuras e detalhes raros.",
+              },
+              validate: validateOptionalHexColor,
+            },
+            {
+              name: "actionColor",
+              type: "text",
+              label: "Acao",
+              admin: {
+                hidden: true,
+              },
+              validate: validateOptionalHexColor,
+            },
+            {
+              name: "actionForegroundColor",
+              type: "text",
+              label: "Texto da acao",
+              admin: {
+                hidden: true,
+              },
+              validate: validateOptionalHexColor,
+            },
+            {
+              name: "linkColor",
+              type: "text",
+              label: "Link",
+              admin: {
+                hidden: true,
+              },
+              validate: validateOptionalHexColor,
+            },
+            {
+              name: "secondaryAccentColor",
+              type: "text",
+              label: "Destaque secundario",
+              admin: {
+                hidden: true,
+              },
+              validate: validateOptionalHexColor,
+            },
+            {
+              name: "tertiaryAccentColor",
+              type: "text",
+              label: "Destaque terciario",
+              admin: {
+                hidden: true,
+              },
+              validate: validateOptionalHexColor,
+            },
+          ],
         },
         {
           name: "resetThemeColors",

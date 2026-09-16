@@ -43,7 +43,7 @@ describe("Icon component", () => {
       createElement(Icon, { name: "check", size: "lg", tone: "primary" }),
     );
     assert.match(primaryLg, /h-6 w-6/);
-    assert.match(primaryLg, /text-primary/);
+    assert.match(primaryLg, /text-action/);
     assert.match(primaryLg, /width="24"/);
     assert.match(primaryLg, /height="24"/);
 
@@ -59,9 +59,14 @@ describe("Icon component", () => {
       createElement(Icon, { name: "document", size: "2xl", tone: "secondary" }),
     );
     assert.match(secondary2xl, /h-10 w-10/);
-    assert.match(secondary2xl, /text-secondary/);
+    assert.match(secondary2xl, /text-brand/);
     assert.match(secondary2xl, /width="40"/);
     assert.match(secondary2xl, /height="40"/);
+
+    const accentMd = renderToStaticMarkup(
+      createElement(Icon, { name: "info", size: "md", tone: "accent" }),
+    );
+    assert.match(accentMd, /text-highlight/);
   });
 
   it("falls back gracefully when given unknown or undefined icon name", () => {

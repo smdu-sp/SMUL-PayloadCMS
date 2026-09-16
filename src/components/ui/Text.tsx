@@ -10,10 +10,10 @@ const textVariants = {
 } as const;
 
 const textTones = {
-  default: "text-foreground",
+  default: "text-paragraph",
   muted: "text-muted-foreground",
-  inverse: "text-secondary-foreground",
-  accent: "text-accent",
+  inverse: "text-brand-foreground",
+  accent: "text-highlight",
 } as const;
 
 const textWeights = {

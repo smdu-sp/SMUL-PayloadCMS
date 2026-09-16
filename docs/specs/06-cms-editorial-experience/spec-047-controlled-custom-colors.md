@@ -1,7 +1,7 @@
 ---
 spec: SPEC-047
 title: Controlled Custom Colors
-status: planned
+status: implemented
 source: CMS-NOVO-CICLO-SPECS-042-050.md
 ---
 

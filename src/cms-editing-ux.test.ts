@@ -31,6 +31,7 @@ type FieldLike = Field & {
   admin?: {
     condition?: unknown;
     description?: string;
+    hidden?: boolean;
   };
   label?: string;
   name?: string;
@@ -47,6 +48,33 @@ const adminDescription = (field: FieldLike): string | undefined =>
   typeof field.admin?.description === "string"
     ? field.admin.description
     : undefined;
+
+const nestedFieldNames = (fields: Field[]): string[] =>
+  fields.flatMap((field) => {
+    const ownName = "name" in field && typeof field.name === "string" ? [field.name] : [];
+    const children = "fields" in field && Array.isArray(field.fields)
+      ? nestedFieldNames(field.fields as Field[])
+      : [];
+
+    return [...ownName, ...children];
+  });
+
+const visibleNestedFieldNames = (fields: Field[]): string[] =>
+  fields.flatMap((field) => {
+    const fieldLike = field as FieldLike;
+    const ownName =
+      "name" in field &&
+      typeof field.name === "string" &&
+      field.name !== "resetThemeColors" &&
+      fieldLike.admin?.hidden !== true
+        ? [field.name]
+        : [];
+    const children = "fields" in field && Array.isArray(field.fields)
+      ? visibleNestedFieldNames(field.fields as Field[])
+      : [];
+
+    return [...ownName, ...children];
+  });
 
 describe("CMS editing UX", () => {
   it("exposes user documentation from the Admin", () => {
@@ -236,10 +264,49 @@ describe("CMS editing UX", () => {
     const branding = fieldByName(SiteSettings.fields, "branding");
     const alt = fieldByName(Media.fields, "alt");
     const usage = fieldByName(Media.fields, "usage");
+    const brandingFieldNames = "fields" in branding && Array.isArray(branding.fields)
+      ? nestedFieldNames(branding.fields as Field[])
+      : [];
+    const visibleBrandingFieldNames = "fields" in branding && Array.isArray(branding.fields)
+      ? visibleNestedFieldNames(branding.fields as Field[])
+      : [];
 
     assert.equal(branding.label, "Cores institucionais");
     assert.equal(usage.label, "Uso principal");
     assert.match(adminDescription(branding) ?? "", /CSS livre/);
+    assert.deepEqual(brandingFieldNames, [
+      "primaryColor",
+      "secondaryColor",
+      "accentColor",
+      "backgroundColor",
+      "headlineColor",
+      "paragraphColor",
+      "buttonColor",
+      "buttonTextColor",
+      "strokeColor",
+      "mainColor",
+      "highlightColor",
+      "secondaryIllustrationColor",
+      "tertiaryColor",
+      "actionColor",
+      "actionForegroundColor",
+      "linkColor",
+      "secondaryAccentColor",
+      "tertiaryAccentColor",
+      "resetThemeColors",
+    ]);
+    assert.deepEqual(visibleBrandingFieldNames, [
+      "backgroundColor",
+      "headlineColor",
+      "paragraphColor",
+      "buttonColor",
+      "buttonTextColor",
+      "strokeColor",
+      "mainColor",
+      "highlightColor",
+      "secondaryIllustrationColor",
+      "tertiaryColor",
+    ]);
     assert.match(adminDescription(alt) ?? "", /leitores de tela/);
     assert.match(adminDescription(usage) ?? "", /SVG/);
   });

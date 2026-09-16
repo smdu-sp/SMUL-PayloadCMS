@@ -9,9 +9,9 @@ const headingSizes = {
 } as const;
 
 const headingTones = {
-  default: "text-heading",
-  inverse: "text-secondary-foreground",
-  accent: "text-accent",
+  default: "text-headline",
+  inverse: "text-brand-foreground",
+  accent: "text-highlight",
 } as const;
 
 const headingAlignments = {

@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
+import type { CSSProperties } from "react";
 
 import { Button, Card, Container, Heading, Section, Text } from "./index";
 
@@ -21,7 +22,7 @@ describe("ui primitives", () => {
     });
 
     assert.equal(element.type, "section");
-    assert.match(element.props.className, /bg-secondary/);
+    assert.match(element.props.className, /bg-brand/);
     assert.match(element.props.className, /py-16/);
   });
 
@@ -34,6 +35,7 @@ describe("ui primitives", () => {
 
     assert.equal(element.type, "h1");
     assert.match(element.props.className, /text-display-md/);
+    assert.match(element.props.className, /text-headline/);
   });
 
   it("Text exposes compact readable variants", () => {
@@ -42,10 +44,15 @@ describe("ui primitives", () => {
       tone: "inverse",
       variant: "lead",
     });
+    const body = Text({
+      children: "Body",
+      variant: "body",
+    });
 
     assert.equal(element.type, "p");
     assert.match(element.props.className, /text-lg/);
-    assert.match(element.props.className, /text-secondary-foreground/);
+    assert.match(element.props.className, /text-brand-foreground/);
+    assert.match(body.props.className, /text-paragraph/);
   });
 
   it("Button renders links and button controls with focus styles", () => {
@@ -71,6 +78,23 @@ describe("ui primitives", () => {
     assert.equal(element.type, "div");
     assert.match(element.props.className, /p-8/);
     assert.match(element.props.className, /h-full/);
-    assert.match(element.props.className, /hover:border-primary/);
+    assert.match(element.props.className, /hover:border-action/);
+  });
+
+  it("Card and Button can inherit controlled block color variables", () => {
+    const card = Card({
+      children: "card",
+      style: {
+        "--block-accent": "#0a3299",
+        "--block-bg": "#ffffff",
+        "--block-fg": "#0a3299",
+      } as CSSProperties,
+      tone: "custom",
+    });
+    const button = Button({ children: "Go", href: "/teste", variant: "blockAccent" });
+
+    assert.match(card.props.className, /var\(--block-bg\)/);
+    assert.equal(card.props.style["--block-accent"], "#0a3299");
+    assert.match(button.props.className, /var\(--block-accent\)/);
   });
 });

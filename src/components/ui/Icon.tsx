@@ -49,13 +49,13 @@ const sizePixelMap: Record<IconSize, number> = {
 };
 
 const toneClasses: Record<IconTone, string> = {
-  accent: "text-accent-foreground",
+  accent: "text-highlight",
   current: "text-current",
   danger: "text-danger",
   default: "text-foreground",
   muted: "text-muted-foreground",
-  primary: "text-primary",
-  secondary: "text-secondary",
+  primary: "text-action",
+  secondary: "text-brand",
   success: "text-success",
   warning: "text-warning",
 };

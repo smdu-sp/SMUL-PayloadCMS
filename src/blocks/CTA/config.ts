@@ -2,6 +2,7 @@ import type { Block } from "payload";
 import { characterLimitAdmin } from "../../fields/character-limit";
 import {
   createAppearanceGroup,
+  createControlledColorAppearanceFields,
   createSpacingField,
   createToneField,
 } from "../../fields/block-appearance";
@@ -76,6 +77,7 @@ export const CTABlock: Block = {
     createAppearanceGroup([
       createToneField(["default", "brand", "accent", "muted"], "default"),
       createSpacingField(["compact", "default", "spacious"], "default"),
+      ...createControlledColorAppearanceFields(),
     ]),
   ],
 };

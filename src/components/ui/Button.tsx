@@ -4,10 +4,12 @@ import type { ButtonHTMLAttributes, ReactNode } from "react";
 import { classNames } from "./classNames";
 
 const buttonVariants = {
+  blockAccent:
+    "bg-[var(--block-accent)] text-[var(--block-bg)] hover:opacity-90 focus-visible:outline-focus",
   primary:
-    "bg-primary text-primary-foreground hover:bg-primary-hover focus-visible:outline-focus",
+    "bg-action text-action-foreground hover:bg-action-hover focus-visible:outline-focus",
   secondary:
-    "bg-surface text-secondary hover:bg-muted focus-visible:outline-focus",
+    "bg-surface text-action hover:bg-muted focus-visible:outline-focus",
   outline:
     "border border-border bg-surface text-foreground hover:bg-muted focus-visible:outline-focus",
   ghost:

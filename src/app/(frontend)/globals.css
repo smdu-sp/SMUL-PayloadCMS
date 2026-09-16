@@ -4,16 +4,27 @@
 :root {
   --color-page: var(--color-background);
   --color-page-foreground: var(--color-foreground);
-  --color-heading: var(--color-accent-foreground);
+  --color-heading: var(--color-primary);
   --color-text: var(--color-foreground);
   --color-text-muted: var(--color-muted-foreground);
   --color-link: var(--color-primary);
+  --color-link-hover: var(--color-primary-hover);
   --color-brand: var(--color-primary);
   --color-brand-hover: var(--color-primary-hover);
   --color-brand-foreground: var(--color-primary-foreground);
+  --color-action: var(--color-primary);
+  --color-action-hover: var(--color-primary-hover);
+  --color-action-foreground: var(--color-primary-foreground);
+  --color-headline: var(--color-heading);
+  --color-paragraph: var(--color-text);
   --color-surface-strong: var(--color-secondary);
   --color-surface-strong-foreground: var(--color-secondary-foreground);
   --color-accent-soft: var(--color-accent);
+  --color-highlight: var(--color-accent);
+  --color-highlight-foreground: var(--color-accent-foreground);
+  --color-secondary-accent: var(--color-secondary);
+  --color-secondary-accent-foreground: var(--color-secondary-foreground);
+  --color-tertiary-accent: var(--color-accent-pink);
   --background: var(--color-background);
   --foreground: var(--color-foreground);
 }
@@ -38,14 +49,25 @@
   --color-surface-strong-foreground: var(--color-surface-strong-foreground);
   --color-border: var(--color-border);
   --color-heading: var(--color-heading);
+  --color-headline: var(--color-headline);
   --color-text: var(--color-text);
+  --color-paragraph: var(--color-paragraph);
   --color-text-muted: var(--color-text-muted);
   --color-brand: var(--color-brand);
   --color-brand-hover: var(--color-brand-hover);
   --color-brand-foreground: var(--color-brand-foreground);
+  --color-action: var(--color-action);
+  --color-action-hover: var(--color-action-hover);
+  --color-action-foreground: var(--color-action-foreground);
   --color-link: var(--color-link);
+  --color-link-hover: var(--color-link-hover);
   --color-focus: var(--color-focus);
   --color-accent-soft: var(--color-accent-soft);
+  --color-highlight: var(--color-highlight);
+  --color-highlight-foreground: var(--color-highlight-foreground);
+  --color-secondary-accent: var(--color-secondary-accent);
+  --color-secondary-accent-foreground: var(--color-secondary-accent-foreground);
+  --color-tertiary-accent: var(--color-tertiary-accent);
   --color-success: var(--color-success);
   --color-warning: var(--color-warning);
   --color-danger: var(--color-danger);
@@ -114,13 +136,13 @@ body {
 }
 
 .cms-rich-text {
-  color: var(--color-text);
+  color: var(--color-paragraph);
   font-size: var(--font-size-base);
   line-height: var(--line-height-relaxed);
 }
 
 .cms-rich-text :where(h1, h2, h3, h4, h5, h6) {
-  color: var(--color-heading);
+  color: var(--color-headline);
   font-family: var(--font-family-heading);
   font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-tight);
@@ -145,7 +167,7 @@ body {
 }
 
 .cms-rich-text :where(strong) {
-  color: var(--color-heading);
+  color: var(--color-headline);
   font-weight: var(--font-weight-bold);
 }
 
@@ -157,7 +179,7 @@ body {
 }
 
 .cms-rich-text :where(a:hover) {
-  color: var(--color-primary-hover);
+  color: var(--color-link-hover);
 }
 
 .cms-rich-text :where(p, ul, ol, blockquote, table) {
@@ -209,7 +231,7 @@ body {
 
 .cms-rich-text :where(th) {
   background: var(--color-surface-muted);
-  color: var(--color-heading);
+  color: var(--color-headline);
   font-weight: var(--font-weight-semibold);
 }
 
