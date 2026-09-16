@@ -20,9 +20,10 @@ type GalleryLightboxProps = {
 };
 
 const columnClasses: Record<GalleryColumns, string> = {
-  "2": "sm:grid-cols-2",
-  "3": "sm:grid-cols-2 lg:grid-cols-3",
-  "4": "sm:grid-cols-2 lg:grid-cols-4",
+  "2": "grid-cols-2",
+  "3": "grid-cols-2 md:grid-cols-3",
+  "4": "grid-cols-2 md:grid-cols-3 lg:grid-cols-4",
+  "8": "grid-cols-2 sm:grid-cols-4 lg:grid-cols-8",
 };
 
 // Para adicionar efeitos, inclua o valor no schema do GalleryBlock,
@@ -132,7 +133,7 @@ export function GalleryLightbox({
 
   return (
     <>
-      <ul className={classNames("grid gap-4", columnClasses[columns])}>
+      <ul className={classNames("grid gap-0.5 sm:gap-0.5", columnClasses[columns])}>
         {images.map((item, index) => {
           const media = item.media as Media;
           const label = mediaLabel(item, index);
@@ -150,7 +151,7 @@ export function GalleryLightbox({
               >
                 <span
                   className={classNames(
-                    "relative block aspect-[4/3] w-full overflow-hidden",
+                    "relative block aspect-square w-full overflow-hidden sm:aspect-[4/3]",
                     thumbnailEffectClasses[thumbnailEffect],
                   )}
                 >
@@ -161,11 +162,6 @@ export function GalleryLightbox({
                     sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
                   />
                 </span>
-                {item.caption ? (
-                  <span className="block px-4 py-3 text-sm leading-normal text-muted-foreground">
-                    {item.caption}
-                  </span>
-                ) : null}
               </button>
             </li>
           );

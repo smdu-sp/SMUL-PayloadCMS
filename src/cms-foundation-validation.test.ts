@@ -14,6 +14,7 @@ import { IconGridBlock } from "./blocks/IconGrid/config";
 import { ImageBlock } from "./blocks/ImageBlock/config";
 import { ImageTextBlock } from "./blocks/ImageText/config";
 import { RichTextBlock } from "./blocks/RichText/config";
+import { VideoBlock } from "./blocks/VideoBlock/config";
 import { AuditLogs } from "./collections/AuditLogs";
 import { Media, mediaUsageOptions } from "./collections/Media";
 import { Pages } from "./collections/Pages";
@@ -230,6 +231,7 @@ describe("SPEC-029 CMS foundation validation", () => {
       ImageBlock,
       GalleryBlock,
       CarouselBlock,
+      VideoBlock,
       ImageTextBlock,
       CardsBlock,
       CTABlock,

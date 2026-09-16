@@ -2,7 +2,7 @@ import type { Media } from "../../payload-types";
 import { Container, Heading, Section } from "../../components/ui";
 import { GalleryLightbox } from "./GalleryLightbox";
 
-export type GalleryColumns = "2" | "3" | "4";
+export type GalleryColumns = "2" | "3" | "4" | "8";
 export type GalleryPreset = "grid";
 export type GalleryThumbnailEffect = "grow" | "none";
 
@@ -27,8 +27,8 @@ export type GalleryBlockProps = {
 export function normalizeGalleryColumns(
   columns: GalleryColumns | string | null | undefined,
 ): GalleryColumns {
-  if (columns === "2" || columns === "4") return columns;
-  return "3";
+  if (columns === "2" || columns === "3" || columns === "8") return columns;
+  return "4";
 }
 
 export function normalizeGalleryPreset(

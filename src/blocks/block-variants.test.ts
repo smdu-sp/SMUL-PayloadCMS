@@ -153,8 +153,9 @@ describe("block variant fallbacks", () => {
     assert.equal(normalizeGalleryColumns("2"), "2");
     assert.equal(normalizeGalleryColumns("3"), "3");
     assert.equal(normalizeGalleryColumns("4"), "4");
-    assert.equal(normalizeGalleryColumns("5"), "3");
-    assert.equal(normalizeGalleryColumns(undefined), "3");
+    assert.equal(normalizeGalleryColumns("8"), "8");
+    assert.equal(normalizeGalleryColumns("5"), "4");
+    assert.equal(normalizeGalleryColumns(undefined), "4");
     assert.equal(normalizeGalleryPreset("grid"), "grid");
     assert.equal(normalizeGalleryPreset("masonry"), "grid");
     assert.equal(normalizeGalleryThumbnailEffect("grow"), "grow");
@@ -171,8 +172,10 @@ describe("block variant fallbacks", () => {
     assert.ok(columns && "options" in columns && Array.isArray(columns.options));
     assert.deepEqual(
       columns.options.map((option) => typeof option === "object" ? option.value : option),
-      ["2", "3", "4"],
+      ["2", "3", "4", "8"],
     );
+    assert.ok("defaultValue" in columns);
+    assert.equal(columns.defaultValue, "4");
     const thumbnailEffect = layout.fields.find(
       (field) => "name" in field && field.name === "thumbnailEffect",
     );

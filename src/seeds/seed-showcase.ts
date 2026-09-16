@@ -99,7 +99,7 @@ export const seedShowcaseLayout = (
       },
     ],
     layout: {
-      columns: "3",
+      columns: "4",
       preset: "grid",
       thumbnailEffect: "grow",
     },

@@ -105,7 +105,7 @@ Este catalogo registra a base real encontrada no projeto durante a SPEC-018. Ele
 
 ## Decisoes da SPEC-043
 
-- Implementado: `gallery`, com titulo opcional, lista de imagens, legenda por imagem, colunas fechadas, preset `grid` e efeito de miniatura controlado.
+- Implementado: `gallery`, com titulo opcional, lista de imagens, importacao auxiliar em lote, legenda por imagem exibida apenas no lightbox, colunas fechadas, preset `grid` e efeito de miniatura controlado.
 - Implementado: lightbox como Dialog acessivel com `Esc`, foco inicial, trap de foco, retorno ao acionador e navegacao anterior/proxima por teclado.
 - Mantido fora do escopo: masonry, carousel automatico, metadados editoriais adicionais e edicao/crop persistente das imagens.
 

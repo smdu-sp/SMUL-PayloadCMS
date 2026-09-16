@@ -446,7 +446,7 @@ export interface GalleryBlock {
    */
   title?: string | null;
   /**
-   * Adicione imagens da biblioteca de midia. Cada item pode ter legenda propria para a miniatura e o lightbox.
+   * Adicione imagens da biblioteca de midia. Cada item pode ter legenda propria para o lightbox.
    */
   images: {
     /**
@@ -454,16 +454,20 @@ export interface GalleryBlock {
      */
     media: number | Media;
     /**
-     * Opcional. Texto exibido abaixo da imagem ampliada e como contexto da miniatura.
+     * Opcional. Texto exibido somente quando a imagem estiver aberta.
      */
     caption?: string | null;
     id?: string | null;
   }[];
   /**
+   * Selecione varias imagens para adiciona-las ao grid de uma vez. O campo e limpo apos salvar; ajuste legendas no array acima.
+   */
+  bulkImages?: (number | Media)[] | null;
+  /**
    * Controla a composicao responsiva com opcoes fechadas. Masonry nao esta disponivel nesta spec.
    */
   layout: {
-    columns: '2' | '3' | '4';
+    columns: '2' | '3' | '4' | '8';
     preset: 'grid';
     thumbnailEffect: 'none' | 'grow';
   };
@@ -1437,6 +1441,7 @@ export interface GalleryBlockSelect<T extends boolean = true> {
         caption?: T;
         id?: T;
       };
+  bulkImages?: T;
   layout?:
     | T
     | {

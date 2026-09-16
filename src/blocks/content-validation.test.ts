@@ -124,10 +124,17 @@ describe("SPEC-026 content validation", () => {
     const galleryImages = fieldByName(GalleryBlock.fields, "images");
     assert.ok("fields" in galleryImages);
     const galleryMedia = fieldByName(galleryImages.fields, "media");
+    const galleryBulkImages = fieldByName(GalleryBlock.fields, "bulkImages");
     assert.ok("validate" in galleryMedia && galleryMedia.validate);
+    assert.ok("validate" in galleryBulkImages && galleryBulkImages.validate);
+    assert.ok("hasMany" in galleryBulkImages && galleryBulkImages.hasMany);
     assert.equal(
       await galleryMedia.validate(null, validationArgs()),
       "Selecione uma imagem para a galeria.",
+    );
+    assert.equal(
+      await galleryBulkImages.validate({ id: 1 } as never, validationArgs()),
+      "Selecione uma ou mais imagens da biblioteca.",
     );
 
     const carouselItems = fieldByName(CarouselBlock.fields, "items");

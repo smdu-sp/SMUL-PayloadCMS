@@ -1,4 +1,4 @@
-import type { Block, UploadFieldSingleValidation } from "payload";
+import type { Block, UploadFieldManyValidation, UploadFieldSingleValidation } from "payload";
 import { characterLimitAdmin } from "../../fields/character-limit";
 import { closedSelect } from "../../fields/editorial-validation";
 import { createBlockAdmin } from "../shared/admin";
@@ -7,6 +7,7 @@ const columnOptions = [
   { label: "2 colunas", value: "2" },
   { label: "3 colunas", value: "3" },
   { label: "4 colunas", value: "4" },
+  { label: "8 colunas", value: "8" },
 ];
 
 const presetOptions = [{ label: "Grade uniforme", value: "grid" }];
@@ -15,6 +16,25 @@ const thumbnailEffectOptions = [
   { label: "Sem efeito", value: "none" },
   { label: "Crescimento suave", value: "grow" },
 ];
+
+type GalleryImageInput = {
+  caption?: string | null;
+  media?: unknown;
+};
+
+function getMediaId(media: unknown): string | number | null {
+  if (typeof media === "number" || typeof media === "string") return media;
+  if (media && typeof media === "object" && "id" in media) {
+    const id = (media as { id?: unknown }).id;
+    return typeof id === "number" || typeof id === "string" ? id : null;
+  }
+  return null;
+}
+
+const validateBulkImages = ((value) =>
+  !value || Array.isArray(value)
+    ? true
+    : "Selecione uma ou mais imagens da biblioteca.") satisfies UploadFieldManyValidation;
 
 export const GalleryBlock: Block = {
   slug: "gallery",
@@ -51,7 +71,7 @@ export const GalleryBlock: Block = {
           : "Adicione ao menos uma imagem a galeria.",
       admin: {
         description:
-          "Adicione imagens da biblioteca de midia. Cada item pode ter legenda propria para a miniatura e o lightbox.",
+          "Adicione imagens da biblioteca de midia. Cada item pode ter legenda propria para o lightbox.",
         initCollapsed: true,
       },
       fields: [
@@ -76,11 +96,50 @@ export const GalleryBlock: Block = {
           admin: {
             ...characterLimitAdmin(180, "textarea"),
             description:
-              "Opcional. Texto exibido abaixo da imagem ampliada e como contexto da miniatura.",
+              "Opcional. Texto exibido somente quando a imagem estiver aberta.",
             rows: 2,
           },
         },
       ],
+    },
+    {
+      name: "bulkImages",
+      type: "upload",
+      relationTo: "media",
+      label: "Adicionar varias imagens",
+      hasMany: true,
+      validate: validateBulkImages,
+      hooks: {
+        beforeValidate: [
+          ({ siblingData, value }) => {
+            if (!Array.isArray(value) || !value.length) return undefined;
+
+            const currentImages = Array.isArray(siblingData?.images)
+              ? siblingData.images as GalleryImageInput[]
+              : [];
+            const existingIds = new Set(
+              currentImages
+                .map((item) => getMediaId(item.media))
+                .filter((id): id is string | number => id !== null),
+            );
+            const newImages = value
+              .filter((media) => {
+                const id = getMediaId(media);
+                if (id === null || existingIds.has(id)) return false;
+                existingIds.add(id);
+                return true;
+              })
+              .map((media) => ({ media }));
+
+            siblingData.images = [...currentImages, ...newImages];
+            return undefined;
+          },
+        ],
+      },
+      admin: {
+        description:
+          "Selecione varias imagens para adiciona-las ao grid de uma vez. O campo e limpo apos salvar; ajuste legendas no array acima.",
+      },
     },
     {
       name: "layout",
@@ -97,9 +156,9 @@ export const GalleryBlock: Block = {
           dbName: "cols",
           label: "Colunas no desktop",
           required: true,
-          defaultValue: "3",
+          defaultValue: "4",
           validate: closedSelect(
-            ["2", "3", "4"],
+            ["2", "3", "4", "8"],
             "Escolha uma quantidade de colunas aprovada.",
           ),
           options: columnOptions,
