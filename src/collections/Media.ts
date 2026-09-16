@@ -1,5 +1,6 @@
 import type { CollectionConfig } from "payload";
-import { adminOnly, adminOrEditor } from "../access/roles.ts";
+import { adminOnly, adminOrEditor, imageEditingCanvasAdminOnly } from "../access/roles.ts";
+import { imageEditingCanvasEndpoint } from "../lib/media/image-editing-canvas-endpoint.ts";
 
 export const allowedMediaMimeTypes = [
   "image/jpeg",
@@ -35,7 +36,15 @@ export const Media: CollectionConfig = {
     description:
       "Cadastre imagens e documentos usados nos blocos, SEO e identidade visual. O texto alternativo e obrigatorio para acessibilidade.",
     useAsTitle: "alt",
+    components: {
+      edit: {
+        beforeDocumentControls: [
+          "/components/admin/ImageEditingCanvas#ImageEditingCanvas",
+        ],
+      },
+    },
   },
+  endpoints: [imageEditingCanvasEndpoint],
   upload: {
     displayPreview: true,
     focalPoint: true,
@@ -71,6 +80,27 @@ export const Media: CollectionConfig = {
       admin: {
         description:
           "Opcional. Use quando a imagem precisar de credito, contexto ou complemento editorial.",
+      },
+    },
+    {
+      name: "sourceMedia",
+      type: "relationship",
+      relationTo: "media",
+      label: "Mídia original",
+      admin: {
+        position: "sidebar",
+        readOnly: true,
+        condition: (_, siblingData) => Boolean(siblingData?.sourceMedia),
+        description: "Derivada criada pelo Canvas. O arquivo original permanece preservado.",
+      },
+    },
+    {
+      name: "canvasOperations",
+      type: "json",
+      label: "Operacoes do Canvas",
+      admin: {
+        hidden: true,
+        readOnly: true,
       },
     },
   ],

@@ -8,6 +8,7 @@ export const auditLogActionOptions = [
   { label: "Despublicacao", value: "unpublish" },
   { label: "Desativacao", value: "deactivate" },
   { label: "Reativacao", value: "reactivate" },
+  { label: "Edicao de imagem", value: "image-edit" },
 ] as const;
 
 export const AuditLogs: CollectionConfig = {

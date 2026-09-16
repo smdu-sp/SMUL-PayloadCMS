@@ -170,6 +170,19 @@ export interface Media {
    * Opcional. Use quando a imagem precisar de credito, contexto ou complemento editorial.
    */
   caption?: string | null;
+  /**
+   * Derivada criada pelo Canvas. O arquivo original permanece preservado.
+   */
+  sourceMedia?: (number | null) | Media;
+  canvasOperations?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -1176,7 +1189,7 @@ export interface AuditLog {
   timestamp: string;
   actor?: (number | null) | User;
   actorEmail?: string | null;
-  action: 'create' | 'update' | 'publish' | 'unpublish' | 'deactivate' | 'reactivate';
+  action: 'create' | 'update' | 'publish' | 'unpublish' | 'deactivate' | 'reactivate' | 'image-edit';
   collection: string;
   documentId: string;
   documentTitle: string;
@@ -1293,6 +1306,8 @@ export interface MediaSelect<T extends boolean = true> {
   usage?: T;
   alt?: T;
   caption?: T;
+  sourceMedia?: T;
+  canvasOperations?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;

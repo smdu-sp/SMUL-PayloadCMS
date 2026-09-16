@@ -45,6 +45,9 @@ export const canManageRestrictedSettings = (user?: UserWithRole | null): boolean
 export const canManageUsers = (user?: UserWithRole | null): boolean =>
   isAdmin(user);
 
+export const canUseImageEditingCanvas = (user?: UserWithRole | null): boolean =>
+  isAdmin(user);
+
 export const canReadAuditLogs = (user?: UserWithRole | null): boolean =>
   isAdmin(user);
 
@@ -53,6 +56,9 @@ const accessUser = (user: unknown): UserWithRole | null | undefined =>
 
 export const adminOnly: Access = ({ req }: Parameters<Access>[0]) =>
   isAdmin(accessUser(req.user));
+
+export const imageEditingCanvasAdminOnly: Access = ({ req }: Parameters<Access>[0]) =>
+  canUseImageEditingCanvas(accessUser(req.user));
 
 export const denyAll: Access = () => false;
 
