@@ -1,3 +1,4 @@
+import { normalizeColorScheme } from "../lib/theme/block-color-theme";
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
@@ -8,7 +9,6 @@ import {
 import { normalizeAlertBoxType } from "./AlertBox/Component";
 import {
   normalizeCTASpacing,
-  normalizeCTATone,
   normalizeCTAVariant,
 } from "./CTA/Component";
 import {
@@ -124,11 +124,11 @@ describe("block variant fallbacks", () => {
     );
   });
 
-  it("keeps known CTA variants and maps legacy values without breaking rendering", () => {
+  it("keeps known CTA variants without legacy color aliases", () => {
     assert.equal(normalizeCTAVariant("default"), "default");
     assert.equal(normalizeCTAVariant("brand"), "brand");
     assert.equal(normalizeCTAVariant("compact"), "compact");
-    assert.equal(normalizeCTAVariant("primary"), "brand");
+    assert.equal(normalizeCTAVariant("primary"), "default");
     assert.equal(normalizeCTAVariant("secondary"), "default");
     assert.equal(normalizeCTAVariant("unknown"), "default");
   });
@@ -251,10 +251,10 @@ describe("block variant fallbacks", () => {
     assert.equal(normalizeActionBannersVariant("grid"), "grid");
     assert.equal(normalizeActionBannersVariant("stacked"), "stacked");
     assert.equal(normalizeActionBannersVariant("unknown"), "grid");
-    assert.equal(normalizeActionBannerAppearance("primary"), "primary");
+    assert.equal(normalizeActionBannerAppearance("surface"), "surface");
     assert.equal(normalizeActionBannerAppearance("brand"), "brand");
     assert.equal(normalizeActionBannerAppearance("accent"), "accent");
-    assert.equal(normalizeActionBannerAppearance("yellow"), "primary");
+    assert.equal(normalizeActionBannerAppearance("yellow"), "surface");
   });
 
   it("normalizes SPEC-033 full-width banner presentation presets", () => {
@@ -292,11 +292,11 @@ describe("block variant fallbacks", () => {
     assert.equal(normalizeHeroAlignment(undefined, true), "center");
 
     // CTA tone & spacing
-    assert.equal(normalizeCTATone("brand"), "brand");
-    assert.equal(normalizeCTATone("accent"), "accent");
-    assert.equal(normalizeCTATone("muted"), "muted");
-    assert.equal(normalizeCTATone("invalid", "accent"), "accent");
-    assert.equal(normalizeCTATone(undefined, "brand"), "brand");
+    assert.equal(normalizeColorScheme("brand"), "brand");
+    assert.equal(normalizeColorScheme("accent"), "accent");
+    assert.equal(normalizeColorScheme("muted"), "muted");
+    assert.equal(normalizeColorScheme("invalid", "accent"), "accent");
+    assert.equal(normalizeColorScheme(undefined, "brand"), "brand");
 
     assert.equal(normalizeCTASpacing("compact"), "compact");
     assert.equal(normalizeCTASpacing("spacious"), "spacious");

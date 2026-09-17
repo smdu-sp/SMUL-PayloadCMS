@@ -3,6 +3,7 @@ import {
   Button,
   Card,
   Container,
+  ColorScope,
   Heading,
   Icon,
   Section,
@@ -33,11 +34,8 @@ const sizes: { label: string; size: IconSize }[] = [
 ];
 
 const tones: { label: string; tone: IconTone }[] = [
-  { label: "Principal (primary)", tone: "primary" },
-  { label: "Institucional (secondary)", tone: "secondary" },
   { label: "Atenção (warning)", tone: "warning" },
   { label: "Sucesso (success)", tone: "success" },
-  { label: "Neutro / Suave (muted)", tone: "muted" },
   { label: "Destaque (accent)", tone: "accent" },
   { label: "Perigo (danger)", tone: "danger" },
 ];
@@ -46,12 +44,12 @@ export default function IconesPage() {
   return (
     <main className="min-h-screen">
       {/* Institutional Top Bar */}
-      <div className="border-b border-border bg-surface-muted px-4 py-2 text-xs text-muted-foreground">
+      <div className="border-b border-border bg-muted px-4 py-2 text-xs text-muted-foreground">
         <Container size="lg">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <span>Prefeitura da Cidade de São Paulo • SMUL • Meu Imóvel Regular</span>
             <Link
-              className="font-medium text-primary hover:underline"
+              className="font-medium text-[var(--block-foreground)] hover:underline"
               href="/admin/icones"
             >
               Abrir no Painel do Editor (/admin/icones) →
@@ -61,11 +59,11 @@ export default function IconesPage() {
       </div>
 
       {/* Header Section */}
-      <Section spacing="md" tone="brand">
+      <Section spacing="md" scheme="brand">
         <Container size="lg">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-wider text-accent">
+              <p className="text-sm font-semibold uppercase tracking-wider text-[var(--block-accent)]">
                 SPEC-035 — Design System & Maturidade Editorial
               </p>
               <div className="mt-2">
@@ -74,14 +72,14 @@ export default function IconesPage() {
                 </Heading>
               </div>
               <div className="mt-4 max-w-container-sm">
-                <Text tone="inverse" variant="lead">
+                <Text variant="lead">
                   Biblioteca visual controlada para garantir consistência, segurança,
                   acessibilidade e alinhamento aos tokens de design em todos os blocos do portal.
                 </Text>
               </div>
             </div>
             <div>
-              <Button href="/admin/icones" variant="secondary">
+              <Button href="/admin/icones" variant="outline">
                 Gerenciar no Admin
               </Button>
             </div>
@@ -90,7 +88,7 @@ export default function IconesPage() {
       </Section>
 
       {/* Grid of Standard Icons */}
-      <Section spacing="lg" tone="default">
+      <Section spacing="lg" scheme="default">
         <Container size="lg">
           <Heading level={2} size="lg">
             Ícones Oficiais do Catálogo ({STANDARD_ICONS.length})
@@ -101,12 +99,12 @@ export default function IconesPage() {
 
           <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-5">
             {STANDARD_ICONS.map((name) => (
-              <Card key={name} padding="md" tone="surface">
+              <Card key={name} padding="md" scheme="surface">
                 <div className="flex flex-col items-center text-center">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-surface-muted p-3">
-                    <Icon name={name} size="2xl" tone="primary" />
+                  <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-muted p-3">
+                    <Icon name={name} size="2xl" tone="accent" />
                   </div>
-                  <span className="mt-3 font-semibold text-foreground">
+                  <span className="mt-3 font-semibold text-[var(--block-foreground)]">
                     {STANDARD_ICON_LABELS[name]}
                   </span>
                   <code className="mt-1 rounded bg-muted px-2 py-0.5 font-mono text-xs text-muted-foreground">
@@ -120,7 +118,7 @@ export default function IconesPage() {
       </Section>
 
       {/* Demonstration of Sizes and Tones */}
-      <Section spacing="md" tone="muted">
+      <Section spacing="md" scheme="muted">
         <Container size="lg">
           <div className="grid gap-8 lg:grid-cols-2">
             {/* Sizes */}
@@ -130,15 +128,15 @@ export default function IconesPage() {
               </Heading>
               <div className="mt-4 space-y-3">
                 {sizes.map(({ label, size }) => (
-                  <div
-                    className="flex items-center gap-4 rounded-md border border-border bg-surface p-3"
+                  <ColorScope scheme="surface"
+                    className="flex items-center gap-4 rounded-md border border-border p-3"
                     key={size}
                   >
                     <div className="flex w-14 items-center justify-center">
-                      <Icon name="building" size={size} tone="primary" />
+                      <Icon name="building" size={size} tone="accent" />
                     </div>
-                    <span className="text-sm font-medium text-foreground">{label}</span>
-                  </div>
+                    <span className="text-sm font-medium text-[var(--block-foreground)]">{label}</span>
+                  </ColorScope>
                 ))}
               </div>
             </div>
@@ -150,15 +148,15 @@ export default function IconesPage() {
               </Heading>
               <div className="mt-4 space-y-3">
                 {tones.map(({ label, tone }) => (
-                  <div
-                    className="flex items-center gap-4 rounded-md border border-border bg-surface p-3"
+                  <ColorScope scheme="surface"
+                    className="flex items-center gap-4 rounded-md border border-border p-3"
                     key={tone}
                   >
                     <div className="flex w-14 items-center justify-center">
                       <Icon name="check" size="xl" tone={tone} />
                     </div>
-                    <span className="text-sm font-medium text-foreground">{label}</span>
-                  </div>
+                    <span className="text-sm font-medium text-[var(--block-foreground)]">{label}</span>
+                  </ColorScope>
                 ))}
               </div>
             </div>
@@ -167,7 +165,7 @@ export default function IconesPage() {
       </Section>
 
       {/* Real Block Demonstrations */}
-      <Section spacing="lg" tone="default">
+      <Section spacing="lg" scheme="default">
         <Container size="lg">
           <Heading level={2} size="lg">
             Demonstração em Blocos Reais

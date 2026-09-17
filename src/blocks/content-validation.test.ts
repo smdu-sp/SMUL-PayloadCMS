@@ -72,32 +72,20 @@ describe("SPEC-026 content validation", () => {
     assert.equal(await validate("warning", validationArgs()), true);
   });
 
-  it("validates SPEC-047 controlled custom color contrast", async () => {
+  it("validates custom overrides against the actual configured theme", async () => {
     const appearance = fieldByName(CTABlock.fields, "appearance");
     assert.ok("validate" in appearance && appearance.validate);
-
-    assert.equal(
-      await appearance.validate(
-        {
-          accent: { preset: "primary", type: "preset" },
-          background: { preset: "default", type: "preset" },
-          foreground: { preset: "primary", type: "preset" },
-        },
-        validationArgs(),
-      ),
-      true,
-    );
-    assert.equal(
-      await appearance.validate(
-        {
-          accent: { customColor: "#5cd6c9", type: "custom" },
-          background: { customColor: "#ffffff", type: "custom" },
-          foreground: { customColor: "#ffffff", type: "custom" },
-        },
-        validationArgs(),
-      ),
-      "Foreground e background precisam atingir contraste minimo WCAG AA.",
-    );
+    let reads = 0;
+    const req = { payload: { findGlobal: async () => {
+      reads++;
+      return { theme: { colors: { background: "#111111", foreground: "#ffffff" } } };
+    } } };
+    const args = { req } as never;
+    assert.equal(await appearance.validate({ scheme: "default", colors: { foreground: "#ffffff" } }, args), true);
+    assert.equal(reads, 1);
+    assert.notEqual(await appearance.validate({ scheme: "default", colors: { foreground: "#111111" } }, args), true);
+    assert.equal(await appearance.validate({ scheme: "surface", colors: { foreground: "#111111" } }, args), true);
+    assert.notEqual(await appearance.validate({ scheme: "surface", colors: { accent: "var(--evil)" } }, args), true);
   });
 
   it("rejects partially completed optional and required links", async () => {

@@ -3,7 +3,7 @@ import { characterLimitAdmin } from "../../fields/character-limit";
 import {
   createAppearanceGroup,
   createSpacingField,
-  createToneField,
+  createSchemeField,
 } from "../../fields/block-appearance";
 import {
   closedSelect,
@@ -102,7 +102,7 @@ export const ImageTextBlock: Block = {
       fields: createLinkFields(),
     },
     createAppearanceGroup([
-      createToneField(["default", "surface", "muted"], "default"),
+      createSchemeField(["default", "surface", "muted"], "default"),
       createSpacingField(["compact", "default", "spacious"], "default"),
     ]),
   ],

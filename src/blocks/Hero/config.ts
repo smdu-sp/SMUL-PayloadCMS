@@ -3,7 +3,7 @@ import { characterLimitAdmin } from "../../fields/character-limit";
 import {
   createAlignmentField,
   createAppearanceGroup,
-  createToneField,
+  createSchemeField,
 } from "../../fields/block-appearance";
 
 import { closedSelect, requiredText } from "../../fields/editorial-validation";
@@ -180,7 +180,7 @@ export const HeroBlock: Block = {
       ],
     },
     createAppearanceGroup([
-      createToneField(["brand", "default", "surface", "muted"], "brand"),
+      createSchemeField(["brand", "default", "surface", "muted"], "brand"),
       createAlignmentField(["left", "center"], "left"),
     ]),
   ],

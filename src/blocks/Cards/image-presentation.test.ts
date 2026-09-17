@@ -36,7 +36,14 @@ function findImage(node: ReactNode): ReturnType<typeof MediaImage> {
     return MediaImage(node.props as Parameters<typeof MediaImage>[0]);
   }
   if (typeof node.type === "function") {
-    return findImage((node.type as (props: unknown) => ReactNode)(node.props));
+    try {
+      return findImage((node.type as (props: unknown) => ReactNode)(node.props));
+    } catch (e) {
+      if (e instanceof Error && e.message.includes("useContext")) {
+        return findImage((node.props as { children?: ReactNode }).children);
+      }
+      throw e;
+    }
   }
   return findImage((node.props as { children?: ReactNode }).children);
 }

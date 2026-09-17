@@ -100,9 +100,9 @@ describe("SPEC-024 admin UX and block visualization", () => {
     assert.deepEqual(
       appearance.options.map((option) => typeof option === "object" ? [option.label, option.value] : option),
       [
-        ["Verde — principal", "primary"],
-        ["Azul — institucional", "brand"],
-        ["Amarelo — apoio", "accent"],
+        ["Superficie neutra", "surface"],
+        ["Institucional", "brand"],
+        ["Destaque", "accent"],
       ],
     );
   });

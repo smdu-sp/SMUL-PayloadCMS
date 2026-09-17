@@ -5,32 +5,11 @@ import type { UIFieldClientProps } from "payload";
 import { useState } from "react";
 
 export function ThemeColorReset({ readOnly }: UIFieldClientProps) {
-  const primary = useField<string | null>({ path: "branding.primaryColor" });
-  const secondary = useField<string | null>({ path: "branding.secondaryColor" });
-  const accent = useField<string | null>({ path: "branding.accentColor" });
-  const background = useField<string | null>({ path: "branding.backgroundColor" });
-  const headline = useField<string | null>({ path: "branding.headlineColor" });
-  const paragraph = useField<string | null>({ path: "branding.paragraphColor" });
-  const button = useField<string | null>({ path: "branding.buttonColor" });
-  const buttonText = useField<string | null>({ path: "branding.buttonTextColor" });
-  const stroke = useField<string | null>({ path: "branding.strokeColor" });
-  const main = useField<string | null>({ path: "branding.mainColor" });
-  const secondaryIllustration = useField<string | null>({
-    path: "branding.secondaryIllustrationColor",
-  });
-  const tertiary = useField<string | null>({ path: "branding.tertiaryColor" });
-  const action = useField<string | null>({ path: "branding.actionColor" });
-  const highlight = useField<string | null>({ path: "branding.highlightColor" });
-  const actionForeground = useField<string | null>({
-    path: "branding.actionForegroundColor",
-  });
-  const link = useField<string | null>({ path: "branding.linkColor" });
-  const secondaryAccent = useField<string | null>({
-    path: "branding.secondaryAccentColor",
-  });
-  const tertiaryAccent = useField<string | null>({
-    path: "branding.tertiaryAccentColor",
-  });
+  const background = useField<string | null>({ path: "theme.colors.background" });
+  const foreground = useField<string | null>({ path: "theme.colors.foreground" });
+  const brand = useField<string | null>({ path: "theme.colors.brand" });
+  const action = useField<string | null>({ path: "theme.colors.action" });
+  const accent = useField<string | null>({ path: "theme.colors.accent" });
   const { disabled } = useForm();
   const [reset, setReset] = useState(false);
 
@@ -41,24 +20,11 @@ export function ThemeColorReset({ readOnly }: UIFieldClientProps) {
         buttonStyle="secondary"
         disabled={readOnly || disabled}
         onClick={() => {
-          primary.setValue(null);
-          secondary.setValue(null);
-          accent.setValue(null);
           background.setValue(null);
-          headline.setValue(null);
-          paragraph.setValue(null);
-          button.setValue(null);
-          buttonText.setValue(null);
-          stroke.setValue(null);
-          main.setValue(null);
-          secondaryIllustration.setValue(null);
-          tertiary.setValue(null);
+          foreground.setValue(null);
+          brand.setValue(null);
           action.setValue(null);
-          highlight.setValue(null);
-          actionForeground.setValue(null);
-          link.setValue(null);
-          secondaryAccent.setValue(null);
-          tertiaryAccent.setValue(null);
+          accent.setValue(null);
           setReset(true);
         }}
       >

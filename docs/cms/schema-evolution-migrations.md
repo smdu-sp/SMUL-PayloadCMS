@@ -29,6 +29,7 @@ As mudancas das SPECS 019 a 027 foram classificadas assim:
 | `Pages.layout` | Novo Block `carousel` | Novo Block | Nao exige migration; dados antigos continuam renderizando. |
 | `cta.appearance` | Novos grupos opcionais `background`, `foreground` e `accent` | Novo field opcional | Nao exige migration; documentos antigos continuam usando tons existentes. |
 | CSS tokens | Novos papeis semanticos `brand`, `action`, `heading`, `link`, `surface`, `muted`, `accent` | Compatibilidade de tema | Nao exige migration; tokens antigos continuam existindo. |
+| Block theme | Novo contrato local e aliases CSS `--block-*` | Refatoracao interna | Nao exige migration; `appearance.tone` e campos existentes sao preservados. |
 | `cards.variant` | Nova variant `modalities` | Novo enum/variant | Nao exige migration; fallback de `Cards` retorna `default`. |
 | `hero.variant` | `image` legado mapeado para `split` | Compatibilidade de enum | Nao exige migration; fallback preservado no componente. |
 | `cta.variant` | `primary` legado mapeado para `brand`; desconhecidos para `default` | Compatibilidade de enum | Nao exige migration; fallback preservado no componente. |

@@ -1,126 +1,49 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-
 import { getContrastRatio, hasMinimumContrast, isHexColor } from "./colors";
-import { DEFAULT_THEME, resolveThemeColors } from "./default-theme";
-import { readFileSync } from "node:fs";
+import { DEFAULT_PALETTE, SYSTEM_COLORS } from "./default-theme";
+import { resolveSemanticTheme, validateBasePalette } from "./semantic-theme";
 import { mapThemeToCssVariables } from "./map-theme-to-css-variables";
 
-describe("theme mapping", () => {
-  it("maps valid branding colors to css variables", () => {
-    const variables = mapThemeToCssVariables({
-      branding: {
-        primaryColor: "#00529C",
-        secondaryColor: "#103b3f",
-        accentColor: "#fff4cc",
-        backgroundColor: "#fafafa",
-        headlineColor: "#112233",
-        paragraphColor: "#334455",
-        buttonColor: "#445566",
-        buttonTextColor: "#fefefe",
-        strokeColor: "#111111",
-        mainColor: "#eeeeee",
-        highlightColor: "#667788",
-        secondaryIllustrationColor: "#778899",
-        tertiaryColor: "#8899aa",
-      },
-    });
-
-    assert.equal(variables["--color-background"], "#fafafa");
-    assert.equal(variables["--color-page"], "#fafafa");
-    assert.equal(variables["--color-foreground"], "#334455");
-    assert.equal(variables["--color-text"], "#334455");
-    assert.equal(variables["--color-primary"], "#445566");
-    assert.equal(variables["--color-brand"], "#445566");
-    assert.equal(variables["--color-action"], "#445566");
-    assert.equal(variables["--color-action-foreground"], "#fefefe");
-    assert.equal(variables["--color-heading"], "#112233");
-    assert.equal(variables["--color-headline"], "#112233");
-    assert.equal(variables["--color-paragraph"], "#334455");
-    assert.equal(variables["--color-link"], "#445566");
-    assert.equal(variables["--color-secondary"], "#778899");
-    assert.equal(variables["--color-secondary-accent"], "#778899");
-    assert.equal(variables["--color-accent"], "#667788");
-    assert.equal(variables["--color-highlight"], "#667788");
-    assert.equal(variables["--color-tertiary-accent"], "#8899aa");
-    assert.equal(variables["--color-illustration-stroke"], "#111111");
-    assert.equal(variables["--color-illustration-main"], "#eeeeee");
-  });
-
-  it("ignores persisted legacy colors when resolving the current palette", () => {
-    const variables = mapThemeToCssVariables({
-      branding: {
-        primaryColor: "#00529C",
-        secondaryColor: "#103b3f",
-        accentColor: "#fff4cc",
-      },
-    });
-
-    assert.deepEqual(variables, mapThemeToCssVariables(null));
-  });
-
-  it("falls back to SMUL defaults for invalid branding values", () => {
-    const variables = mapThemeToCssVariables({
-      branding: {
-        primaryColor: "url(javascript:alert(1))",
-        secondaryColor: "<script>",
-        accentColor: "",
-      },
-    });
-
-    assert.deepEqual(variables, mapThemeToCssVariables(null));
-    assert.equal(variables["--color-primary"], DEFAULT_THEME.primaryColor);
-  });
-
-  it("restores all default tokens after clearing legacy overrides", () => {
-    const resetBranding = {
-      accentColor: null,
-      actionColor: null,
-      actionForegroundColor: null,
-      backgroundColor: null,
-      buttonColor: null,
-      buttonTextColor: null,
-      headlineColor: null,
-      highlightColor: null,
-      linkColor: null,
-      mainColor: null,
-      paragraphColor: null,
-      primaryColor: null,
-      secondaryAccentColor: null,
-      secondaryIllustrationColor: null,
-      secondaryColor: null,
-      strokeColor: null,
-      tertiaryAccentColor: null,
-      tertiaryColor: null,
-    };
-    assert.deepEqual(resolveThemeColors(resetBranding), DEFAULT_THEME);
-    assert.deepEqual(mapThemeToCssVariables({ branding: resetBranding }), mapThemeToCssVariables(null));
-    assert.deepEqual(resolveThemeColors({ primaryColor: "#ABC" }), DEFAULT_THEME);
-  });
-
-  it("keeps code defaults aligned with the standalone CSS fallback", () => {
-    const css = readFileSync(new URL("../../styles/tokens.css", import.meta.url), "utf8");
-    for (const [field, token] of [
-      ["backgroundColor", "background"],
-      ["primaryColor", "primary"],
-      ["secondaryColor", "secondary"],
-      ["accentColor", "accent"],
-      ["tertiaryAccentColor", "accent-pink"],
-    ] as const) {
-      assert.ok(css.includes(`--color-${token}: ${DEFAULT_THEME[field]};`));
+describe("global semantic theme", () => {
+  it("keeps the five base inputs independent and derives paired roles", () => {
+    const theme = resolveSemanticTheme({ background: "#111111", foreground: "#ffffff", brand: "#ffff00", action: "#ff00ff", accent: "#00ff00" });
+    assert.equal(theme.brand, "#ffff00");
+    assert.equal(theme.action, "#ff00ff");
+    assert.equal(theme.heading, theme.foreground);
+    for (const [bg, fg] of [[theme.background, theme.foreground], [theme.surface, theme.surfaceForeground], [theme.muted, theme.mutedForeground], [theme.brand, theme.brandForeground], [theme.action, theme.actionForeground], [theme.accent, theme.accentForeground]]) {
+      assert.ok(hasMinimumContrast(fg, bg), bg);
+    }
+    assert.equal(theme.focus, SYSTEM_COLORS.focus);
+    const variables = mapThemeToCssVariables(theme);
+    assert.equal(variables["--color-brand"], "#ffff00");
+    assert.equal(variables["--color-action"], "#ff00ff");
+    assert.equal(variables["--color-surface-foreground"], theme.surfaceForeground);
+    assert.equal(variables["--block-foreground"], "#ffffff");
+    assert.equal(Object.keys(variables).length, 24);
+    for (const name of ["primary", "secondary", "headline", "paragraph", "highlight", "link", "illustration-main"]) {
+      assert.equal(variables[`--color-${name}`], undefined);
     }
   });
-
-  it("accepts only short or long hex colors", () => {
+  it("resets the five inputs to institutional defaults without aliases", () => {
+    const reset = { background: null, foreground: null, brand: null, action: null, accent: null };
+    assert.deepEqual(resolveSemanticTheme(reset), resolveSemanticTheme());
+    assert.equal(resolveSemanticTheme().brand, DEFAULT_PALETTE.brand);
+    assert.deepEqual(resolveSemanticTheme({ brand: "<script>", action: "url(evil)" }), resolveSemanticTheme());
+  });
+  it("validates pairs and protects rendering from malformed data", () => {
+    assert.equal(validateBasePalette({}), true);
+    assert.notEqual(validateBasePalette({ background: "#fff", foreground: "#fff" }), true);
+    assert.notEqual(validateBasePalette({ brand: "red" }), true);
+    assert.ok(hasMinimumContrast(resolveSemanticTheme({ background: "#fff", foreground: "#fff" }).foreground, "#fff"));
+    assert.equal(resolveSemanticTheme({}, { heading: "#000" }).heading, "#000");
+    assert.equal(resolveSemanticTheme({}, { heading: "#fff" }).heading, DEFAULT_PALETTE.foreground);
+  });
+  it("accepts only short or long hex and computes contrast", () => {
     assert.equal(isHexColor("#fff"), true);
     assert.equal(isHexColor("#ffffff"), true);
     assert.equal(isHexColor("rgb(0, 0, 0)"), false);
     assert.equal(isHexColor("#ffff"), false);
-  });
-
-  it("validates WCAG contrast ratios for custom color pairs", () => {
-    assert.equal(hasMinimumContrast("#0a3299", "#ffffff"), true);
-    assert.equal(hasMinimumContrast("#5cd6c9", "#ffffff"), false);
     assert.ok((getContrastRatio("#000", "#fff") ?? 0) >= 21);
   });
 });

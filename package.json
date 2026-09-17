@@ -10,6 +10,7 @@
     "lint": "eslint",
     "test": "node --import tsx --test src/**/*.test.ts",
     "typecheck": "tsc --noEmit",
+    "test:colors:visual": "node --import tsx src/lib/theme/serve-color-regression.tsx",
     "payload": "payload",
     "seed:editorial": "node --import ./src/seeds/patch-os-userinfo.mjs --import tsx ./src/seeds/run-payload-development.mjs run src/seeds/editorial-baseline.ts",
     "seed:first-admin": "payload run src/seeds/create-first-admin.ts",

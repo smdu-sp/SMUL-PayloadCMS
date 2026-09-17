@@ -3,26 +3,20 @@ import { Card, Container, Heading, Section, Text } from "../../components/ui";
 import { BlockLink } from "../shared/BlockLink";
 
 type ActionBannersVariant = "grid" | "stacked";
-type ActionBannerAppearance = "accent" | "brand" | "primary";
+type ActionBannerAppearance = "accent" | "brand" | "surface";
 
 const bannerStyles = {
   accent: {
     cardTone: "accent",
-    linkAppearance: "primary",
-    textTone: "default",
-    titleTone: "default",
+    linkAppearance: "solid",
   },
   brand: {
     cardTone: "brand",
-    linkAppearance: "secondary",
-    textTone: "inverse",
-    titleTone: "inverse",
+    linkAppearance: "solid",
   },
-  primary: {
+  surface: {
     cardTone: "surface",
-    linkAppearance: "primary",
-    textTone: "default",
-    titleTone: "default",
+    linkAppearance: "solid",
   },
 } as const;
 
@@ -36,7 +30,7 @@ export function normalizeActionBannerAppearance(
   appearance: ActionBannersBlockProps["banners"][number]["appearance"] | string | null | undefined,
 ): ActionBannerAppearance {
   if (appearance === "brand" || appearance === "accent") return appearance;
-  return "primary";
+  return "surface";
 }
 
 export function ActionBannersBlock({
@@ -47,7 +41,7 @@ export function ActionBannersBlock({
   const normalizedVariant = normalizeActionBannersVariant(variant);
 
   return (
-    <Section spacing="md" tone="default">
+    <Section spacing="md" scheme="default">
       <Container size="lg">
         {title ? (
           <Heading level={2} size="lg">
@@ -64,13 +58,13 @@ export function ActionBannersBlock({
 
             return (
               <li key={banner.id}>
-                <Card fullHeight padding="lg" tone={styles.cardTone}>
-                  <Heading level={3} size="md" tone={styles.titleTone}>
+                <Card fullHeight padding="lg" scheme={styles.cardTone}>
+                  <Heading level={3} size="md">
                     <span className="break-words">{banner.title}</span>
                   </Heading>
                   {banner.description ? (
                     <div className="mt-3">
-                      <Text tone={styles.textTone}>{banner.description}</Text>
+                      <Text>{banner.description}</Text>
                     </div>
                   ) : null}
                   <div className="mt-auto pt-6">

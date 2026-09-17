@@ -4,16 +4,9 @@ import type { ButtonHTMLAttributes, ReactNode } from "react";
 import { classNames } from "./classNames";
 
 const buttonVariants = {
-  blockAccent:
-    "bg-[var(--block-accent)] text-[var(--block-bg)] hover:opacity-90 focus-visible:outline-focus",
-  primary:
-    "bg-action text-action-foreground hover:bg-action-hover focus-visible:outline-focus",
-  secondary:
-    "bg-surface text-action hover:bg-muted focus-visible:outline-focus",
-  outline:
-    "border border-border bg-surface text-foreground hover:bg-muted focus-visible:outline-focus",
-  ghost:
-    "bg-transparent text-link hover:bg-muted focus-visible:outline-focus",
+  solid: "bg-[var(--block-action)] text-[var(--block-action-foreground)] border border-transparent hover:underline",
+  outline: "border border-current bg-transparent text-[var(--block-foreground)] hover:underline",
+  ghost: "bg-transparent text-[var(--block-foreground)] hover:underline",
 } as const;
 
 const buttonSizes = {
@@ -47,7 +40,7 @@ export type ButtonProps = ButtonAsButtonProps | ButtonAsLinkProps;
 export function Button({
   children,
   size = "md",
-  variant = "primary",
+  variant = "solid",
   ...props
 }: ButtonProps) {
   const className = classNames(

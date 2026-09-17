@@ -1,3 +1,5 @@
+import { resolveSemanticTheme } from "../../lib/theme/semantic-theme";
+import { resolveBlockColorTheme } from "../../lib/theme/block-color-theme";
 import Link from "next/link";
 import { Icon } from "../ui/Icon";
 import { STANDARD_ICONS, STANDARD_ICON_LABELS, type StandardIconName } from "../../domain/icons";
@@ -61,15 +63,14 @@ const SIZES: { label: string; size: "sm" | "md" | "lg" | "xl" | "2xl" | "3xl"; p
   { label: "Destaque (3xl)", size: "3xl", px: "48px" },
 ];
 
-const TONES: { label: string; tone: "primary" | "secondary" | "warning" | "success" | "muted" | "accent" | "danger"; token: string }[] = [
-  { label: "Principal (primary)", tone: "primary", token: "#007a73 — Verde SMUL" },
-  { label: "Institucional (secondary)", tone: "secondary", token: "#103b3f — Petróleo Escuro" },
-  { label: "Atenção (warning)", tone: "warning", token: "#b86e00 — Âmbar Alerta" },
-  { label: "Sucesso (success)", tone: "success", token: "#167c4a — Verde Deferimento" },
-  { label: "Neutro / Suave (muted)", tone: "muted", token: "#5e7069 — Cinza Médio" },
-  { label: "Destaque (accent)", tone: "accent", token: "#fff4cc — Dourado Suave" },
-  { label: "Perigo (danger)", tone: "danger", token: "#b42318 — Vermelho Irregularidade" },
-];
+const previewTheme = resolveSemanticTheme();
+const previewScope = resolveBlockColorTheme(previewTheme);
+const TONES = [
+  { label: "Destaque contextual", tone: "accent", token: "scope.accent", color: previewScope.accent },
+  { label: "Atencao", tone: "warning", token: "system.warning", color: previewTheme.warning },
+  { label: "Sucesso", tone: "success", token: "system.success", color: previewTheme.success },
+  { label: "Perigo", tone: "danger", token: "system.danger", color: previewTheme.danger },
+] as const;
 
 export function AdminIconsPage() {
   return (
@@ -116,7 +117,7 @@ export function AdminIconsPage() {
             return (
               <article className="admin-icons__card" key={name}>
                 <div className="admin-icons__icon-wrapper">
-                  <Icon name={name} size="2xl" tone="primary" />
+                  <Icon name={name} size="2xl" tone="current" style={{ color: previewScope.accent }} />
                 </div>
                 <div className="admin-icons__content">
                   <div className="admin-icons__card-header">
@@ -142,7 +143,7 @@ export function AdminIconsPage() {
           {SIZES.map(({ label, size, px }) => (
             <div className="admin-icons__token-card" key={size}>
               <div className="admin-icons__token-icon">
-                <Icon name="building" size={size} tone="primary" />
+                <Icon name="building" size={size} tone="current" style={{ color: previewScope.accent }} />
               </div>
               <div className="admin-icons__token-info">
                 <strong>{label}</strong>
@@ -158,10 +159,10 @@ export function AdminIconsPage() {
         <h2>Tons e Cores Institucionais</h2>
         <p className="admin-icons__section-intro">Cores controladas que herdam os valores de tokens da SMUL e Prefeitura de São Paulo.</p>
         <div className="admin-icons__tokens-grid">
-          {TONES.map(({ label, tone, token }) => (
+          {TONES.map(({ label, tone, token, color }) => (
             <div className="admin-icons__token-card" key={tone}>
               <div className="admin-icons__token-icon">
-                <Icon name="check" size="xl" tone={tone} />
+                <Icon name="check" size="xl" tone="current" style={{ color }} />
               </div>
               <div className="admin-icons__token-info">
                 <strong>{label}</strong>

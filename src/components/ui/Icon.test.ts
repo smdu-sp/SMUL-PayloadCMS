@@ -40,10 +40,10 @@ describe("Icon component", () => {
 
   it("maps design token sizes and tones to css classes", () => {
     const primaryLg = renderToStaticMarkup(
-      createElement(Icon, { name: "check", size: "lg", tone: "primary" }),
+      createElement(Icon, { name: "check", size: "lg", tone: "accent" }),
     );
     assert.match(primaryLg, /h-6 w-6/);
-    assert.match(primaryLg, /text-action/);
+    assert.match(primaryLg, /var\(--block-accent\)/);
     assert.match(primaryLg, /width="24"/);
     assert.match(primaryLg, /height="24"/);
 
@@ -56,17 +56,17 @@ describe("Icon component", () => {
     assert.match(warningSm, /height="16"/);
 
     const secondary2xl = renderToStaticMarkup(
-      createElement(Icon, { name: "document", size: "2xl", tone: "secondary" }),
+      createElement(Icon, { name: "document", size: "2xl", tone: "current" }),
     );
     assert.match(secondary2xl, /h-10 w-10/);
-    assert.match(secondary2xl, /text-brand/);
+    assert.match(secondary2xl, /text-current/);
     assert.match(secondary2xl, /width="40"/);
     assert.match(secondary2xl, /height="40"/);
 
     const accentMd = renderToStaticMarkup(
       createElement(Icon, { name: "info", size: "md", tone: "accent" }),
     );
-    assert.match(accentMd, /text-highlight/);
+    assert.match(accentMd, /var\(--block-accent\)/);
   });
 
   it("falls back gracefully when given unknown or undefined icon name", () => {

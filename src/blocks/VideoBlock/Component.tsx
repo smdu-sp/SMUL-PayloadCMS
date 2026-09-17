@@ -36,7 +36,7 @@ export function VideoBlock({
   const iframeTitle = title?.trim() || "Video incorporado";
 
   return (
-    <Section spacing="default" tone="default">
+    <Section spacing="default" scheme="default">
       <Container size="lg">
         {title ? (
           <div className="mb-5">

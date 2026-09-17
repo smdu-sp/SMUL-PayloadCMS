@@ -55,7 +55,7 @@ export const seedShowcaseLayout = (
     cta: internalLink("Explorar o catálogo", seedPageId),
     variant: "centered",
     appearance: {
-      tone: "brand",
+      scheme: "brand",
       alignment: "center",
     },
   },
@@ -153,7 +153,7 @@ export const seedShowcaseLayout = (
     variant: "image-left",
     cta: internalLink("Voltar ao início do catálogo", seedPageId),
     appearance: {
-      tone: "default",
+      scheme: "default",
       spacing: "default",
     },
   },
@@ -165,7 +165,7 @@ export const seedShowcaseLayout = (
       "O modelo Modalidades destaca caminhos editoriais sem criar um tipo de bloco separado.",
     variant: "modalities",
     appearance: {
-      tone: "surface",
+      scheme: "surface",
       spacing: "default",
     },
     items: [
@@ -199,7 +199,7 @@ export const seedShowcaseLayout = (
       {
         title: "Ação principal",
         description: "Usa o tom verde para a chamada de maior prioridade.",
-        appearance: "primary",
+        appearance: "surface",
         button: internalLink("Abrir ação principal", seedPageId),
       },
       {
@@ -275,7 +275,7 @@ export const seedShowcaseLayout = (
       "A variante compacta é adequada para listas curtas que precisam ser percorridas rapidamente.",
     variant: "compact",
     appearance: {
-      tone: "default",
+      scheme: "default",
       spacing: "compact",
     },
     items: [
@@ -302,7 +302,7 @@ export const seedShowcaseLayout = (
     action: internalLink("Voltar ao início do catálogo", seedPageId),
     variant: "brand",
     appearance: {
-      tone: "brand",
+      scheme: "brand",
       spacing: "default",
     },
   },

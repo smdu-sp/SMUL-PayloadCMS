@@ -1,172 +1,36 @@
-import type { CSSProperties } from "react";
 import type { CTABlock as CTABlockProps } from "../../payload-types";
 import { Card, Container, Heading, Section, Text } from "../../components/ui";
-import {
-  resolveControlledColorCssValue,
-  type ControlledColorValue,
-} from "../../fields/block-appearance";
+import { normalizeColorScheme } from "../../lib/theme/block-color-theme";
 import { BlockLink } from "../shared/BlockLink";
 
 type CTAVariant = "brand" | "compact" | "default";
-
 const ctaVariantStyles = {
-  brand: {
-    actionAppearance: "secondary",
-    cardTone: "brand",
-    containerSize: "lg",
-    descriptionSpacing: "mt-4",
-    linkSize: "md",
-    padding: "lg",
-    headingSize: "lg",
-    actionSpacing: "mt-7",
-    sectionSpacing: "md",
-    textTone: "inverse",
-    titleTone: "inverse",
-  },
-  compact: {
-    actionAppearance: "primary",
-    cardTone: "surface",
-    containerSize: "md",
-    descriptionSpacing: "mt-3",
-    linkSize: "sm",
-    padding: "md",
-    headingSize: "md",
-    actionSpacing: "mt-5",
-    sectionSpacing: "sm",
-    textTone: "default",
-    titleTone: "default",
-  },
-  default: {
-    actionAppearance: "primary",
-    cardTone: "accent",
-    containerSize: "lg",
-    descriptionSpacing: "mt-4",
-    linkSize: "md",
-    padding: "lg",
-    headingSize: "lg",
-    actionSpacing: "mt-7",
-    sectionSpacing: "md",
-    textTone: "default",
-    titleTone: "default",
-  },
+  brand: { containerSize: "lg", padding: "lg", headingSize: "lg", linkSize: "md" },
+  compact: { containerSize: "md", padding: "md", headingSize: "md", linkSize: "sm" },
+  default: { containerSize: "lg", padding: "lg", headingSize: "lg", linkSize: "md" },
 } as const;
 
-type CTAAppearance = {
-  accent?: ControlledColorValue | null;
-  background?: ControlledColorValue | null;
-  foreground?: ControlledColorValue | null;
-  spacing?: "compact" | "default" | "spacious" | string | null;
-  tone?: "accent" | "brand" | "default" | "muted" | "surface" | string | null;
-};
-
-type CTABlockWithAppearanceProps = CTABlockProps & {
-  appearance?: CTAAppearance | null;
-};
-
-export function normalizeCTAVariant(
-  variant: CTABlockProps["variant"] | "primary" | "secondary" | string | null | undefined,
-): CTAVariant {
-  if (variant === "brand" || variant === "compact" || variant === "default") return variant;
-  if (variant === "primary") return "brand";
-  return "default";
+export function normalizeCTAVariant(variant?: string | null): CTAVariant {
+  return variant === "brand" || variant === "compact" ? variant : "default";
 }
 
-export function normalizeCTATone(
-  tone?: string | null,
-  fallbackTone: "accent" | "brand" | "default" | "muted" | "surface" = "default",
-): "accent" | "brand" | "default" | "muted" | "surface" {
-  if (
-    tone === "brand" ||
-    tone === "accent" ||
-    tone === "muted" ||
-    tone === "surface"
-  ) {
-    return tone;
-  }
-  return fallbackTone;
+export function normalizeCTASpacing(spacing?: string | null, fallback: "compact" | "default" | "spacious" = "default") {
+  return spacing === "compact" || spacing === "spacious" || spacing === "default" ? spacing : fallback;
 }
 
-export function normalizeCTASpacing(
-  spacing?: string | null,
-  fallbackSpacing: "compact" | "default" | "spacious" = "default",
-): "compact" | "default" | "spacious" {
-  if (spacing === "compact" || spacing === "spacious") return spacing;
-  return fallbackSpacing;
-}
-
-function getControlledColorStyle(
-  appearance: CTAAppearance | null | undefined,
-): CSSProperties | undefined {
-  const background = resolveControlledColorCssValue(appearance?.background);
-  const foreground = resolveControlledColorCssValue(appearance?.foreground);
-  const accent = resolveControlledColorCssValue(appearance?.accent);
-
-  if (!background || !foreground || !accent) return undefined;
-
-  return {
-    "--block-accent": accent,
-    "--block-bg": background,
-    "--block-fg": foreground,
-  } as CSSProperties;
-}
-
-export function CTABlock({
-  action,
-  appearance,
-  description,
-  title,
-  variant,
-}: CTABlockWithAppearanceProps) {
+export function CTABlock({ action, appearance, description, title, variant }: CTABlockProps) {
   const normalizedVariant = normalizeCTAVariant(variant);
   const styles = ctaVariantStyles[normalizedVariant];
-  const effectiveTone = normalizeCTATone(
-    appearance?.tone && appearance.tone !== "default" ? appearance.tone : null,
-    styles.cardTone,
-  );
-  const isDarkTone = effectiveTone === "brand";
-  const effectiveSpacing = normalizeCTASpacing(
-    appearance?.spacing,
-    styles.sectionSpacing === "sm" ? "compact" : "default",
-  );
-  const controlledColorStyle = getControlledColorStyle(appearance);
-  const usesControlledColors = Boolean(controlledColorStyle);
-
   return (
-    <Section spacing={effectiveSpacing} tone="default">
+    <Section spacing={normalizeCTASpacing(appearance?.spacing, normalizedVariant === "compact" ? "compact" : "default")}>
       <Container size={styles.containerSize}>
-        <Card
-          padding={styles.padding}
-          style={controlledColorStyle}
-          tone={usesControlledColors ? "custom" : effectiveTone}
-        >
-          <Heading
-            level={2}
-            size={styles.headingSize}
-            tone={isDarkTone && !usesControlledColors ? "inverse" : "default"}
-          >
+        <Card scheme={normalizeColorScheme(appearance?.scheme)} overrides={appearance?.colors} padding={styles.padding}>
+          <Heading level={2} size={styles.headingSize}>
             <span className="text-balance break-words">{title}</span>
           </Heading>
-          {description ? (
-            <div className={`${styles.descriptionSpacing} max-w-container-sm`}>
-              <Text tone={isDarkTone && !usesControlledColors ? "inverse" : "default"} variant="lead">
-                {description}
-              </Text>
-            </div>
-          ) : null}
+          {description ? <div className="mt-4 max-w-container-sm"><Text variant="lead">{description}</Text></div> : null}
           {action?.label ? (
-            <div className={styles.actionSpacing}>
-              <BlockLink
-                appearance={
-                  usesControlledColors
-                    ? "blockAccent"
-                    : isDarkTone
-                      ? "secondary"
-                      : styles.actionAppearance
-                }
-                link={action}
-                size={styles.linkSize}
-              />
-            </div>
+            <div className="mt-7"><BlockLink appearance="solid" link={action} size={styles.linkSize} /></div>
           ) : null}
         </Card>
       </Container>

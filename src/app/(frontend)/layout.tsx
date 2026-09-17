@@ -6,6 +6,7 @@ import { getSiteSettings } from "../../lib/payload/get-page";
 import { generateSiteMetadata } from "../../lib/seo/metadata";
 import { getTheme } from "../../lib/theme/get-theme";
 import { mapThemeToCssVariables } from "../../lib/theme/map-theme-to-css-variables";
+import { ThemeProvider } from "../../components/ui/ColorScope";
 import "./globals.css";
 
 const lato = Lato({
@@ -31,7 +32,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
       className={`h-full antialiased ${lato.variable}`}
       style={themeVariables}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col"><ThemeProvider theme={theme}>{children}</ThemeProvider></body>
     </html>
   );
 }

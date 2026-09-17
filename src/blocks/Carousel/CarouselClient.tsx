@@ -164,7 +164,7 @@ export function CarouselClient({
                 role="group"
               >
                 <div className="h-full pl-4">
-                  <Card fullHeight padding="sm" tone="surface">
+                  <Card fullHeight padding="sm" scheme="surface">
                     <article className="flex h-full flex-col">
                       <div className="-m-5 mb-0 overflow-hidden rounded-t-lg bg-muted">
                         <div className="relative aspect-[16/9] w-full">
@@ -213,7 +213,7 @@ export function CarouselClient({
               onClick={() => goToPrevious(true)}
               type="button"
             >
-              <span className="inline-flex h-10 w-10 items-center justify-center rounded-md bg-surface/80 text-lg font-semibold text-foreground shadow-sm ring-1 ring-border backdrop-blur-sm transition-colors group-hover:bg-surface focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-focus">
+              <span className="inline-flex h-10 w-10 items-center justify-center rounded-md bg-[var(--block-action)] text-lg font-semibold text-[var(--block-action-foreground)] shadow-sm ring-1 ring-border backdrop-blur-sm transition-colors group-hover:underline group-focus-visible:outline focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-focus">
                 {"<"}
               </span>
             </button>
@@ -223,7 +223,7 @@ export function CarouselClient({
               onClick={() => goToNext(true)}
               type="button"
             >
-              <span className="inline-flex h-10 w-10 items-center justify-center rounded-md bg-surface/80 text-lg font-semibold text-foreground shadow-sm ring-1 ring-border backdrop-blur-sm transition-colors group-hover:bg-surface focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-focus">
+              <span className="inline-flex h-10 w-10 items-center justify-center rounded-md bg-[var(--block-action)] text-lg font-semibold text-[var(--block-action-foreground)] shadow-sm ring-1 ring-border backdrop-blur-sm transition-colors group-hover:underline group-focus-visible:outline focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-focus">
                 {">"}
               </span>
             </button>
@@ -236,7 +236,7 @@ export function CarouselClient({
           <div className="flex gap-2 md:hidden">
             <button
               aria-label="Slide anterior"
-              className="rounded-md border border-border px-4 py-2 font-semibold text-foreground hover:bg-muted focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-focus"
+              className="rounded-md border border-border px-4 py-2 font-semibold text-[var(--block-foreground)] hover:underline focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-focus"
               onClick={() => goToPrevious(true)}
               type="button"
             >
@@ -244,7 +244,7 @@ export function CarouselClient({
             </button>
             <button
               aria-label="Proximo slide"
-              className="rounded-md border border-border px-4 py-2 font-semibold text-foreground hover:bg-muted focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-focus"
+              className="rounded-md border border-border px-4 py-2 font-semibold text-[var(--block-foreground)] hover:underline focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-focus"
               onClick={() => goToNext(true)}
               type="button"
             >
@@ -260,7 +260,7 @@ export function CarouselClient({
                   aria-current={activeIndex === index ? "true" : undefined}
                   className={classNames(
                     "h-3 w-3 rounded-full border border-border focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-focus",
-                    activeIndex === index ? "bg-primary" : "bg-surface",
+                    activeIndex === index ? "bg-[var(--block-foreground)]" : "border-current bg-transparent",
                   )}
                   key={item.id ?? index}
                   onClick={() => goTo(index, true)}

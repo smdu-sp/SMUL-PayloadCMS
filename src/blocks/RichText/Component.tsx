@@ -60,7 +60,7 @@ export function RichTextBlock({
         : "lg";
 
   return (
-    <Section spacing={effectiveSpacing} tone="default">
+    <Section spacing={effectiveSpacing} scheme="default">
       <Container size={containerSize}>
         <RichText
           className={`cms-rich-text leading-relaxed ${effectiveWidth !== "narrow" ? "cms-rich-text--wide" : ""}`}

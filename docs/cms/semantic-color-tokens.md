@@ -6,15 +6,15 @@ Esta nota registra a camada semantica de cores usada pela configuracao global do
 
 | Token | Papel visual | Origem atual |
 |---|---|---|
-| `--color-brand` | Identidade institucional e areas fortes | `buttonColor` |
-| `--color-action` | Botoes principais e chamadas clicaveis | `buttonColor` |
+| `--color-brand` | Identidade institucional e areas fortes | `primaryColor` legado ou default institucional |
+| `--color-action` | Botoes principais e chamadas clicaveis | `buttonColor`, com fallback `actionColor` ou `primaryColor` |
 | `--color-heading` | Titulos editoriais e headings de secao | `headlineColor` |
 | `--color-headline` | Alias editorial para titulos | `headlineColor` |
-| `--color-link` | Links textuais | `buttonColor` |
+| `--color-link` | Links textuais | `buttonColor`, com fallback `linkColor` ou `primaryColor` |
 | `--color-paragraph` | Texto corrido editorial | `paragraphColor` |
 | `--color-surface` | Cards e paineis claros | fallback do Design System |
 | `--color-muted` | Fundos suaves e areas de apoio | fallback do Design System |
-| `--color-accent` | Destaques menores, icones e detalhes | `accentColor` |
+| `--color-accent` | Destaques menores, icones e detalhes | `highlightColor`, com fallback `accentColor` |
 | `--color-highlight` | Alias editorial para destaque | `highlightColor` |
 | `--color-secondary-accent` | Destaque secundario | `secondaryIllustrationColor`, fallback `secondaryAccentColor` ou `secondaryColor` |
 | `--color-tertiary-accent` | Destaque terciario | `tertiaryColor`, fallback `tertiaryAccentColor` |
@@ -33,8 +33,10 @@ Estados de sistema continuam separados:
 ## Regras
 
 - Components devem consumir tokens por papel visual.
-- `buttonColor` alimenta os aliases tecnicos `primary`, `brand`, `action` e `link`.
-- `secondaryIllustrationColor` alimenta o alias tecnico `secondary`.
+- `primaryColor` permanece como fallback da identidade `brand`.
+- `buttonColor` alimenta `action` e `link`; campos legados equivalentes sao usados antes do default institucional.
+- `secondaryColor` continua alimentando `secondary` e `surface-strong`.
+- `secondaryIllustrationColor` alimenta apenas `secondary-accent`.
 - `highlightColor` alimenta o alias tecnico `accent`.
 - `secondaryColor` permanece como superficie forte (`surface-strong`).
 - `accentColor` permanece para detalhes e destaques menores.
@@ -65,7 +67,7 @@ A aba de configuracao do site expoe campos opcionais no grupo `branding`. Ausenc
 | Secondary | `secondaryIllustrationColor` | `secondaryAccent` |
 | Tertiary | `tertiaryColor` | `tertiaryAccent` |
 
-Os campos legados `primaryColor`, `secondaryColor`, `accentColor`, `actionColor`, `actionForegroundColor`, `linkColor`, `secondaryAccentColor` e `tertiaryAccentColor` continuam ocultos no schema apenas para compatibilidade com documentos persistidos. Seus valores nao participam mais da paleta renderizada.
+Os campos legados `primaryColor`, `secondaryColor`, `accentColor`, `actionColor`, `actionForegroundColor`, `linkColor`, `secondaryAccentColor` e `tertiaryAccentColor` continuam no schema para compatibilidade com documentos persistidos. Quando o papel semantico correspondente nao possui valor novo, o valor legado participa da paleta como fallback.
 
 ## Primitives
 
@@ -89,3 +91,5 @@ Os tokens antigos continuam existindo:
 ```
 
 Eles sao mantidos para compatibilidade e como fonte inicial dos novos papeis semanticos.
+
+Blocks nao consomem esses aliases diretamente quando existe um papel local equivalente. A resolucao do escopo local esta documentada em `docs/cms/block-color-theme.md`.

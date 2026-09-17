@@ -1,5 +1,5 @@
 import type { Media, Page } from "../../payload-types";
-import { Heading, Text } from "../../components/ui";
+import { Heading, MediaColorScope, Text } from "../../components/ui";
 import { classNames } from "../../components/ui/classNames";
 import { BlockLink } from "../shared/BlockLink";
 import { MediaImage } from "../shared/MediaImage";
@@ -108,8 +108,8 @@ const focalPointClasses = {
 } as const;
 
 const overlayClasses = {
-  dark: "bg-secondary/65",
-  light: "bg-background/70",
+  dark: "bg-[var(--block-background)] opacity-85",
+  light: "bg-[var(--block-background)] opacity-85",
   none: "",
 } as const;
 
@@ -140,7 +140,6 @@ export function FullWidthImageBannerBlock({
   const hasContent = Boolean(
     content?.eyebrow || content?.title || content?.description || content?.actions?.length,
   );
-  const contentTone = normalizedOverlay === "light" ? "default" : "inverse";
 
   if (!hasDesktopImage) return null;
 
@@ -150,6 +149,7 @@ export function FullWidthImageBannerBlock({
   const shouldUseFixedHeight = !hasAutoHeight && (!hasCustomHeight || Boolean(resolvedHeight));
 
   return (
+    <MediaColorScope mode={normalizedOverlay === "light" ? "light" : "dark"} paint={false}>
     <section
       className={classNames(
         "relative overflow-hidden bg-muted",
@@ -197,7 +197,7 @@ export function FullWidthImageBannerBlock({
             {content?.eyebrow ? (
               <Text
                 as="span"
-                tone={contentTone === "inverse" ? "accent" : "muted"}
+                tone="accent"
                 transform="uppercase"
                 variant="small"
                 weight="semibold"
@@ -217,7 +217,6 @@ export function FullWidthImageBannerBlock({
                   }
                   level={2}
                   size={normalizedHeight === "compact" ? "lg" : "display"}
-                  tone={contentTone}
                 >
                   <span className="whitespace-pre-line text-balance break-words">{content.title}</span>
                 </Heading>
@@ -225,7 +224,7 @@ export function FullWidthImageBannerBlock({
             ) : null}
             {content?.description ? (
               <div className="mt-5">
-                <Text tone={contentTone} variant="lead">
+                <Text variant="lead">
                   <span className="whitespace-pre-line break-words">{content.description}</span>
                 </Text>
               </div>
@@ -233,7 +232,7 @@ export function FullWidthImageBannerBlock({
             {content?.actions?.length ? (
               <div className="mt-7 flex flex-wrap gap-3">
                 {content.actions.map((action) => (
-                  <BlockLink appearance="primary" key={action.id} link={action} />
+                  <BlockLink appearance="solid" key={action.id} link={action} />
                 ))}
               </div>
             ) : null}
@@ -241,5 +240,6 @@ export function FullWidthImageBannerBlock({
         </div>
       ) : null}
     </section>
+    </MediaColorScope>
   );
 }

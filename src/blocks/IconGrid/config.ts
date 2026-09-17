@@ -3,7 +3,7 @@ import { characterLimitAdmin } from "../../fields/character-limit";
 import {
   createAppearanceGroup,
   createSpacingField,
-  createToneField,
+  createSchemeField,
 } from "../../fields/block-appearance";
 
 import { closedSelect, requiredText } from "../../fields/editorial-validation";
@@ -64,7 +64,7 @@ export const IconGridBlock: Block = {
       ],
     },
     createAppearanceGroup([
-      createToneField(["default", "surface", "muted"], "default"),
+      createSchemeField(["default", "surface", "muted"], "default"),
       createSpacingField(["compact", "default", "spacious"], "default"),
     ]),
     {

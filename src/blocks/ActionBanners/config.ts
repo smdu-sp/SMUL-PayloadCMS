@@ -84,9 +84,9 @@ export const ActionBannersBlock: Block = {
           type: "select",
           label: "Tom visual",
           required: true,
-          defaultValue: "primary",
+          defaultValue: "surface",
           validate: closedSelect(
-            ["primary", "brand", "accent"],
+            ["surface", "brand", "accent"],
             "Escolha uma aparencia aprovada para este banner.",
           ),
           admin: {
@@ -94,9 +94,9 @@ export const ActionBannersBlock: Block = {
               "Mapeia a faixa para tokens do Design System, sem cores livres.",
           },
           options: [
-            { label: "Verde — principal", value: "primary" },
-            { label: "Azul — institucional", value: "brand" },
-            { label: "Amarelo — apoio", value: "accent" },
+            { label: "Superficie neutra", value: "surface" },
+            { label: "Institucional", value: "brand" },
+            { label: "Destaque", value: "accent" },
           ],
         },
         {

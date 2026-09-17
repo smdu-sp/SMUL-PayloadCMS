@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import type { Media } from "../../payload-types";
-import { Text } from "../../components/ui";
+import { MediaColorScope, Text } from "../../components/ui";
 import { classNames } from "../../components/ui/classNames";
 import { MediaImage } from "../shared/MediaImage";
 import type {
@@ -169,6 +169,7 @@ export function GalleryLightbox({
       </ul>
 
       {activeItem && activeIndex !== null ? (
+        <MediaColorScope mode="dark" paint={false}>
         <div
           aria-labelledby={titleId}
           aria-modal="true"
@@ -215,8 +216,8 @@ export function GalleryLightbox({
                 </div>
                 {activeItem.caption ? (
                   <figcaption className="mt-3 text-center">
-                    <Text tone="inverse" variant="small">
-                      <span className="whitespace-pre-line break-words text-white">
+                    <Text variant="small">
+                      <span className="whitespace-pre-line break-words">
                         {activeItem.caption}
                       </span>
                     </Text>
@@ -237,6 +238,7 @@ export function GalleryLightbox({
             </div>
           </div>
         </div>
+        </MediaColorScope>
       ) : null}
     </>
   );

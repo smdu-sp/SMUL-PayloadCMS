@@ -1,3 +1,4 @@
+import { validateBasePalette, type PaletteInput } from "../lib/theme/semantic-theme";
 import type { GlobalConfig } from "payload";
 import { adminOnly } from "../access/roles.ts";
 import { createSeoFields } from "../fields/seo.ts";
@@ -71,248 +72,68 @@ export const SiteSettings: GlobalConfig = {
       ],
     },
     {
-      name: "branding",
+      name: "theme",
       type: "group",
-      label: "Cores institucionais",
-      admin: {
-        description:
-          "Ajuste apenas as cores permitidas pelo Design System. Nao e possivel inserir CSS livre.",
-      },
+      label: "Tema",
       fields: [
         {
-          name: "primaryColor",
-          type: "text",
-          label: "Cor principal",
-          admin: {
-            description:
-              "Cor principal de botoes, links e destaques. Use hexadecimal curto ou longo. Deixe vazio para usar o padrao SMUL.",
-            hidden: true,
-          },
-          validate: validateOptionalHexColor,
-        },
-        {
-          name: "secondaryColor",
-          type: "text",
-          label: "Cor institucional escura",
-          admin: {
-            description:
-              "Cor de fundos fortes, como areas de destaque. Use hexadecimal curto ou longo. Deixe vazio para usar o padrao SMUL.",
-            hidden: true,
-          },
-          validate: validateOptionalHexColor,
-        },
-        {
-          name: "accentColor",
-          type: "text",
-          label: "Cor de destaque",
-          admin: {
-            description:
-              "Cor suave para superficies de apoio e chamadas secundarias. Use hexadecimal curto ou longo. Deixe vazio para usar o padrao SMUL.",
-            hidden: true,
-          },
-          validate: validateOptionalHexColor,
-        },
-        {
-          type: "collapsible",
-          label: "Elements",
-          admin: {
-            description:
-              "Composicao principal do site inspirada no modelo Happy Hues.",
-          },
+          name: "colors",
+          type: "group",
+          label: "Cores do tema",
+          validate: (value) => validateBasePalette(value as PaletteInput),
+          admin: { description: "Cinco papeis globais. Deixe vazio para usar os defaults institucionais. Os pares de contraste sao resolvidos pelo Design System." },
           fields: [
             {
-              type: "row",
-              fields: [
-                {
-                  name: "backgroundColor",
-                  type: "text",
-                  label: "Background",
-                  admin: {
-                    description:
-                      "Fundo geral de paginas e secoes. Deixe vazio para usar o padrao SMUL.",
-                    width: "50%",
-                  },
-                  validate: validateOptionalHexColor,
-                },
-                {
-                  name: "headlineColor",
-                  type: "text",
-                  label: "Headline",
-                  admin: {
-                    description:
-                      "Cor dos titulos editoriais. Deixe vazio para usar o padrao SMUL.",
-                    width: "50%",
-                  },
-                  validate: validateOptionalHexColor,
-                },
-              ],
-            },
-            {
-              type: "row",
-              fields: [
-                {
-                  name: "paragraphColor",
-                  type: "text",
-                  label: "Paragraph",
-                  admin: {
-                    description:
-                      "Cor do texto corrido. Deixe vazio para usar o texto padrao do Design System.",
-                    width: "50%",
-                  },
-                  validate: validateOptionalHexColor,
-                },
-                {
-                  name: "buttonColor",
-                  type: "text",
-                  label: "Button",
-                  admin: {
-                    description:
-                      "Cor de botoes principais e chamadas clicaveis. Deixe vazio para usar o padrao SMUL.",
-                    width: "50%",
-                  },
-                  validate: validateOptionalHexColor,
-                },
-              ],
-            },
-            {
-              name: "buttonTextColor",
+              name: "background",
               type: "text",
-              label: "Button text",
-              admin: {
-                description:
-                  "Cor do texto em botoes fortes. Deixe vazio para usar o contraste padrao.",
-              },
+              label: "Fundo principal (Background)",
               validate: validateOptionalHexColor,
-            },
-          ],
-        },
-        {
-          type: "collapsible",
-          label: "Illustration",
-          admin: {
-            description:
-              "Cores de apoio para ilustracoes, detalhes e composicoes visuais.",
-          },
-          fields: [
-            {
-              type: "row",
-              fields: [
-                {
-                  name: "strokeColor",
-                  type: "text",
-                  label: "Stroke",
-                  admin: {
-                    description:
-                      "Cor de contornos em ilustracoes e detalhes graficos futuros.",
-                    width: "50%",
-                  },
-                  validate: validateOptionalHexColor,
-                },
-                {
-                  name: "mainColor",
-                  type: "text",
-                  label: "Main",
-                  admin: {
-                    description:
-                      "Cor principal de ilustracoes e areas graficas futuras.",
-                    width: "50%",
-                  },
-                  validate: validateOptionalHexColor,
-                },
-              ],
+              admin: {
+                description: "Cor de fundo estrutural das páginas e blocos padrão. Deixe vazio para restaurar o padrão institucional.",
+              },
             },
             {
-              type: "row",
-              fields: [
-                {
-                  name: "highlightColor",
-                  type: "text",
-                  label: "Highlight",
-                  admin: {
-                    description:
-                      "Cor de detalhes, icones e enfases menores. Deixe vazio para usar o padrao SMUL.",
-                    width: "50%",
-                  },
-                  validate: validateOptionalHexColor,
-                },
-                {
-                  name: "secondaryIllustrationColor",
-                  type: "text",
-                  label: "Secondary",
-                  admin: {
-                    description:
-                      "Cor secundaria para apoio visual e variacoes de enfase.",
-                    width: "50%",
-                  },
-                  validate: validateOptionalHexColor,
-                },
-              ],
-            },
-            {
-              name: "tertiaryColor",
+              name: "foreground",
               type: "text",
-              label: "Tertiary",
-              admin: {
-                description:
-                  "Cor terciaria para composicoes futuras e detalhes raros.",
-              },
+              label: "Texto principal (Foreground)",
               validate: validateOptionalHexColor,
+              admin: {
+                description: "Cor utilizada para os textos de leitura básica. Precisa ter alto contraste com a cor de fundo. Deixe vazio para restaurar o padrão institucional.",
+              },
             },
             {
-              name: "actionColor",
+              name: "brand",
               type: "text",
-              label: "Acao",
-              admin: {
-                hidden: true,
-              },
+              label: "Identidade Institucional (Brand)",
               validate: validateOptionalHexColor,
+              admin: {
+                description: "Cor institucional forte, aplicada para preencher o fundo de painéis de destaque e áreas de grande peso da marca. Deixe vazio para restaurar o padrão institucional.",
+              },
             },
             {
-              name: "actionForegroundColor",
+              name: "action",
               type: "text",
-              label: "Texto da acao",
-              admin: {
-                hidden: true,
-              },
+              label: "Ação e Interatividade (Action)",
               validate: validateOptionalHexColor,
+              admin: {
+                description: "Cor focada na conversão e usabilidade, aplicada exclusivamente em botões principais (CTAs), links e áreas clicáveis do portal. Deixe vazio para restaurar o padrão institucional.",
+              },
             },
             {
-              name: "linkColor",
+              name: "accent",
               type: "text",
-              label: "Link",
-              admin: {
-                hidden: true,
-              },
+              label: "Detalhes de Apoio (Accent)",
               validate: validateOptionalHexColor,
-            },
-            {
-              name: "secondaryAccentColor",
-              type: "text",
-              label: "Destaque secundario",
               admin: {
-                hidden: true,
+                description: "Cor gráfica secundária, utilizada para enfeites da interface, destaques menores, badges estruturais e ícones. Deixe vazio para restaurar o padrão institucional.",
               },
-              validate: validateOptionalHexColor,
-            },
-            {
-              name: "tertiaryAccentColor",
-              type: "text",
-              label: "Destaque terciario",
-              admin: {
-                hidden: true,
-              },
-              validate: validateOptionalHexColor,
             },
           ],
         },
         {
           name: "resetThemeColors",
           type: "ui",
-          admin: {
-            components: {
-              Field: "/components/admin/ThemeColorReset#ThemeColorReset",
-            },
-          },
+          admin: { components: { Field: "/components/admin/ThemeColorReset#ThemeColorReset" } },
         },
       ],
     },

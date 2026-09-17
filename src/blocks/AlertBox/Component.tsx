@@ -8,11 +8,11 @@ type AlertBoxType = "info" | "warning";
 const alertStyles = {
   info: {
     cardTone: "surface",
-    marker: "bg-primary",
+    marker: "bg-[var(--block-accent)]",
   },
   warning: {
     cardTone: "accent",
-    marker: "bg-secondary",
+    marker: "bg-warning",
   },
 } as const;
 
@@ -31,9 +31,9 @@ export function AlertBoxBlock({
   const styles = alertStyles[normalizeAlertBoxType(type)];
 
   return (
-    <Section spacing="sm" tone="default">
+    <Section spacing="sm" scheme="default">
       <Container size="md">
-        <Card padding="lg" tone={styles.cardTone}>
+        <Card padding="lg" scheme={styles.cardTone}>
           <div className="flex gap-5">
             <div className={`mt-1 h-10 w-1.5 shrink-0 rounded-full ${styles.marker}`} />
             <div className="min-w-0">

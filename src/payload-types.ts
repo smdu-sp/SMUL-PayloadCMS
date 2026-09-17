@@ -342,13 +342,13 @@ export interface HeroBlock {
    */
   variant: 'default' | 'centered' | 'split';
   /**
-   * Opcoes semanticas de apresentacao controladas pelo Design System. Nao permite CSS arbitrario.
+   * Opcoes semanticas controladas pelo Design System. Nao permite CSS arbitrario.
    */
   appearance?: {
     /**
-     * Define a cor de fundo e a enfase visual do bloco respeitando as diretrizes da SMUL.
+     * Seleciona uma combinacao completa de fundo, texto, acao e destaque.
      */
-    tone?: ('default' | 'surface' | 'muted' | 'brand') | null;
+    scheme?: ('default' | 'surface' | 'muted' | 'brand') | null;
     /**
      * Controla se os elementos de texto e botoes ficam alinhados a esquerda ou centralizados.
      */
@@ -386,7 +386,7 @@ export interface RichTextBlock {
    */
   variant: 'default' | 'narrow';
   /**
-   * Opcoes semanticas de apresentacao controladas pelo Design System. Nao permite CSS arbitrario.
+   * Opcoes semanticas controladas pelo Design System. Nao permite CSS arbitrario.
    */
   appearance?: {
     /**
@@ -645,13 +645,13 @@ export interface ImageTextBlock {
     newTab?: boolean | null;
   };
   /**
-   * Opcoes semanticas de apresentacao controladas pelo Design System. Nao permite CSS arbitrario.
+   * Opcoes semanticas controladas pelo Design System. Nao permite CSS arbitrario.
    */
   appearance?: {
     /**
-     * Define a cor de fundo e a enfase visual do bloco respeitando as diretrizes da SMUL.
+     * Seleciona uma combinacao completa de fundo, texto, acao e destaque.
      */
-    tone?: ('default' | 'surface' | 'muted') | null;
+    scheme?: ('default' | 'surface' | 'muted') | null;
     /**
      * Controla a distancia vertical do bloco em relacao aos blocos adjacentes.
      */
@@ -679,13 +679,13 @@ export interface CardsBlock {
    */
   variant: 'default' | 'modalities';
   /**
-   * Opcoes semanticas de apresentacao controladas pelo Design System. Nao permite CSS arbitrario.
+   * Opcoes semanticas controladas pelo Design System. Nao permite CSS arbitrario.
    */
   appearance?: {
     /**
-     * Define a cor de fundo e a enfase visual do bloco respeitando as diretrizes da SMUL.
+     * Seleciona uma combinacao completa de fundo, texto, acao e destaque.
      */
-    tone?: ('default' | 'surface' | 'muted') | null;
+    scheme?: ('default' | 'surface' | 'muted') | null;
     /**
      * Controla a distancia vertical do bloco em relacao aos blocos adjacentes.
      */
@@ -825,40 +825,24 @@ export interface CTABlock {
    */
   variant: 'default' | 'brand' | 'compact';
   /**
-   * Opcoes semanticas de apresentacao controladas pelo Design System. Nao permite CSS arbitrario.
+   * Opcoes semanticas controladas pelo Design System. Nao permite CSS arbitrario.
    */
   appearance?: {
     /**
-     * Define a cor de fundo e a enfase visual do bloco respeitando as diretrizes da SMUL.
+     * Seleciona uma combinacao completa de fundo, texto, acao e destaque.
      */
-    tone?: ('default' | 'muted' | 'brand' | 'accent') | null;
+    scheme?: ('default' | 'surface' | 'muted' | 'brand' | 'accent' | 'inverse') | null;
     /**
      * Controla a distancia vertical do bloco em relacao aos blocos adjacentes.
      */
     spacing?: ('compact' | 'default' | 'spacious') | null;
-    background?: {
-      type?: ('preset' | 'custom') | null;
-      preset?: ('default' | 'surface' | 'primary' | 'secondary' | 'accent') | null;
-      /**
-       * Use hexadecimal curto ou longo. O contraste e validado antes de salvar.
-       */
-      customColor?: string | null;
-    };
-    foreground?: {
-      type?: ('preset' | 'custom') | null;
-      preset?: ('default' | 'surface' | 'primary' | 'secondary' | 'accent') | null;
-      /**
-       * Use hexadecimal curto ou longo. O contraste e validado antes de salvar.
-       */
-      customColor?: string | null;
-    };
-    accent?: {
-      type?: ('preset' | 'custom') | null;
-      preset?: ('default' | 'surface' | 'primary' | 'secondary' | 'accent') | null;
-      /**
-       * Use hexadecimal curto ou longo. O contraste e validado antes de salvar.
-       */
-      customColor?: string | null;
+    /**
+     * Deixe vazio para usar o esquema. O contraste considera o tema atual. Nao configura elementos individuais.
+     */
+    colors?: {
+      background?: string | null;
+      foreground?: string | null;
+      accent?: string | null;
     };
   };
   id?: string | null;
@@ -883,13 +867,13 @@ export interface IconGridBlock {
    */
   variant: 'default' | 'compact';
   /**
-   * Opcoes semanticas de apresentacao controladas pelo Design System. Nao permite CSS arbitrario.
+   * Opcoes semanticas controladas pelo Design System. Nao permite CSS arbitrario.
    */
   appearance?: {
     /**
-     * Define a cor de fundo e a enfase visual do bloco respeitando as diretrizes da SMUL.
+     * Seleciona uma combinacao completa de fundo, texto, acao e destaque.
      */
-    tone?: ('default' | 'surface' | 'muted') | null;
+    scheme?: ('default' | 'surface' | 'muted') | null;
     /**
      * Controla a distancia vertical do bloco em relacao aos blocos adjacentes.
      */
@@ -1096,7 +1080,7 @@ export interface ActionBannersBlock {
     /**
      * Mapeia a faixa para tokens do Design System, sem cores livres.
      */
-    appearance: 'primary' | 'brand' | 'accent';
+    appearance: 'surface' | 'brand' | 'accent';
     button: {
       /**
        * Texto visivel para o usuario. Use uma acao clara, como Abrir pagina ou Saiba mais.
@@ -1413,7 +1397,7 @@ export interface HeroBlockSelect<T extends boolean = true> {
   appearance?:
     | T
     | {
-        tone?: T;
+        scheme?: T;
         alignment?: T;
       };
   id?: T;
@@ -1554,7 +1538,7 @@ export interface ImageTextBlockSelect<T extends boolean = true> {
   appearance?:
     | T
     | {
-        tone?: T;
+        scheme?: T;
         spacing?: T;
       };
   id?: T;
@@ -1571,7 +1555,7 @@ export interface CardsBlockSelect<T extends boolean = true> {
   appearance?:
     | T
     | {
-        tone?: T;
+        scheme?: T;
         spacing?: T;
       };
   items?:
@@ -1626,28 +1610,14 @@ export interface CTABlockSelect<T extends boolean = true> {
   appearance?:
     | T
     | {
-        tone?: T;
+        scheme?: T;
         spacing?: T;
-        background?:
+        colors?:
           | T
           | {
-              type?: T;
-              preset?: T;
-              customColor?: T;
-            };
-        foreground?:
-          | T
-          | {
-              type?: T;
-              preset?: T;
-              customColor?: T;
-            };
-        accent?:
-          | T
-          | {
-              type?: T;
-              preset?: T;
-              customColor?: T;
+              background?: T;
+              foreground?: T;
+              accent?: T;
             };
       };
   id?: T;
@@ -1664,7 +1634,7 @@ export interface IconGridBlockSelect<T extends boolean = true> {
   appearance?:
     | T
     | {
-        tone?: T;
+        scheme?: T;
         spacing?: T;
       };
   items?:
@@ -1970,67 +1940,32 @@ export interface SiteSetting {
         id?: string | null;
       }[]
     | null;
-  /**
-   * Ajuste apenas as cores permitidas pelo Design System. Nao e possivel inserir CSS livre.
-   */
-  branding?: {
+  theme?: {
     /**
-     * Cor principal de botoes, links e destaques. Use hexadecimal curto ou longo. Deixe vazio para usar o padrao SMUL.
+     * Cinco papeis globais. Deixe vazio para usar os defaults institucionais. Os pares de contraste sao resolvidos pelo Design System.
      */
-    primaryColor?: string | null;
-    /**
-     * Cor de fundos fortes, como areas de destaque. Use hexadecimal curto ou longo. Deixe vazio para usar o padrao SMUL.
-     */
-    secondaryColor?: string | null;
-    /**
-     * Cor suave para superficies de apoio e chamadas secundarias. Use hexadecimal curto ou longo. Deixe vazio para usar o padrao SMUL.
-     */
-    accentColor?: string | null;
-    /**
-     * Fundo geral de paginas e secoes. Deixe vazio para usar o padrao SMUL.
-     */
-    backgroundColor?: string | null;
-    /**
-     * Cor dos titulos editoriais. Deixe vazio para usar o padrao SMUL.
-     */
-    headlineColor?: string | null;
-    /**
-     * Cor do texto corrido. Deixe vazio para usar o texto padrao do Design System.
-     */
-    paragraphColor?: string | null;
-    /**
-     * Cor de botoes principais e chamadas clicaveis. Deixe vazio para usar o padrao SMUL.
-     */
-    buttonColor?: string | null;
-    /**
-     * Cor do texto em botoes fortes. Deixe vazio para usar o contraste padrao.
-     */
-    buttonTextColor?: string | null;
-    /**
-     * Cor de contornos em ilustracoes e detalhes graficos futuros.
-     */
-    strokeColor?: string | null;
-    /**
-     * Cor principal de ilustracoes e areas graficas futuras.
-     */
-    mainColor?: string | null;
-    /**
-     * Cor de detalhes, icones e enfases menores. Deixe vazio para usar o padrao SMUL.
-     */
-    highlightColor?: string | null;
-    /**
-     * Cor secundaria para apoio visual e variacoes de enfase.
-     */
-    secondaryIllustrationColor?: string | null;
-    /**
-     * Cor terciaria para composicoes futuras e detalhes raros.
-     */
-    tertiaryColor?: string | null;
-    actionColor?: string | null;
-    actionForegroundColor?: string | null;
-    linkColor?: string | null;
-    secondaryAccentColor?: string | null;
-    tertiaryAccentColor?: string | null;
+    colors?: {
+      /**
+       * Cor de fundo estrutural das páginas e blocos padrão. Deixe vazio para restaurar o padrão institucional.
+       */
+      background?: string | null;
+      /**
+       * Cor utilizada para os textos de leitura básica. Precisa ter alto contraste com a cor de fundo. Deixe vazio para restaurar o padrão institucional.
+       */
+      foreground?: string | null;
+      /**
+       * Cor institucional forte, aplicada para preencher o fundo de painéis de destaque e áreas de grande peso da marca. Deixe vazio para restaurar o padrão institucional.
+       */
+      brand?: string | null;
+      /**
+       * Cor focada na conversão e usabilidade, aplicada exclusivamente em botões principais (CTAs), links e áreas clicáveis do portal. Deixe vazio para restaurar o padrão institucional.
+       */
+      action?: string | null;
+      /**
+       * Cor gráfica secundária, utilizada para enfeites da interface, destaques menores, badges estruturais e ícones. Deixe vazio para restaurar o padrão institucional.
+       */
+      accent?: string | null;
+    };
   };
   /**
    * Valores usados quando uma pagina nao possui SEO proprio configurado.
@@ -2113,27 +2048,18 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         url?: T;
         id?: T;
       };
-  branding?:
+  theme?:
     | T
     | {
-        primaryColor?: T;
-        secondaryColor?: T;
-        accentColor?: T;
-        backgroundColor?: T;
-        headlineColor?: T;
-        paragraphColor?: T;
-        buttonColor?: T;
-        buttonTextColor?: T;
-        strokeColor?: T;
-        mainColor?: T;
-        highlightColor?: T;
-        secondaryIllustrationColor?: T;
-        tertiaryColor?: T;
-        actionColor?: T;
-        actionForegroundColor?: T;
-        linkColor?: T;
-        secondaryAccentColor?: T;
-        tertiaryAccentColor?: T;
+        colors?:
+          | T
+          | {
+              background?: T;
+              foreground?: T;
+              brand?: T;
+              action?: T;
+              accent?: T;
+            };
       };
   defaultSEO?:
     | T

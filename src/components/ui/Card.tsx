@@ -1,55 +1,34 @@
-import type { CSSProperties, ReactNode } from "react";
-
+import type { ReactNode } from "react";
+import type { ColorScheme, EditorialColorOverrides } from "../../lib/theme/block-color-theme";
+import { ColorScope } from "./ColorScope";
 import { classNames } from "./classNames";
 
-const cardTones = {
-  default: "border border-border bg-surface text-foreground",
-  surface: "border border-border bg-surface text-foreground",
-  muted: "border border-border bg-muted text-foreground",
-  accent: "border border-border bg-highlight text-highlight-foreground",
-  brand: "bg-brand text-brand-foreground",
-  custom:
-    "border border-[color:var(--block-accent)] bg-[var(--block-bg)] text-[var(--block-fg)] [&_h2]:text-[var(--block-fg)] [&_p]:text-[var(--block-fg)]",
-} as const;
-
-const cardPaddings = {
-  sm: "p-5",
-  md: "p-6",
-  lg: "p-8",
-} as const;
-
-export type CardTone = keyof typeof cardTones;
+const cardPaddings = { sm: "p-5", md: "p-6", lg: "p-8" } as const;
 export type CardPadding = keyof typeof cardPaddings;
-
 type CardProps = {
   children: ReactNode;
+  scheme?: ColorScheme | "inherit";
+  overrides?: EditorialColorOverrides | null;
   fullHeight?: boolean;
   interactive?: boolean;
   padding?: CardPadding;
-  style?: CSSProperties;
-  tone?: CardTone;
 };
 
 export function Card({
-  children,
-  fullHeight = false,
-  interactive = false,
-  padding = "md",
-  style,
-  tone = "surface",
+  children, scheme = "surface", overrides, fullHeight = false, interactive = false, padding = "md",
 }: CardProps) {
   return (
-    <div
+    <ColorScope
+      scheme={scheme}
+      overrides={overrides}
       className={classNames(
-        "flex flex-col overflow-hidden rounded-lg",
+        "flex flex-col overflow-hidden rounded-lg border border-border",
         cardPaddings[padding],
-        cardTones[tone],
         fullHeight && "h-full",
-        interactive && "transition-colors hover:border-action",
+        interactive && "transition-colors hover:border-current",
       )}
-      style={style}
     >
       {children}
-    </div>
+    </ColorScope>
   );
 }

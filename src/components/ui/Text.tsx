@@ -6,14 +6,12 @@ const textVariants = {
   body: "text-base leading-relaxed",
   lead: "text-lg leading-relaxed",
   small: "text-sm leading-normal",
-  muted: "text-base leading-relaxed text-muted-foreground",
+  muted: "text-base leading-relaxed",
 } as const;
 
 const textTones = {
-  default: "text-paragraph",
-  muted: "text-muted-foreground",
-  inverse: "text-brand-foreground",
-  accent: "text-highlight",
+  default: "text-[var(--block-foreground)]",
+  accent: "text-[var(--block-accent)]",
 } as const;
 
 const textWeights = {
@@ -48,7 +46,7 @@ export function Text({
     <Component
       className={classNames(
         textVariants[variant],
-        variant === "muted" ? undefined : textTones[tone],
+        textTones[tone],
         textWeights[weight],
         transform === "uppercase" && "uppercase",
       )}

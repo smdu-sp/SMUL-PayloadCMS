@@ -261,7 +261,7 @@ describe("CMS editing UX", () => {
     assert.ok(Footer.admin?.description);
     assert.ok(SiteSettings.admin?.description);
 
-    const branding = fieldByName(SiteSettings.fields, "branding");
+    const branding = fieldByName(SiteSettings.fields, "theme");
     const alt = fieldByName(Media.fields, "alt");
     const usage = fieldByName(Media.fields, "usage");
     const brandingFieldNames = "fields" in branding && Array.isArray(branding.fields)
@@ -271,42 +271,10 @@ describe("CMS editing UX", () => {
       ? visibleNestedFieldNames(branding.fields as Field[])
       : [];
 
-    assert.equal(branding.label, "Cores institucionais");
+    assert.equal(branding.label, "Tema");
     assert.equal(usage.label, "Uso principal");
-    assert.match(adminDescription(branding) ?? "", /CSS livre/);
-    assert.deepEqual(brandingFieldNames, [
-      "primaryColor",
-      "secondaryColor",
-      "accentColor",
-      "backgroundColor",
-      "headlineColor",
-      "paragraphColor",
-      "buttonColor",
-      "buttonTextColor",
-      "strokeColor",
-      "mainColor",
-      "highlightColor",
-      "secondaryIllustrationColor",
-      "tertiaryColor",
-      "actionColor",
-      "actionForegroundColor",
-      "linkColor",
-      "secondaryAccentColor",
-      "tertiaryAccentColor",
-      "resetThemeColors",
-    ]);
-    assert.deepEqual(visibleBrandingFieldNames, [
-      "backgroundColor",
-      "headlineColor",
-      "paragraphColor",
-      "buttonColor",
-      "buttonTextColor",
-      "strokeColor",
-      "mainColor",
-      "highlightColor",
-      "secondaryIllustrationColor",
-      "tertiaryColor",
-    ]);
+    assert.deepEqual(brandingFieldNames, ["colors", "background", "foreground", "brand", "action", "accent", "resetThemeColors"]);
+    assert.deepEqual(visibleBrandingFieldNames, ["colors", "background", "foreground", "brand", "action", "accent"]);
     assert.match(adminDescription(alt) ?? "", /leitores de tela/);
     assert.match(adminDescription(usage) ?? "", /SVG/);
   });

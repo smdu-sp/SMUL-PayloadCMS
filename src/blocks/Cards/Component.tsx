@@ -25,7 +25,7 @@ type CardsItem = CardsBlockProps["items"][number] & {
 
 type CardsAppearance = {
   spacing?: "compact" | "default" | "spacious" | string | null;
-  tone?: "default" | "muted" | "surface" | string | null;
+  scheme?: "default" | "muted" | "surface" | string | null;
 };
 
 type CardsBlockWithAppearanceProps = CardsBlockProps & {
@@ -121,7 +121,7 @@ function CardMedia({
         iconSource={item.iconSource}
         sizes="56px"
         standardIcon={item.standardIcon}
-        tone="primary"
+        tone="accent"
       />
     );
   }
@@ -161,7 +161,7 @@ export function CardsBlock({
   const normalizedVariant = normalizeCardsVariant(variant);
   const modalities = normalizedVariant === "modalities";
   const effectiveTone = normalizeCardsTone(
-    appearance?.tone && appearance.tone !== "default" ? appearance.tone : null,
+    appearance?.scheme,
     modalities ? "default" : "muted",
   );
   const effectiveSpacing = normalizeCardsSpacing(
@@ -170,7 +170,7 @@ export function CardsBlock({
   );
 
   return (
-    <Section spacing={effectiveSpacing} tone={effectiveTone}>
+    <Section spacing={effectiveSpacing} scheme={effectiveTone}>
       <Container size="lg">
         {title ? (
           <Heading level={2} size="lg">

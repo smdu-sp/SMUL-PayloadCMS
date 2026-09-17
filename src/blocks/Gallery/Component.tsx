@@ -54,7 +54,7 @@ export function GalleryBlock({ images, layout, title }: GalleryBlockProps) {
   const thumbnailEffect = normalizeGalleryThumbnailEffect(layout?.thumbnailEffect);
 
   return (
-    <Section spacing="default" tone="default">
+    <Section spacing="default" scheme="default">
       <Container size="lg">
         {title ? (
           <div className="mb-8">

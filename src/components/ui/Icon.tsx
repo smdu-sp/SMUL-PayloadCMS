@@ -10,10 +10,6 @@ export type IconTone =
   | "accent"
   | "current"
   | "danger"
-  | "default"
-  | "muted"
-  | "primary"
-  | "secondary"
   | "success"
   | "warning";
 
@@ -49,13 +45,9 @@ const sizePixelMap: Record<IconSize, number> = {
 };
 
 const toneClasses: Record<IconTone, string> = {
-  accent: "text-highlight",
+  accent: "text-[var(--block-accent)]",
   current: "text-current",
   danger: "text-danger",
-  default: "text-foreground",
-  muted: "text-muted-foreground",
-  primary: "text-action",
-  secondary: "text-brand",
   success: "text-success",
   warning: "text-warning",
 };
@@ -177,7 +169,7 @@ export function Icon({
   name,
   size = "lg",
   style,
-  tone = "current",
+  tone = "accent",
   width,
   ...rest
 }: IconProps) {

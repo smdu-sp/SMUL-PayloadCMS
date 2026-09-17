@@ -56,7 +56,7 @@ export function ImageBlock({
   const fitClassName = getImagePresentationFitClassName(presentation);
 
   return (
-    <Section spacing="default" tone="default">
+    <Section spacing="default" scheme="default">
       <Container size="lg">
         <figure
           className={classNames(
@@ -84,7 +84,7 @@ export function ImageBlock({
           )}
           {caption ? (
             <figcaption className="mt-3">
-              <Text tone="muted" variant="small">
+              <Text variant="small">
                 <span className="whitespace-pre-line break-words">{caption}</span>
               </Text>
             </figcaption>

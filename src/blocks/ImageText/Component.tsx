@@ -12,7 +12,7 @@ type ImageTextVariant = "image-left" | "image-right";
 
 type ImageTextAppearance = {
   spacing?: "compact" | "default" | "spacious" | string | null;
-  tone?: "default" | "muted" | "surface" | string | null;
+  scheme?: "default" | "muted" | "surface" | string | null;
 };
 
 type ImageTextBlockWithLegacyProps = ImageTextBlockProps & {
@@ -53,11 +53,11 @@ export function ImageTextBlock({
 }: ImageTextBlockWithLegacyProps) {
   const normalizedVariant = normalizeImageTextVariant(variant ?? imagePosition);
   const imageOnRight = normalizedVariant === "image-right";
-  const effectiveTone = normalizeImageTextTone(appearance?.tone);
+  const effectiveTone = normalizeImageTextTone(appearance?.scheme);
   const effectiveSpacing = normalizeImageTextSpacing(appearance?.spacing);
 
   return (
-    <Section spacing={effectiveSpacing} tone={effectiveTone}>
+    <Section spacing={effectiveSpacing} scheme={effectiveTone}>
       <Container size="lg">
         <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
           <MediaImage

@@ -1,44 +1,14 @@
 import type { ReactNode } from "react";
-
-import { classNames } from "./classNames";
+import type { ColorScheme } from "../../lib/theme/block-color-theme";
+import { ColorScope } from "./ColorScope";
 
 const sectionSpacings = {
-  compact: "py-10 sm:py-12",
-  default: "py-14 sm:py-16",
-  spacious: "py-20 sm:py-24",
-  sm: "py-12",
-  md: "py-14",
-  lg: "py-16",
-  xl: "py-24",
+  compact: "py-10 sm:py-12", default: "py-14 sm:py-16", spacious: "py-20 sm:py-24",
+  sm: "py-12", md: "py-14", lg: "py-16", xl: "py-24",
 } as const;
-
-const sectionTones = {
-  default: "bg-background text-foreground",
-  surface: "bg-surface text-foreground",
-  muted: "bg-muted text-foreground",
-  brand: "bg-brand text-brand-foreground",
-  primary: "bg-action text-action-foreground",
-  secondary: "bg-surface-strong text-surface-strong-foreground",
-  accent: "bg-highlight text-highlight-foreground",
-} as const;
-
 export type SectionSpacing = keyof typeof sectionSpacings;
-export type SectionTone = keyof typeof sectionTones;
+type SectionProps = { children: ReactNode; spacing?: SectionSpacing; scheme?: ColorScheme | "inherit" };
 
-type SectionProps = {
-  children: ReactNode;
-  spacing?: SectionSpacing;
-  tone?: SectionTone;
-};
-
-export function Section({
-  children,
-  spacing = "md",
-  tone = "default",
-}: SectionProps) {
-  return (
-    <section className={classNames(sectionTones[tone], sectionSpacings[spacing])}>
-      {children}
-    </section>
-  );
+export function Section({ children, spacing = "md", scheme = "inherit" }: SectionProps) {
+  return <ColorScope as="section" scheme={scheme} className={sectionSpacings[spacing]}>{children}</ColorScope>;
 }

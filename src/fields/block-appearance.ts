@@ -1,235 +1,45 @@
 import type { Field, GroupField } from "payload";
-import { hasMinimumContrast, isHexColor, normalizeHexColor } from "../lib/theme/colors";
+import { validateOptionalHexColor } from "../lib/theme/colors";
+import { colorSchemes, normalizeColorScheme, validateColorOverrides, type ColorScheme, type EditorialColorOverrides } from "../lib/theme/block-color-theme";
+import { resolveSemanticTheme, type GlobalSemanticTheme } from "../lib/theme/semantic-theme";
 import { closedSelect } from "./editorial-validation";
 
-export const toneOptions = [
+export const schemeOptions = [
   { label: "Padrao", value: "default" },
-  { label: "Superficie branca", value: "surface" },
-  { label: "Suave / Neutro", value: "muted" },
-  { label: "Institucional (Brand)", value: "brand" },
-  { label: "Institucional principal (Azul)", value: "primary" },
-  { label: "Institucional escuro", value: "secondary" },
-  { label: "Destaque (Turquesa SMUL)", value: "accent" },
+  { label: "Superficie neutra", value: "surface" },
+  { label: "Suave", value: "muted" },
+  { label: "Institucional", value: "brand" },
+  { label: "Destaque", value: "accent" },
+  { label: "Invertido", value: "inverse" },
 ] as const;
-
 export const spacingOptions = [
-  { label: "Compacto", value: "compact" },
-  { label: "Padrao", value: "default" },
-  { label: "Espacoso", value: "spacious" },
+  { label: "Compacto", value: "compact" }, { label: "Padrao", value: "default" }, { label: "Espacoso", value: "spacious" },
 ] as const;
-
 export const widthOptions = [
-  { label: "Estreito", value: "narrow" },
-  { label: "Padrao", value: "default" },
-  { label: "Amplo", value: "wide" },
-  { label: "Largura total", value: "full" },
+  { label: "Estreito", value: "narrow" }, { label: "Padrao", value: "default" },
+  { label: "Amplo", value: "wide" }, { label: "Largura total", value: "full" },
 ] as const;
-
 export const alignmentOptions = [
-  { label: "A esquerda", value: "left" },
-  { label: "Centralizado", value: "center" },
+  { label: "A esquerda", value: "left" }, { label: "Centralizado", value: "center" },
 ] as const;
-
-export type BlockTone = (typeof toneOptions)[number]["value"];
 export type BlockSpacing = (typeof spacingOptions)[number]["value"];
 export type BlockWidth = (typeof widthOptions)[number]["value"];
 export type BlockAlignment = (typeof alignmentOptions)[number]["value"];
 
-export type ControlledColorPreset =
-  | "accent"
-  | "default"
-  | "primary"
-  | "secondary"
-  | "surface";
-export type ControlledColorType = "custom" | "preset";
-
-export type ControlledColorValue = {
-  customColor?: string | null;
-  preset?: ControlledColorPreset | null;
-  type?: ControlledColorType | string | null;
-};
-
-export type ControlledBlockColors = {
-  accent?: ControlledColorValue | null;
-  background?: ControlledColorValue | null;
-  foreground?: ControlledColorValue | null;
-};
-
-const colorPresetOptions = [
-  { label: "Default", value: "default" },
-  { label: "Surface", value: "surface" },
-  { label: "Primary", value: "primary" },
-  { label: "Secondary", value: "secondary" },
-  { label: "Accent", value: "accent" },
-] as const;
-
-const colorPresetHex: Record<ControlledColorPreset, string> = {
-  accent: "#5cd6c9",
-  default: "#ffffff",
-  primary: "#0a3299",
-  secondary: "#0a3299",
-  surface: "#ffffff",
-};
-
-const colorPresetCssVariables: Record<ControlledColorPreset, string> = {
-  accent: "var(--color-accent)",
-  default: "var(--color-background)",
-  primary: "var(--color-primary)",
-  secondary: "var(--color-secondary)",
-  surface: "var(--color-surface)",
-};
-
-function colorFieldLabel(name: "accent" | "background" | "foreground"): string {
-  if (name === "background") return "Background";
-  if (name === "foreground") return "Foreground";
-  return "Accent";
-}
-
-function resolveControlledColor(value: ControlledColorValue | null | undefined): string | null {
-  if (!value) return null;
-  if (value.type === "custom") return normalizeHexColor(value.customColor);
-  if (value.preset && value.preset in colorPresetHex) {
-    return colorPresetHex[value.preset as ControlledColorPreset];
-  }
-  return null;
-}
-
-export function resolveControlledColorCssValue(
-  value: ControlledColorValue | null | undefined,
-): string | null {
-  if (!value) return null;
-  if (value.type === "custom") return normalizeHexColor(value.customColor);
-  if (value.preset && value.preset in colorPresetCssVariables) {
-    return colorPresetCssVariables[value.preset as ControlledColorPreset];
-  }
-  return null;
+export function createSchemeField(allowed: readonly ColorScheme[] = colorSchemes, defaultValue: ColorScheme = "default"): Field {
+  return {
+    name: "scheme", type: "select", label: "Esquema de cores", defaultValue,
+    validate: closedSelect(allowed, "Escolha um esquema aprovado pelo Design System."),
+    options: schemeOptions.filter(option => allowed.includes(option.value)).map(option => ({ ...option })),
+    admin: { description: "Seleciona uma combinacao completa de fundo, texto, acao e destaque." },
+  };
 }
 
 export function validateControlledBlockColors(
-  colors: ControlledBlockColors | null | undefined,
+  appearance: { scheme?: string | null; colors?: EditorialColorOverrides | null } | null | undefined,
+  theme: GlobalSemanticTheme = resolveSemanticTheme(),
 ): true | string {
-  const background = resolveControlledColor(colors?.background);
-  const foreground = resolveControlledColor(colors?.foreground);
-  const accent = resolveControlledColor(colors?.accent);
-
-  if (colors?.background?.type === "custom" && !background) {
-    return "Informe uma cor hexadecimal valida para o background.";
-  }
-
-  if (colors?.foreground?.type === "custom" && !foreground) {
-    return "Informe uma cor hexadecimal valida para o foreground.";
-  }
-
-  if (colors?.accent?.type === "custom" && !accent) {
-    return "Informe uma cor hexadecimal valida para o accent.";
-  }
-
-  if (background && foreground && !hasMinimumContrast(foreground, background)) {
-    return "Foreground e background precisam atingir contraste minimo WCAG AA.";
-  }
-
-  if (background && accent && !hasMinimumContrast(accent, background)) {
-    return "Accent e background precisam atingir contraste minimo WCAG AA.";
-  }
-
-  return true;
-}
-
-export function createControlledColorField(
-  name: "accent" | "background" | "foreground",
-  defaultPreset: ControlledColorPreset,
-): GroupField {
-  const label = colorFieldLabel(name);
-
-  return {
-    name,
-    type: "group",
-    label,
-    fields: [
-      {
-        name: "type",
-        type: "select",
-        label: `${label}: origem`,
-        defaultValue: "preset",
-        validate: closedSelect(
-          ["preset", "custom"],
-          `Escolha a origem aprovada para ${label}.`,
-        ),
-        options: [
-          { label: "Preset", value: "preset" },
-          { label: "Custom", value: "custom" },
-        ],
-      },
-      {
-        name: "preset",
-        type: "select",
-        label: `${label}: preset`,
-        defaultValue: defaultPreset,
-        validate: (value: unknown, { siblingData }: { siblingData?: Record<string, unknown> }) => {
-          if (siblingData?.type === "custom") return true;
-          return typeof value === "string" &&
-            colorPresetOptions.some((option) => option.value === value)
-            ? true
-            : `Escolha um preset aprovado para ${label}.`;
-        },
-        admin: {
-          condition: (_, siblingData) => siblingData?.type !== "custom",
-        },
-        options: colorPresetOptions.map((option) => ({
-          label: option.label,
-          value: option.value,
-        })),
-      },
-      {
-        name: "customColor",
-        type: "text",
-        label: `${label}: cor customizada`,
-        validate: (value: unknown, { siblingData }: { siblingData?: Record<string, unknown> }) => {
-          if (siblingData?.type !== "custom") return true;
-          return isHexColor(value)
-            ? true
-            : `Informe uma cor hexadecimal valida para ${label}, como #0a3299.`;
-        },
-        admin: {
-          condition: (_, siblingData) => siblingData?.type === "custom",
-          description:
-            "Use hexadecimal curto ou longo. O contraste e validado antes de salvar.",
-        },
-      },
-    ],
-  };
-}
-
-export function createToneField(
-  allowedTones: readonly BlockTone[] = [
-    "default",
-    "surface",
-    "muted",
-    "primary",
-    "secondary",
-    "accent",
-  ],
-  defaultValue: BlockTone = "default",
-): Field {
-  const filtered = toneOptions.filter((opt) =>
-    allowedTones.includes(opt.value),
-  );
-
-  return {
-    name: "tone",
-    type: "select",
-    label: "Tom visual",
-    defaultValue,
-    validate: closedSelect(
-      allowedTones,
-      "Escolha um tom visual aprovado pelo Design System.",
-    ),
-    admin: {
-      description:
-        "Define a cor de fundo e a enfase visual do bloco respeitando as diretrizes da SMUL.",
-    },
-    options: filtered.map((o) => ({ label: o.label, value: o.value })),
-  };
+  return validateColorOverrides(theme, normalizeColorScheme(appearance?.scheme), appearance?.colors);
 }
 
 export function createSpacingField(
@@ -309,22 +119,27 @@ export function createAlignmentField(
 
 export function createAppearanceGroup(fields: Field[]): GroupField {
   return {
-    name: "appearance",
-    type: "group",
-    label: "Aparencia e estilo",
-    validate: (value) => validateControlledBlockColors(value as ControlledBlockColors),
-    admin: {
-      description:
-        "Opcoes semanticas de apresentacao controladas pelo Design System. Nao permite CSS arbitrario.",
+    name: "appearance", type: "group", label: "Aparencia e estilo",
+    validate: async (value, { req }) => {
+      const appearance = value as { scheme?: string | null; colors?: EditorialColorOverrides | null } | null;
+      if (!appearance?.colors || !Object.values(appearance.colors).some(Boolean)) return true;
+      // Validate against the same global values used by the renderer, not fixed preset hexes.
+      const settings = await req.payload.findGlobal({ slug: "site-settings", depth: 0, req });
+      return validateControlledBlockColors(appearance, resolveSemanticTheme(settings.theme?.colors));
     },
+    admin: { description: "Opcoes semanticas controladas pelo Design System. Nao permite CSS arbitrario." },
     fields,
   };
 }
 
 export function createControlledColorAppearanceFields(): Field[] {
-  return [
-    createControlledColorField("background", "default"),
-    createControlledColorField("foreground", "primary"),
-    createControlledColorField("accent", "primary"),
-  ];
+  return [{
+    name: "colors", type: "group", label: "Overrides semanticos (opcional)",
+    admin: { description: "Deixe vazio para usar o esquema. O contraste considera o tema atual. Nao configura elementos individuais." },
+    fields: [
+      { name: "background", label: "Fundo" },
+      { name: "foreground", label: "Texto" },
+      { name: "accent", label: "Destaque" },
+    ].map(({ name, label }) => ({ name, label, type: "text" as const, validate: validateOptionalHexColor })),
+  }];
 }

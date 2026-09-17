@@ -1,5 +1,6 @@
+import type { ReactNode } from "react";
 import type { HeroBlock as HeroBlockProps } from "../../payload-types";
-import { Container, Heading, Section, Text } from "../../components/ui";
+import { Container, Heading, MediaColorScope, Section, Text } from "../../components/ui";
 import { classNames } from "../../components/ui/classNames";
 import {
   getFocalPointStyle,
@@ -21,7 +22,7 @@ type HeroBackground = {
 
 type HeroAppearance = {
   alignment?: "center" | "left" | string | null;
-  tone?: "brand" | "default" | "muted" | "surface" | string | null;
+  scheme?: "brand" | "default" | "muted" | "surface" | string | null;
 };
 
 type HeroBlockWithBackgroundProps = HeroBlockProps & {
@@ -82,8 +83,8 @@ const focalPointClasses: Record<FocalPoint, string> = {
 };
 
 const overlayClasses: Record<HeroOverlay, string> = {
-  dark: "bg-secondary/70",
-  light: "bg-background/70",
+  dark: "bg-[var(--block-background)] opacity-85",
+  light: "bg-[var(--block-background)] opacity-85",
   none: "",
 };
 
@@ -104,7 +105,7 @@ export function HeroBlock({
     normalizedVariant === "centered",
   );
   const centered = normalizedAlignment === "center";
-  const normalizedTone = normalizeHeroTone(appearance?.tone);
+  const normalizedTone = normalizeHeroTone(appearance?.scheme);
   const hasImage = Boolean(image && typeof image === "object" && image.url);
   const split = normalizedVariant === "split" && hasImage;
   const backgroundImage = background?.image;
@@ -123,13 +124,12 @@ export function HeroBlock({
   const contentAlignment = centered ? "items-center text-center" : "items-start";
   const contentWidth = split ? "max-w-container-md" : "max-w-container-sm";
   const toneForSection = hasBackground ? "brand" : normalizedTone;
-  const isDarkTone =
-    toneForSection === "brand" || (hasBackground && overlay !== "light");
-  const contentTone = isDarkTone ? "inverse" : "default";
 
   return (
-    <Section spacing={hasBackground ? "sm" : "xl"} tone={toneForSection}>
-      <div
+    <Section spacing={hasBackground ? "sm" : "xl"} scheme={toneForSection}>
+      <HeroContentScope
+        enabled={hasBackground}
+        mode={overlay === "light" ? "light" : "dark"}
         className={classNames(
           "relative overflow-hidden",
           hasBackground && "min-h-[30rem] py-16 sm:py-20",
@@ -198,21 +198,20 @@ export function HeroBlock({
                   align={centered ? "center" : "start"}
                   level={1}
                   size="display"
-                  tone={contentTone}
                 >
                   <span className="text-balance break-words">{title}</span>
                 </Heading>
               </div>
               {description ? (
                 <div className="mt-6 max-w-container-sm">
-                  <Text tone={contentTone} variant="lead">
+                  <Text variant="lead">
                     {description}
                   </Text>
                 </div>
               ) : null}
               {cta?.label ? (
                 <div className="mt-8">
-                  <BlockLink appearance="primary" link={cta} />
+                  <BlockLink appearance="solid" link={cta} />
                 </div>
               ) : null}
             </div>
@@ -230,7 +229,12 @@ export function HeroBlock({
             ) : null}
           </div>
         </Container>
-      </div>
+      </HeroContentScope>
     </Section>
   );
+}
+function HeroContentScope({ enabled, children, ...props }: {
+  enabled: boolean; children: ReactNode; mode: "light" | "dark"; className: string;
+}) {
+  return enabled ? <MediaColorScope {...props} paint={false}>{children}</MediaColorScope> : <div className={props.className}>{children}</div>;
 }

@@ -4,7 +4,7 @@ import {
   createAppearanceGroup,
   createControlledColorAppearanceFields,
   createSpacingField,
-  createToneField,
+  createSchemeField,
 } from "../../fields/block-appearance";
 
 import { closedSelect, requiredText } from "../../fields/editorial-validation";
@@ -75,7 +75,7 @@ export const CTABlock: Block = {
       ],
     },
     createAppearanceGroup([
-      createToneField(["default", "brand", "accent", "muted"], "default"),
+      createSchemeField(),
       createSpacingField(["compact", "default", "spacious"], "default"),
       ...createControlledColorAppearanceFields(),
     ]),

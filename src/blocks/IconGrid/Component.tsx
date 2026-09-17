@@ -7,7 +7,7 @@ type IconGridVariant = "compact" | "default";
 
 type IconGridAppearance = {
   spacing?: "compact" | "default" | "spacious" | string | null;
-  tone?: "default" | "muted" | "surface" | string | null;
+  scheme?: "default" | "muted" | "surface" | string | null;
 };
 
 type IconGridBlockWithAppearanceProps = IconGridBlockProps & {
@@ -49,14 +49,14 @@ export function IconGridBlock({
 }: IconGridBlockWithAppearanceProps) {
   const normalizedVariant = normalizeIconGridVariant(variant);
   const compact = normalizedVariant === "compact";
-  const effectiveTone = normalizeIconGridTone(appearance?.tone);
+  const effectiveTone = normalizeIconGridTone(appearance?.scheme);
   const effectiveSpacing = normalizeIconGridSpacing(
     appearance?.spacing,
     compact ? "compact" : "default",
   );
 
   return (
-    <Section spacing={effectiveSpacing} tone={effectiveTone}>
+    <Section spacing={effectiveSpacing} scheme={effectiveTone}>
       <Container size="lg">
         <Heading level={2} size="lg">
           <span className="text-balance break-words">{title}</span>
@@ -81,7 +81,7 @@ export function IconGridBlock({
                       iconSource={item.iconSource}
                       sizes={compact ? "36px" : "44px"}
                       standardIcon={item.standardIcon}
-                      tone="primary"
+                      tone="accent"
                     />
                     <div className="min-w-0">
                       <Text weight="semibold">
