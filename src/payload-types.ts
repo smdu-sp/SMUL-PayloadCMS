@@ -151,7 +151,7 @@ export interface User {
   collection: 'users';
 }
 /**
- * Cadastre imagens e documentos usados nos blocos, SEO e identidade visual. O texto alternativo e obrigatorio para acessibilidade.
+ * Cadastre imagens e documentos usados nos blocos...
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media".

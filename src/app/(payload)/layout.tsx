@@ -1,5 +1,4 @@
 import type { ServerFunctionClient } from "payload";
-
 import "@payloadcms/next/css";
 
 import config from "@payload-config";

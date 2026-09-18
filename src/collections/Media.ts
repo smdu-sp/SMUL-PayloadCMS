@@ -31,9 +31,9 @@ export const Media: CollectionConfig = {
     plural: "Mídias",
   },
   admin: {
-    defaultColumns: ["alt", "usage", "caption", "updatedAt"],
-    description:
-      "Cadastre imagens e documentos usados nos blocos, SEO e identidade visual. O texto alternativo e obrigatorio para acessibilidade.",
+    // ADICIONE O 'filename' como primeira coluna. Ele vai renderizar a imagem!
+    defaultColumns: ["filename", "alt", "usage", "caption", "updatedAt"],
+    description: "Cadastre imagens e documentos usados nos blocos...",
     useAsTitle: "alt",
   },
   upload: {
