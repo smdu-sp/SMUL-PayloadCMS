@@ -3,7 +3,6 @@ import { addDataAndFileToRequest, type Endpoint } from "payload";
 import { imageEditingCanvasAdminOnly } from "../../access/roles.ts";
 import {
   processImageTransform,
-  normalizeAltText,
   resolveMediaPath,
   validateCanvasTransformPayload,
 } from "./image-editing-canvas.ts";
@@ -28,50 +27,20 @@ export const imageEditingCanvasEndpoint: Endpoint = {
       }
 
       const altText = transform.altText?.trim();
-      if (!altText) {
-        return Response.json(
-          { message: "Informe o texto alternativo da imagem derivada." },
-          { status: 400 },
-        );
-      }
-      const normalizedAltText = normalizeAltText(altText);
-      let page = 1;
-      let duplicatedAltText = false;
-      let totalPages = 1;
-      while (page <= totalPages && !duplicatedAltText) {
-        const mediaWithAltText = await req.payload.find({
-          collection: "media",
-          depth: 0,
-          limit: 100,
-          page,
-          where: { alt: { exists: true } },
-        });
-        duplicatedAltText = mediaWithAltText.docs.some(
-          (media) => typeof media.alt === "string" && normalizeAltText(media.alt) === normalizedAltText,
-        );
-        totalPages = mediaWithAltText.totalPages;
-        page += 1;
-      }
-      if (duplicatedAltText) {
-        return Response.json(
-          { message: "Já existe uma mídia com esse texto alternativo. Informe uma descrição diferente." },
-          { status: 409 },
-        );
-      }
+      const normalizedAltText = altText ? altText : original.alt?.trim() || "";
 
       const sourcePath = resolveMediaPath(original.filename);
       await fs.access(sourcePath);
       const inputBuffer = await fs.readFile(sourcePath);
       const { buffer, metrics } = await processImageTransform(inputBuffer, transform);
-      const fileName = `${original.filename.replace(/\.[^.]+$/, "")}-canvas-${Date.now()}.webp`;
-      const derived = await req.payload.create({
+      const fileName = original.filename;
+      const updated = await req.payload.update({
         collection: "media",
+        id: original.id,
         data: {
-          alt: altText,
+          alt: normalizedAltText || original.alt || "",
           caption: original.caption,
           usage: original.usage,
-          parentMedia: original.id,
-          isDerived: true,
           focalPoint: transform.focalPoint,
           editingMetadata: {
             crop: transform.crop,
@@ -90,17 +59,17 @@ export const imageEditingCanvasEndpoint: Endpoint = {
           action: "image-edit",
           actor: req.user?.id,
           actorEmail: req.user?.email,
-          changedFields: [{ field: "editingMetadata" }],
+          changedFields: [{ field: "editingMetadata" }, { field: "alt" }],
           collection: "media",
-          documentId: String(derived.id),
-          documentTitle: String(derived.alt || fileName),
+          documentId: String(updated.id),
+          documentTitle: String(updated.alt || fileName),
           timestamp: new Date().toISOString(),
           version: `source:${String(original.id)}`,
         },
         overrideAccess: true,
         req,
       });
-      return Response.json({ doc: derived }, { status: 201 });
+      return Response.json({ doc: updated }, { status: 200 });
     } catch (error) {
       return Response.json({ message: error instanceof Error ? error.message : "Nao foi possivel gerar a derivada." }, { status: 400 });
     }

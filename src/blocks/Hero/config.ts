@@ -162,12 +162,12 @@ export const HeroBlock: Block = {
     {
       name: "variant",
       type: "select",
-      label: "Modelo de apresentacao",
+      label: "Modelo de apresentação",
       required: true,
       defaultValue: "default",
       validate: closedSelect(
         ["default", "centered", "split"],
-        "Escolha um modelo de apresentacao aprovado.",
+        "Escolha um modelo de apresentação aprovado.",
       ),
       admin: {
         description:

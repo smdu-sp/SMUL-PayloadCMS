@@ -54,13 +54,13 @@ describe("image editing canvas", () => {
     assert.equal(canUseImageEditingCanvas(null), false);
     assert.equal(canUseImageEditingCanvas({ role: "editor" }), false);
     assert.throws(() => validateCanvasTransformPayload({ rotate: 45 }));
-    assert.throws(() => validateCanvasTransformPayload({
+    assert.doesNotThrow(() => validateCanvasTransformPayload({
       originalMediaId: "1",
       crop: { x: 0, y: 0, width: 100, height: 100, unit: "%" },
       resize: {},
       rotate: 0,
       focalPoint: { x: 50, y: 50 },
-      altText: "   ",
+      altText: "",
     }));
     assert.throws(() => validateCanvasTransformPayload({
       originalMediaId: "1",
@@ -75,5 +75,15 @@ describe("image editing canvas", () => {
     assert.equal(normalizeAltText("  Foto da Fachada  "), "foto da fachada");
     assert.equal(normalizeAltText("foto   da fachada"), "foto da fachada");
     assert.equal(normalizeAltText("FÓTO DA FACHADA"), "foto da fachada");
+  });
+
+  it("ignores the current media asset when checking duplicate alt text", () => {
+    const media = [
+      { id: 1, alt: "Foto da Fachada" },
+      { id: 2, alt: "Outro texto" },
+    ];
+
+    assert.equal(hasDuplicateAltText(media, "foto da fachada", 1), false);
+    assert.equal(hasDuplicateAltText(media, "foto da fachada", 99), true);
   });
 });

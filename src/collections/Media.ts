@@ -64,11 +64,6 @@ export const Media: CollectionConfig = {
       admin: {
         description:
           "Descreva objetivamente a imagem para pessoas que usam leitores de tela.",
-        components: {
-          afterInput: [
-            "/components/admin/ImageEditingCanvas#ImageEditingCanvas",
-          ],
-        },
       },
     },
     {

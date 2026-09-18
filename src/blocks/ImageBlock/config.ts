@@ -24,6 +24,11 @@ export const ImageBlock: Block = {
       admin: {
         description:
           "Imagem exibida como bloco editorial unico. O arquivo original permanece preservado na biblioteca de midia.",
+        components: {
+          afterInput: [
+            "/components/admin/ImageEditingCanvas#ImageEditingCanvas",
+          ],
+        },
       },
     },
     {
@@ -41,7 +46,7 @@ export const ImageBlock: Block = {
     {
       name: "imagePresentation",
       type: "group",
-      label: "Apresentacao da imagem",
+      label: "Apresentação da imagem",
       admin: {
         description:
           "Define como esta imagem e exibida neste bloco. O arquivo original na Midia nao e alterado.",

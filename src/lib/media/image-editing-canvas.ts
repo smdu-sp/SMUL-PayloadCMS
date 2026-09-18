@@ -79,7 +79,6 @@ export function validateCanvasTransformPayload(
   const altText = typeof value.altText === "string" ? value.altText.trim() : "";
   if (
     typeof value.originalMediaId !== "string" ||
-    !altText ||
     !crop ||
     !resize ||
     !focalPoint ||

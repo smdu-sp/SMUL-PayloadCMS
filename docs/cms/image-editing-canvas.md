@@ -5,8 +5,8 @@
 - A SPEC-034 foi considerada insuficiente para o caso de uso de gerar uma imagem editada: seus controles alteram somente a apresentação dentro do bloco e não criam um novo asset.
 - Nenhum feedback editorial foi anexado ao pedido. A justificativa foi registrada a partir do gap observável entre apresentação e geração de derivados; a validação com usuários continua sendo uma decisão operacional pendente.
 - O processamento usa `sharp`, no servidor, e aceita somente operações validadas: rotação em ângulos fixos, redimensionamento em presets de largura, proporção e ponto focal.
-- Cada execução lê o arquivo indicado por `filename` e cria um novo documento na collection `Media`, relacionado pelo campo `sourceMedia`. O documento original não é atualizado nem sobrescrito.
-- O Canvas é restrito ao perfil administrador. Cada derivada gera um registro em `AuditLogs` com o asset de origem.
+- Cada execução lê o arquivo indicado por `filename`, aplica a transformação no servidor e salva a edição no próprio asset atual da collection `Media`.
+- O Canvas é restrito ao perfil administrador, e a edição gera um registro em `AuditLogs` para o asset original, sem criar outra mídia como derivada.
 
 ## Fora desta implementação
 

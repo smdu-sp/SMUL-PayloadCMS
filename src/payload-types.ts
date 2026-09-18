@@ -360,7 +360,7 @@ export interface HeroBlock {
    */
   variant: 'default' | 'centered' | 'split';
   /**
-   * Opcoes semanticas de apresentacao controladas pelo Design System. Nao permite CSS arbitrario.
+   * Opcoes semanticas de apresentação controladas pelo Design System. Nao permite CSS arbitrario.
    */
   appearance?: {
     /**
@@ -404,7 +404,7 @@ export interface RichTextBlock {
    */
   variant: 'default' | 'narrow';
   /**
-   * Opcoes semanticas de apresentacao controladas pelo Design System. Nao permite CSS arbitrario.
+   * Opcoes semanticas de apresentação controladas pelo Design System. Nao permite CSS arbitrario.
    */
   appearance?: {
     /**
@@ -659,7 +659,7 @@ export interface ImageTextBlock {
     newTab?: boolean | null;
   };
   /**
-   * Opcoes semanticas de apresentacao controladas pelo Design System. Nao permite CSS arbitrario.
+   * Opcoes semanticas de apresentação controladas pelo Design System. Nao permite CSS arbitrario.
    */
   appearance?: {
     /**
@@ -693,7 +693,7 @@ export interface CardsBlock {
    */
   variant: 'default' | 'modalities';
   /**
-   * Opcoes semanticas de apresentacao controladas pelo Design System. Nao permite CSS arbitrario.
+   * Opcoes semanticas de apresentação controladas pelo Design System. Nao permite CSS arbitrario.
    */
   appearance?: {
     /**
@@ -839,7 +839,7 @@ export interface CTABlock {
    */
   variant: 'default' | 'brand' | 'compact';
   /**
-   * Opcoes semanticas de apresentacao controladas pelo Design System. Nao permite CSS arbitrario.
+   * Opcoes semanticas de apresentação controladas pelo Design System. Nao permite CSS arbitrario.
    */
   appearance?: {
     /**
@@ -873,7 +873,7 @@ export interface IconGridBlock {
    */
   variant: 'default' | 'compact';
   /**
-   * Opcoes semanticas de apresentacao controladas pelo Design System. Nao permite CSS arbitrario.
+   * Opcoes semanticas de apresentação controladas pelo Design System. Nao permite CSS arbitrario.
    */
   appearance?: {
     /**
@@ -1168,7 +1168,7 @@ export interface FullWidthImageBannerBlock {
    */
   imageHeight: 'auto' | 'compact' | 'medium' | 'large' | 'custom';
   /**
-   * Informe uma altura entre 160 e 900 pixels. O valor controla apenas a apresentacao deste banner.
+   * Informe uma altura entre 160 e 900 pixels. O valor controla apenas a apresentação deste banner.
    */
   customImageHeight?: number | null;
   /**

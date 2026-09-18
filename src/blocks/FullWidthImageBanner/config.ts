@@ -193,7 +193,7 @@ export const FullWidthImageBannerBlock: Block = {
       admin: {
         condition: (_, siblingData) => siblingData?.imageHeight === "custom",
         description:
-          "Informe uma altura entre 160 e 900 pixels. O valor controla apenas a apresentacao deste banner.",
+          "Informe uma altura entre 160 e 900 pixels. O valor controla apenas a apresentação deste banner.",
         step: 10,
       },
       validate: validateCustomImageHeight,

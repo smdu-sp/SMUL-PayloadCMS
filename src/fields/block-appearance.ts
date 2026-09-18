@@ -148,7 +148,7 @@ export function createAppearanceGroup(fields: Field[]): GroupField {
     label: "Aparencia e estilo",
     admin: {
       description:
-        "Opcoes semanticas de apresentacao controladas pelo Design System. Nao permite CSS arbitrario.",
+        "Opcoes semanticas de apresentação controladas pelo Design System. Nao permite CSS arbitrario.",
     },
     fields,
   };
