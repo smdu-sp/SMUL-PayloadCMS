@@ -1,3 +1,4 @@
+import { ImageEditingCanvas as ImageEditingCanvas_111bccef76473ed486e4c4f4c2335248 } from '../../../components/admin/ImageEditingCanvas'
 import { CharacterLimitedTextField as CharacterLimitedTextField_e13edbeccdd76f669b096be564191153 } from '../../../components/admin/CharacterLimitedTextField'
 import { BlockSummaryLabel as BlockSummaryLabel_c15f5e6693bd920665b62c3211106b36 } from '../../../components/admin/BlockSummaryLabel'
 import { RscEntryLexicalCell as RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
@@ -30,10 +31,10 @@ import { LdapLoginForm as LdapLoginForm_ed57e8278d8fc41bbde4f1158ced6162 } from 
 import { AdminHelpPage as AdminHelpPage_fd4c73e32c16bef21c4dbf624c6561e5 } from '../../../components/admin/AdminHelpPage'
 import { AdminIconsPage as AdminIconsPage_57d417081b3c092800eb2089b1999e49 } from '../../../components/admin/AdminIconsPage'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
-import { ImageEditingCanvas as ImageEditingCanvas_4f3e15a9a5dc7a3d2e1f4a5b6c7d8e9f } from '../../../components/admin/ImageEditingCanvas'
 
 /** @type import('payload').ImportMap */
 export const importMap = {
+  "/components/admin/ImageEditingCanvas#ImageEditingCanvas": ImageEditingCanvas_111bccef76473ed486e4c4f4c2335248,
   "/components/admin/CharacterLimitedTextField#CharacterLimitedTextField": CharacterLimitedTextField_e13edbeccdd76f669b096be564191153,
   "/components/admin/BlockSummaryLabel#BlockSummaryLabel": BlockSummaryLabel_c15f5e6693bd920665b62c3211106b36,
   "@payloadcms/richtext-lexical/rsc#RscEntryLexicalCell": RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e,
@@ -66,5 +67,4 @@ export const importMap = {
   "/components/admin/AdminHelpPage#AdminHelpPage": AdminHelpPage_fd4c73e32c16bef21c4dbf624c6561e5,
   "/components/admin/AdminIconsPage#AdminIconsPage": AdminIconsPage_57d417081b3c092800eb2089b1999e49,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
-  ,"/components/admin/ImageEditingCanvas#ImageEditingCanvas": ImageEditingCanvas_4f3e15a9a5dc7a3d2e1f4a5b6c7d8e9f
 }

@@ -303,3 +303,162 @@
   color: var(--theme-elevation-600);
   font-size: 12px;
 }
+
+.image-editing-canvas {
+  border-top: 1px solid var(--theme-elevation-150);
+  margin-top: 24px;
+  padding-top: 20px;
+}
+
+.image-editing-canvas h2 {
+  font-size: 18px;
+  margin: 0 0 16px;
+}
+
+.image-editing-canvas__stage {
+  background: var(--theme-elevation-50);
+  border: 1px solid var(--theme-elevation-200);
+  cursor: crosshair;
+  max-width: 760px;
+  overflow: hidden;
+  position: relative;
+}
+
+.image-editing-canvas__stage .ReactCrop {
+  display: block;
+  max-height: 480px;
+}
+
+.image-editing-canvas__stage img {
+  display: block;
+  max-height: 480px;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.image-editing-canvas__focal-point {
+  background: #f2c94c;
+  border: 2px solid #1d1f20;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px rgba(242, 201, 76, 0.35);
+  height: 14px;
+  cursor: grab;
+  pointer-events: auto;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 14px;
+}
+
+.image-editing-canvas__focal-point:active {
+  cursor: grabbing;
+}
+
+.image-editing-canvas__toolbar {
+  align-items: end;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.image-editing-canvas__toolbar label {
+  display: grid;
+  font-size: 12px;
+  gap: 5px;
+}
+
+.image-editing-canvas__toolbar input,
+.image-editing-canvas__toolbar select {
+  min-width: 90px;
+}
+
+.image-editing-canvas__rotation {
+  display: flex;
+  gap: 6px;
+}
+
+.image-editing-canvas__rotation button {
+  align-items: center;
+  background: var(--theme-elevation-100);
+  border: 1px solid var(--theme-elevation-250);
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 20px;
+  height: 36px;
+  justify-content: center;
+  width: 36px;
+}
+
+.image-editing-canvas__save {
+  background: #007a73;
+  border: 0;
+  border-radius: 4px;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 600;
+  min-height: 36px;
+  padding: 0 14px;
+}
+
+.image-editing-canvas__save:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.image-editing-canvas__toast {
+  align-items: center;
+  bottom: 24px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+  display: flex;
+  gap: 12px;
+  max-width: min(420px, calc(100vw - 32px));
+  padding: 12px 14px;
+  position: fixed;
+  right: 24px;
+  z-index: 20;
+}
+
+.image-editing-canvas__toast--success {
+  background: #007a73;
+  color: #fff;
+}
+
+.image-editing-canvas__toast--error {
+  background: #9f2d2d;
+  color: #fff;
+}
+
+.image-editing-canvas__toast span {
+  flex: 1;
+}
+
+.image-editing-canvas__toast a {
+  color: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  white-space: nowrap;
+}
+
+.image-editing-canvas__toast button {
+  background: transparent;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  font-size: 20px;
+  line-height: 1;
+  padding: 0;
+}
+
+@media (max-width: 640px) {
+  .image-editing-canvas__toolbar > label,
+  .image-editing-canvas__save {
+    flex: 1 1 140px;
+  }
+
+  .image-editing-canvas__toast {
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
+  }
+}

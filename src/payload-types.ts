@@ -173,8 +173,13 @@ export interface Media {
   /**
    * Derivada criada pelo Canvas. O arquivo original permanece preservado.
    */
-  sourceMedia?: (number | null) | Media;
-  canvasOperations?:
+  parentMedia?: (number | null) | Media;
+  isDerived?: boolean | null;
+  focalPoint?: {
+    x?: number | null;
+    y?: number | null;
+  };
+  editingMetadata?:
     | {
         [k: string]: unknown;
       }
@@ -1306,8 +1311,15 @@ export interface MediaSelect<T extends boolean = true> {
   usage?: T;
   alt?: T;
   caption?: T;
-  sourceMedia?: T;
-  canvasOperations?: T;
+  parentMedia?: T;
+  isDerived?: T;
+  focalPoint?:
+    | T
+    | {
+        x?: T;
+        y?: T;
+      };
+  editingMetadata?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;

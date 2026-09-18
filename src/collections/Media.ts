@@ -1,5 +1,5 @@
 import type { CollectionConfig } from "payload";
-import { adminOnly, adminOrEditor, imageEditingCanvasAdminOnly } from "../access/roles.ts";
+import { adminOnly, adminOrEditor } from "../access/roles.ts";
 import { imageEditingCanvasEndpoint } from "../lib/media/image-editing-canvas-endpoint.ts";
 
 export const allowedMediaMimeTypes = [
@@ -36,13 +36,6 @@ export const Media: CollectionConfig = {
     description:
       "Cadastre imagens e documentos usados nos blocos, SEO e identidade visual. O texto alternativo e obrigatorio para acessibilidade.",
     useAsTitle: "alt",
-    components: {
-      edit: {
-        beforeDocumentControls: [
-          "/components/admin/ImageEditingCanvas#ImageEditingCanvas",
-        ],
-      },
-    },
   },
   endpoints: [imageEditingCanvasEndpoint],
   upload: {
@@ -71,6 +64,11 @@ export const Media: CollectionConfig = {
       admin: {
         description:
           "Descreva objetivamente a imagem para pessoas que usam leitores de tela.",
+        components: {
+          afterInput: [
+            "/components/admin/ImageEditingCanvas#ImageEditingCanvas",
+          ],
+        },
       },
     },
     {
@@ -83,21 +81,38 @@ export const Media: CollectionConfig = {
       },
     },
     {
-      name: "sourceMedia",
+      name: "parentMedia",
       type: "relationship",
       relationTo: "media",
       label: "Mídia original",
       admin: {
         position: "sidebar",
         readOnly: true,
-        condition: (_, siblingData) => Boolean(siblingData?.sourceMedia),
+        condition: (_, siblingData) => Boolean(siblingData?.parentMedia),
         description: "Derivada criada pelo Canvas. O arquivo original permanece preservado.",
       },
     },
     {
-      name: "canvasOperations",
+      name: "isDerived",
+      type: "checkbox",
+      label: "Mídia derivada",
+      defaultValue: false,
+      admin: { hidden: true, readOnly: true },
+    },
+    {
+      name: "focalPoint",
+      type: "group",
+      label: "Ponto focal",
+      admin: { readOnly: true },
+      fields: [
+        { name: "x", type: "number", min: 0, max: 100 },
+        { name: "y", type: "number", min: 0, max: 100 },
+      ],
+    },
+    {
+      name: "editingMetadata",
       type: "json",
-      label: "Operacoes do Canvas",
+      label: "Metadados de edicao",
       admin: {
         hidden: true,
         readOnly: true,

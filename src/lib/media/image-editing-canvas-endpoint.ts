@@ -1,36 +1,87 @@
 import fs from "node:fs/promises";
-import type { Endpoint } from "payload";
-import { canUseImageEditingCanvas } from "../../access/roles.ts";
-import { applyImageCanvasOperations, resolveMediaPath, validateImageCanvasOperations } from "./image-editing-canvas.ts";
+import { addDataAndFileToRequest, type Endpoint } from "payload";
+import { imageEditingCanvasAdminOnly } from "../../access/roles.ts";
+import {
+  processImageTransform,
+  normalizeAltText,
+  resolveMediaPath,
+  validateCanvasTransformPayload,
+} from "./image-editing-canvas.ts";
 
 export const imageEditingCanvasEndpoint: Endpoint = {
-  path: "/:id/image-canvas",
+  path: "/edit-canvas",
   method: "post",
   handler: async (req) => {
-    if (!canUseImageEditingCanvas(req.user as { role?: "admin" | "editor" } | null)) {
+    if (!(await imageEditingCanvasAdminOnly({ req }))) {
       return Response.json({ message: "Sem permissao para usar o Canvas." }, { status: 403 });
     }
-    const mediaId = req.routeParams?.id;
-    const media = await req.payload.findByID({ collection: "media", id: String(mediaId), depth: 0 });
-    if (!media.filename || media.mimeType?.startsWith("image/") !== true) {
-      return Response.json({ message: "Apenas imagens podem ser editadas." }, { status: 400 });
-    }
     try {
-      const operations = validateImageCanvasOperations(req.data?.operations);
-      const sourcePath = resolveMediaPath(media.filename);
+      await addDataAndFileToRequest(req);
+      const transform = validateCanvasTransformPayload(req.data);
+      const original = await req.payload.findByID({
+        collection: "media",
+        id: transform.originalMediaId,
+        depth: 0,
+      });
+      if (!original.filename || original.mimeType?.startsWith("image/") !== true) {
+        return Response.json({ message: "Apenas imagens podem ser editadas." }, { status: 400 });
+      }
+
+      const altText = transform.altText?.trim();
+      if (!altText) {
+        return Response.json(
+          { message: "Informe o texto alternativo da imagem derivada." },
+          { status: 400 },
+        );
+      }
+      const normalizedAltText = normalizeAltText(altText);
+      let page = 1;
+      let duplicatedAltText = false;
+      let totalPages = 1;
+      while (page <= totalPages && !duplicatedAltText) {
+        const mediaWithAltText = await req.payload.find({
+          collection: "media",
+          depth: 0,
+          limit: 100,
+          page,
+          where: { alt: { exists: true } },
+        });
+        duplicatedAltText = mediaWithAltText.docs.some(
+          (media) => typeof media.alt === "string" && normalizeAltText(media.alt) === normalizedAltText,
+        );
+        totalPages = mediaWithAltText.totalPages;
+        page += 1;
+      }
+      if (duplicatedAltText) {
+        return Response.json(
+          { message: "Já existe uma mídia com esse texto alternativo. Informe uma descrição diferente." },
+          { status: 409 },
+        );
+      }
+
+      const sourcePath = resolveMediaPath(original.filename);
       await fs.access(sourcePath);
-      const { data, info } = await applyImageCanvasOperations(sourcePath, operations);
-      const filename = `${media.filename.replace(/\.[^.]+$/, "")}-canvas-${Date.now()}.webp`;
+      const inputBuffer = await fs.readFile(sourcePath);
+      const { buffer, metrics } = await processImageTransform(inputBuffer, transform);
+      const fileName = `${original.filename.replace(/\.[^.]+$/, "")}-canvas-${Date.now()}.webp`;
       const derived = await req.payload.create({
         collection: "media",
         data: {
-          alt: `${media.alt || "Imagem"} (derivada)`,
-          caption: media.caption,
-          sourceMedia: media.id,
-          usage: media.usage,
-          canvasOperations: operations,
+          alt: altText,
+          caption: original.caption,
+          usage: original.usage,
+          parentMedia: original.id,
+          isDerived: true,
+          focalPoint: transform.focalPoint,
+          editingMetadata: {
+            crop: transform.crop,
+            resize: transform.resize,
+            rotate: transform.rotate,
+            aspectRatio: transform.aspectRatio,
+            metrics,
+          },
         },
-        file: { data, mimetype: info.format === "webp" ? "image/webp" : media.mimeType, name: filename, size: data.length },
+        file: { data: buffer, mimetype: "image/webp", name: fileName, size: buffer.length },
         req,
       });
       await req.payload.create({
@@ -39,12 +90,12 @@ export const imageEditingCanvasEndpoint: Endpoint = {
           action: "image-edit",
           actor: req.user?.id,
           actorEmail: req.user?.email,
-          changedFields: [{ field: "canvasOperations" }],
+          changedFields: [{ field: "editingMetadata" }],
           collection: "media",
           documentId: String(derived.id),
-          documentTitle: String(derived.alt || filename),
+          documentTitle: String(derived.alt || fileName),
           timestamp: new Date().toISOString(),
-          version: `source:${String(media.id)}`,
+          version: `source:${String(original.id)}`,
         },
         overrideAccess: true,
         req,
