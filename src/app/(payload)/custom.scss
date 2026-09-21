@@ -12,7 +12,7 @@
 
     &:hover,
     &:focus-visible {
-      background-color: #072573; /* Um tom ligeiramente mais escuro no hover */
+      background-color: #072573;
       border-color: #072573;
       color: #ffffff;
     }
@@ -29,7 +29,7 @@
 
     &:hover,
     &:focus-visible {
-      background-color: #e03556; /* Um tom ligeiramente mais escuro no hover */
+      background-color: #e03556;
       border-color: #e03556;
       color: #ffffff;
     }
@@ -37,8 +37,179 @@
 }
 
 /* ==========================================================================
-   ESTILOS EXISTENTES DO PROJETO
+   MENU LATERAL - FIXO NA TELA (STICKY SEM QUEBRAR O LAYOUT)
    ========================================================================== */
+.modern-nav {
+  /* 👇 FIXAÇÃO DA NAVBAR SEM SAIR DO FLUXO DO FLEXBOX 👇 */
+  position: sticky !important;
+  top: 0 !important;
+  align-self: flex-start !important;
+  height: 100vh !important;
+  width: 260px !important;
+  min-width: 260px !important;
+  flex-shrink: 0 !important;
+  overflow-y: auto !important;
+  box-sizing: border-box !important;
+
+  /* Estilos visuais originais */
+  display: flex;
+  flex-direction: column;
+  background-color: #0f0f0f;
+  border-right: 1px solid #222222;
+  padding: 60px 16px 24px 16px;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 15px;
+  transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #333333;
+    border-radius: 4px;
+  }
+
+  /* Botão Menu Principal */
+  .btn-dashboard {
+    display: block;
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    padding: 10px 14px;
+    border-radius: 6px;
+    background-color: #1a1a1a;
+    border: 1px solid #333333;
+    margin-bottom: 24px;
+    transition: all 0.2s ease;
+    text-align: left;
+
+    &:hover {
+      background-color: rgba(249, 70, 104, 0.15);
+      border-color: #f94668;
+      color: #f94668;
+      box-shadow: 0 2px 10px rgba(249, 70, 104, 0.3);
+    }
+  }
+
+  .nav-section {
+    margin-bottom: 24px;
+  }
+
+  .nav-label {
+    display: block;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #666666;
+    font-weight: 600;
+    margin-bottom: 8px;
+    padding-left: 4px;
+  }
+
+  /* Links de Collections e Globals */
+  .nav-link {
+    display: block;
+    color: #a3a3a3;
+    text-decoration: none;
+    font-size: 0.95rem;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    margin-bottom: 2px;
+
+    &:hover {
+      background-color: rgba(249, 70, 104, 0.12);
+      color: #f94668;
+      box-shadow: 0 2px 8px rgba(249, 70, 104, 0.25);
+    }
+  }
+
+  .nav-footer {
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: 1px solid #222222;
+  }
+
+  .link-danger {
+    color: #ef4444;
+
+    &:hover {
+      background-color: #3f1616;
+      color: #f87171;
+      box-shadow: none;
+    }
+  }
+}
+
+/* =========================================================
+   TEMA CLARO (LIGHT MODE) OVERRIDES
+   ========================================================= */
+[data-theme="light"] {
+  .modern-nav {
+    background-color: #ffffff;
+    border-right-color: #e5e7eb;
+
+    &::-webkit-scrollbar-thumb {
+      background-color: #d1d5db;
+    }
+
+    .btn-dashboard {
+      background-color: #f9fafb;
+      border-color: #e5e7eb;
+      color: #111827;
+
+      &:hover {
+        background-color: rgba(10, 50, 153, 0.08);
+        border-color: #0a3299;
+        color: #0a3299;
+        box-shadow: 0 2px 10px rgba(10, 50, 153, 0.25);
+      }
+    }
+
+    .nav-label {
+      color: #6b7280;
+    }
+
+    .nav-link {
+      color: #374151;
+
+      &:hover {
+        background-color: rgba(10, 50, 153, 0.08);
+        color: #0a3299;
+        box-shadow: 0 2px 8px rgba(10, 50, 153, 0.2);
+      }
+    }
+
+    .nav-footer {
+      border-top-color: #e5e7eb;
+    }
+
+    .link-danger {
+      color: #dc2626;
+
+      &:hover {
+        background-color: #fef2f2;
+        color: #991b1b;
+        box-shadow: none;
+      }
+    }
+  }
+}
+
+/* ==========================================================================
+   OUTROS ESTILOS DO PROJETO (HELP, ICONS, LOGOS)
+   ========================================================================== */
+
+.payload-home-icon {
+  color: #f94668 !important;
+  display: block;
+  transition: color 0.2s ease;
+}
+
+[data-theme="light"] .payload-home-icon {
+  color: #0a3299 !important;
+}
 
 .admin-help-nav-link {
   color: var(--theme-text);
@@ -46,9 +217,7 @@
   font-size: 14px;
   padding: 8px var(--base);
   text-decoration: none;
-  transition:
-    background 0.15s ease,
-    color 0.15s ease;
+  transition: background 0.15s ease, color 0.15s ease;
 }
 
 .admin-help-nav-link:hover,
@@ -182,7 +351,6 @@
   margin: 4px 0 0;
 }
 
-/* Admin Icons Page Styling — SPEC-035 */
 .admin-icons__header-row {
   align-items: flex-start;
   display: flex;
@@ -234,9 +402,7 @@
   display: flex;
   gap: 16px;
   padding: 16px;
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .admin-icons__card:hover {
@@ -346,10 +512,6 @@
   font-size: 12px;
 }
 
-/* ==========================================================================
-   EQUALIZAÇÃO E AJUSTE DE TAMANHO DAS LOGOS
-   ========================================================================== */
-
 .custom-logo-container {
   display: flex;
   align-items: center;
@@ -357,24 +519,20 @@
   width: 100%;
 }
 
-/* 1. Força a mesma altura para ambas as imagens */
 .custom-logo-container img {
-  height: 300px; /* <--- ALTURA PADRÃO DAS DUAS LOGOS */
+  height: 300px;
   width: auto;
   object-fit: contain;
 }
 
-/* 2. Caso o arquivo da logo escura continue parecendo maior que o da clara,
-      você pode ajustar a altura individual de cada uma aqui: */
 .logo-theme-light {
-  height: 200px; /* Ajuste se a clara precisar ser ajustada */
+  height: 200px;
 }
 
 .logo-theme-dark {
-  height: 200px;  /* Diminuído ligeiramente para compensar a proporção do PNG escuro */
+  height: 200px;
 }
 
-/* 3. Regras de Exibição por Tema */
 [data-theme="light"] {
   .logo-theme-light {
     display: block !important;
@@ -390,175 +548,5 @@
   }
   .logo-theme-dark {
     display: block !important;
-  }
-}
-
-
-
-/* src/app/(payload)/custom.scss */
-
-/* =========================================================
-   1. ÍCONE DE HOME (TOPO)
-   ========================================================= */
-.payload-home-icon {
-  color: #f94668 !important; /* Rosa no modo escuro */
-  display: block;
-  transition: color 0.2s ease;
-}
-
-[data-theme="light"] .payload-home-icon {
-  color: #0a3299 !important; /* Azul no modo claro */
-}
-
-/* =========================================================
-   2. MENU LATERAL - TEMA ESCURO (DARK MODE)
-   ========================================================= */
-.modern-nav {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  width: 260px;
-  min-width: 260px;
-  background-color: #0f0f0f;
-  border-right: 1px solid #222222;
-  padding: 60px 16px 24px 16px;
-  box-sizing: border-box;
-  font-family: system-ui, -apple-system, sans-serif;
-  overflow-y: auto;
-  transition: background-color 0.2s, border-color 0.2s, color 0.2s;
-
-  &::-webkit-scrollbar {
-    width: 4px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background-color: #333333;
-    border-radius: 4px;
-  }
-
-  /* Botão Menu Principal */
-  .btn-dashboard {
-    display: block;
-    color: #ffffff;
-    font-weight: 600;
-    font-size: 0.875rem;
-    text-decoration: none;
-    padding: 10px 14px;
-    border-radius: 6px;
-    background-color: #1a1a1a;
-    border: 1px solid #333333;
-    margin-bottom: 24px;
-    transition: all 0.2s ease;
-    text-align: left;
-
-    &:hover {
-      background-color: rgba(249, 70, 104, 0.15);
-      border-color: #f94668;
-      color: #f94668;
-      box-shadow: 0 2px 10px rgba(249, 70, 104, 0.3); /* Sombra Rosa */
-    }
-  }
-
-  .nav-section {
-    margin-bottom: 24px;
-  }
-
-  .nav-label {
-    display: block;
-    font-size: 0.65rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: #666666;
-    font-weight: 600;
-    margin-bottom: 8px;
-    padding-left: 4px;
-  }
-
-  /* Links de Collections e Globals */
-  .nav-link {
-    display: block;
-    color: #a3a3a3;
-    text-decoration: none;
-    font-size: 0.875rem;
-    padding: 8px 12px;
-    border-radius: 6px;
-    transition: all 0.2s ease;
-    margin-bottom: 2px;
-
-    &:hover {
-      background-color: rgba(249, 70, 104, 0.12);
-      color: #f94668;
-      box-shadow: 0 2px 8px rgba(249, 70, 104, 0.25); /* Sombra Rosa */
-    }
-  }
-
-  .nav-footer {
-    margin-top: auto;
-    padding-top: 16px;
-    border-top: 1px solid #222222;
-  }
-
-  .link-danger {
-    color: #ef4444;
-
-    &:hover {
-      background-color: #3f1616;
-      color: #f87171;
-      box-shadow: none;
-    }
-  }
-}
-
-/* =========================================================
-   3. TEMA CLARO (LIGHT MODE) OVERRIDES
-   ========================================================= */
-[data-theme="light"] {
-  .modern-nav {
-    background-color: #ffffff;
-    border-right-color: #e5e7eb;
-
-    &::-webkit-scrollbar-thumb {
-      background-color: #d1d5db;
-    }
-
-    .btn-dashboard {
-      background-color: #f9fafb;
-      border-color: #e5e7eb;
-      color: #111827;
-
-      &:hover {
-        background-color: rgba(10, 50, 153, 0.08);
-        border-color: #0a3299;
-        color: #0a3299;
-        box-shadow: 0 2px 10px rgba(10, 50, 153, 0.25); /* Sombra Azul */
-      }
-    }
-
-    .nav-label {
-      color: #6b7280;
-    }
-
-    .nav-link {
-      color: #374151;
-
-      &:hover {
-        background-color: rgba(10, 50, 153, 0.08);
-        color: #0a3299;
-        box-shadow: 0 2px 8px rgba(10, 50, 153, 0.2); /* Sombra Azul */
-      }
-    }
-
-    .nav-footer {
-      border-top-color: #e5e7eb;
-    }
-
-    .link-danger {
-      color: #dc2626;
-
-      &:hover {
-        background-color: #fef2f2;
-        color: #991b1b;
-        box-shadow: none;
-      }
-    }
   }
 }

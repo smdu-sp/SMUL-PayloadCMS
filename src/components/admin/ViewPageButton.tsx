@@ -42,7 +42,7 @@ export const ViewPageButton: React.FC<ViewPageButtonProps> = ({ rowData }) => {
         transition: 'all 0.15s ease',
       }}
     >
-      Ver no site ↗
+      Ver pagina 
     </a>
   )
 }

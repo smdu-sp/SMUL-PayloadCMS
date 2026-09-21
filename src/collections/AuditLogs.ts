@@ -33,6 +33,13 @@ export const AuditLogs: CollectionConfig = {
     group: "Governanca",
     listSearchableFields: ["actorEmail", "action", "collection", "documentTitle"],
     useAsTitle: "documentTitle",
+    components: {
+      edit: {
+        beforeDocumentControls: [
+          "/components/admin/AdminHelpBackButton#AdminHelpBackButton",
+        ],
+      },
+    },
   },
   fields: [
     {

@@ -1,3 +1,4 @@
+// src/collections/pages.ts
 import type { CollectionConfig } from "payload";
 import { ActionBannersBlock } from "../blocks/ActionBanners/config.ts";
 import { AlertBoxBlock } from "../blocks/AlertBox/config.ts";
@@ -55,9 +56,16 @@ export const Pages: CollectionConfig = {
     plural: "Páginas",
   },
   admin: {
-    defaultColumns: ["title", "slug", "_status", "updatedAt"],
+    defaultColumns: ["title", "slug", "viewPage", "_status", "updatedAt"],
     description:
       "Crie e organize paginas editoriais do portal. Use rascunho, preview e publicacao para controlar o ciclo editorial.",
+    components: {
+      edit: {
+        beforeDocumentControls: [
+          "/components/admin/AdminHelpBackButton#AdminHelpBackButton",
+        ],
+      },
+    },
     livePreview: {
       breakpoints: [
         { name: "mobile", label: "Celular", width: 390, height: 844 },
@@ -116,6 +124,17 @@ export const Pages: CollectionConfig = {
         beforeValidate: [({ value }) => normalizePageSlug(value)],
       },
       validate: validatePageSlug,
+    },
+    // 2. ADICIONADO AQUI: Campo virtual do tipo 'ui' para renderizar o botão na tabela
+    {
+      name: "viewPage",
+      type: "ui",
+      label: "Pagina",
+      admin: {
+        components: {
+          Cell: "/components/admin/ViewPageButton#ViewPageButton",
+        },
+      },
     },
     {
       name: "lifecycleStatus",

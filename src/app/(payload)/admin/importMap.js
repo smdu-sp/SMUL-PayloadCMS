@@ -1,3 +1,5 @@
+import { AdminHelpBackButton as AdminHelpBackButton_91d47573155c4345c3604f489d60a701 } from '../../../components/admin/AdminHelpBackButton'
+import { ViewPageButton as ViewPageButton_280befce703042c3892fc43e283cbc0b } from '../../../components/admin/ViewPageButton'
 import { CharacterLimitedTextField as CharacterLimitedTextField_e13edbeccdd76f669b096be564191153 } from '../../../components/admin/CharacterLimitedTextField'
 import { BlockSummaryLabel as BlockSummaryLabel_c15f5e6693bd920665b62c3211106b36 } from '../../../components/admin/BlockSummaryLabel'
 import { RscEntryLexicalCell as RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
@@ -36,6 +38,8 @@ import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } f
 
 /** @type import('payload').ImportMap */
 export const importMap = {
+  "/components/admin/AdminHelpBackButton#AdminHelpBackButton": AdminHelpBackButton_91d47573155c4345c3604f489d60a701,
+  "/components/admin/ViewPageButton#ViewPageButton": ViewPageButton_280befce703042c3892fc43e283cbc0b,
   "/components/admin/CharacterLimitedTextField#CharacterLimitedTextField": CharacterLimitedTextField_e13edbeccdd76f669b096be564191153,
   "/components/admin/BlockSummaryLabel#BlockSummaryLabel": BlockSummaryLabel_c15f5e6693bd920665b62c3211106b36,
   "@payloadcms/richtext-lexical/rsc#RscEntryLexicalCell": RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e,

@@ -81,7 +81,7 @@ export function AdminIconsPage() {
       <header className="admin-help__header">
         <div className="admin-icons__header-row">
           <div>
-            <p className="admin-help__eyebrow">Design System & Governança — SPEC-035</p>
+            <p className="admin-help__eyebrow">Design System & Governança </p>
             <h1>Catálogo de Ícones Padrão</h1>
             <p>
               Biblioteca visual consistente e segura para o portal <strong>Meu Imóvel Regular</strong>. Substitui uploads arbitrários de SVG por glifos padronizados com controle de tamanho, cor
@@ -174,7 +174,7 @@ export function AdminIconsPage() {
 
       {/* Guidelines Section */}
       <section className="admin-help__section" id="diretrizes">
-        <h2>Diretrizes de Uso para Editores (SPEC-035)</h2>
+        <h2>Diretrizes de Uso para Editores </h2>
         <div className="admin-help__blocks">
           <article className="admin-help__block">
             <h3>Quando usar Ícone Padrão</h3>

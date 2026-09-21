@@ -31,10 +31,16 @@ export const Media: CollectionConfig = {
     plural: "Mídias",
   },
   admin: {
-    // ADICIONE O 'filename' como primeira coluna. Ele vai renderizar a imagem!
     defaultColumns: ["filename", "alt", "usage", "caption", "updatedAt"],
     description: "Cadastre imagens e documentos usados nos blocos...",
     useAsTitle: "alt",
+    components: {
+      edit: {
+        beforeDocumentControls: [
+          "/components/admin/AdminHelpBackButton#AdminHelpBackButton",
+        ],
+      },
+    },
   },
   upload: {
     displayPreview: true,
