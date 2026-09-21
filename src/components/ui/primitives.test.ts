@@ -4,7 +4,7 @@ import { describe, it } from "node:test";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { readFileSync } from "node:fs";
-import { Button, Card, Container, Heading, Section, Text, ColorScope } from "./index";
+import { Button, Card, Container, Heading, Section, Text, ColorScope, Status } from "./index";
 import { ThemeProvider, MediaColorScope } from "./ColorScope";
 import { resolveSemanticTheme } from "../../lib/theme/semantic-theme";
 
@@ -28,6 +28,16 @@ describe("ui primitives and nested scopes", () => {
     assert.equal(card.props.scheme, "surface");
     assert.match(card.props.className, /p-8/);
     assert.match(card.props.className, /h-full/);
+    assert.match(card.props.className, /border-border/);
+    assert.match(card.props.className, /transition-\[border-color,box-shadow,translate\]/);
+    assert.match(card.props.className, /hover:-translate-y-1/);
+    assert.match(card.props.className, /hover:border-current/);
+    assert.match(card.props.className, /hover:shadow-md/);
+    assert.match(card.props.className, /motion-reduce:translate-none/);
+    const emphasizedCard = Card({ children: "card", interactive: true, interaction: "emphasized" });
+    assert.match(emphasizedCard.props.className, /hover:-translate-y-2/);
+    assert.match(emphasizedCard.props.className, /hover:shadow-xl/);
+    assert.notEqual(card.props.className, emphasizedCard.props.className);
     assert.equal(Card({ children: "plain", scheme: "inherit" }).props.scheme, "inherit");
   });
   it("inherits without publishing global resets and creates complete nested surfaces", () => {
@@ -72,5 +82,15 @@ describe("ui primitives and nested scopes", () => {
     ));
     assert.match(markup, /--block-background:#ffffff/);
     assert.match(markup, /--block-foreground:#000000/);
+  });
+  it("renders semantic statuses without relying only on color", () => {
+    const markup = renderToStaticMarkup(createElement(Status, {
+      title: createElement(Heading, { children: "Aviso", level: 2 }),
+      variant: "warning",
+      children: "Conteudo",
+    }));
+    assert.match(markup, /data-status="warning"/);
+    assert.match(markup, /Atencao/);
+    assert.match(markup, /aria-hidden="true"/);
   });
 });

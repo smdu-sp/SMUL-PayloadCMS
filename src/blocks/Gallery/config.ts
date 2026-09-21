@@ -1,5 +1,10 @@
 import type { Block, UploadFieldManyValidation, UploadFieldSingleValidation } from "payload";
 import { characterLimitAdmin } from "../../fields/character-limit";
+import {
+  createAppearanceGroup,
+  createInteractionField,
+  createSpacingField,
+} from "../../fields/block-appearance";
 import { closedSelect } from "../../fields/editorial-validation";
 import { createBlockAdmin } from "../shared/admin";
 
@@ -190,5 +195,9 @@ export const GalleryBlock: Block = {
         },
       ],
     },
+    createAppearanceGroup([
+      createSpacingField(["compact", "default", "spacious"], "default"),
+      createInteractionField(["none", "subtle", "default", "emphasized"], "default"),
+    ]),
   ],
 };

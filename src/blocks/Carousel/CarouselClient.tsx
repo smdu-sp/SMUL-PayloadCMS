@@ -79,8 +79,8 @@ export function CarouselClient({
     }
 
     setActiveIndex(index);
-    scrollToSlide(index, userAction ? "smooth" : "smooth");
-  }, [scrollToSlide]);
+    scrollToSlide(index, reducedMotion ? "auto" : "smooth");
+  }, [reducedMotion, scrollToSlide]);
 
   const goToPrevious = useCallback((userAction = false) => {
     setActiveIndex((current) => {
@@ -88,10 +88,10 @@ export function CarouselClient({
       if (userAction) {
         setUserInteracted(true);
       }
-      scrollToSlide(nextIndex, "smooth");
+      scrollToSlide(nextIndex, reducedMotion ? "auto" : "smooth");
       return nextIndex;
     });
-  }, [items.length, scrollToSlide]);
+  }, [items.length, reducedMotion, scrollToSlide]);
 
   const goToNext = useCallback((userAction = false) => {
     setActiveIndex((current) => {
@@ -99,10 +99,10 @@ export function CarouselClient({
       if (userAction) {
         setUserInteracted(true);
       }
-      scrollToSlide(nextIndex, "smooth");
+      scrollToSlide(nextIndex, reducedMotion ? "auto" : "smooth");
       return nextIndex;
     });
-  }, [items.length, scrollToSlide]);
+  }, [items.length, reducedMotion, scrollToSlide]);
 
   useEffect(() => {
     if (!isRotationActive) return;
@@ -143,7 +143,7 @@ export function CarouselClient({
         }}
       >
         <ul
-          className="-ml-4 flex snap-x snap-mandatory overflow-x-auto scroll-smooth rounded-lg pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="-ml-4 flex snap-x snap-mandatory overflow-x-auto scroll-smooth rounded-lg pb-2 motion-reduce:scroll-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           ref={trackRef}
         >
           {items.map((item, index) => {
@@ -236,7 +236,7 @@ export function CarouselClient({
           <div className="flex gap-2 md:hidden">
             <button
               aria-label="Slide anterior"
-              className="rounded-md border border-border px-4 py-2 font-semibold text-[var(--block-foreground)] hover:underline focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-focus"
+              className="rounded-md border border-[var(--block-border)] px-4 py-2 font-semibold text-[var(--block-foreground)] hover:underline focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-focus"
               onClick={() => goToPrevious(true)}
               type="button"
             >
@@ -244,7 +244,7 @@ export function CarouselClient({
             </button>
             <button
               aria-label="Proximo slide"
-              className="rounded-md border border-border px-4 py-2 font-semibold text-[var(--block-foreground)] hover:underline focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-focus"
+              className="rounded-md border border-[var(--block-border)] px-4 py-2 font-semibold text-[var(--block-foreground)] hover:underline focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-focus"
               onClick={() => goToNext(true)}
               type="button"
             >
@@ -259,7 +259,7 @@ export function CarouselClient({
                   aria-label={`Ir para slide ${index + 1}`}
                   aria-current={activeIndex === index ? "true" : undefined}
                   className={classNames(
-                    "h-3 w-3 rounded-full border border-border focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-focus",
+                    "h-3 w-3 rounded-full border border-[var(--block-border)] focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-focus",
                     activeIndex === index ? "bg-[var(--block-foreground)]" : "border-current bg-transparent",
                   )}
                   key={item.id ?? index}

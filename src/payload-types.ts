@@ -471,6 +471,19 @@ export interface GalleryBlock {
     preset: 'grid';
     thumbnailEffect: 'none' | 'grow';
   };
+  /**
+   * Opcoes semanticas controladas pelo Design System. Nao permite CSS arbitrario.
+   */
+  appearance?: {
+    /**
+     * Controla a distancia vertical do bloco em relacao aos blocos adjacentes.
+     */
+    spacing?: ('compact' | 'default' | 'spacious') | null;
+    /**
+     * Define feedback de hover, foco e movimento por presets controlados. Nao expõe CSS.
+     */
+    interaction?: ('none' | 'subtle' | 'default' | 'emphasized') | null;
+  };
   id?: string | null;
   blockName?: string | null;
   blockType: 'gallery';
@@ -690,6 +703,10 @@ export interface CardsBlock {
      * Controla a distancia vertical do bloco em relacao aos blocos adjacentes.
      */
     spacing?: ('compact' | 'default' | 'spacious') | null;
+    /**
+     * Define feedback de hover, foco e movimento por presets controlados. Nao expõe CSS.
+     */
+    interaction?: ('none' | 'subtle' | 'default' | 'emphasized') | null;
   };
   /**
    * Adicione de 1 a 12 cards. O layout ajusta a quantidade de colunas conforme a largura da tela.
@@ -837,6 +854,10 @@ export interface CTABlock {
      */
     spacing?: ('compact' | 'default' | 'spacious') | null;
     /**
+     * Controla intensidade visual dentro dos limites do Design System.
+     */
+    emphasis?: ('subtle' | 'default' | 'strong') | null;
+    /**
      * Deixe vazio para usar o esquema. O contraste considera o tema atual. Nao configura elementos individuais.
      */
     colors?: {
@@ -961,6 +982,15 @@ export interface FAQAccordionBlock {
    */
   variant: 'default' | 'compact';
   /**
+   * Opcoes semanticas controladas pelo Design System. Nao permite CSS arbitrario.
+   */
+  appearance?: {
+    /**
+     * Seleciona uma combinacao completa de fundo, texto, acao e destaque.
+     */
+    scheme?: ('default' | 'surface' | 'muted') | null;
+  };
+  /**
    * Cada item vira uma linha expansivel acessivel por teclado.
    */
   items: {
@@ -1020,9 +1050,9 @@ export interface AlertBoxBlock {
     [k: string]: unknown;
   };
   /**
-   * Define apenas o tom visual do aviso dentro do Design System.
+   * Define o estado semantico do aviso. O Design System resolve cor, icone e borda.
    */
-  type: 'info' | 'warning';
+  type: 'info' | 'success' | 'warning' | 'danger';
   /**
    * Opcional. Use para encaminhar o usuario a uma pagina ou servico oficial.
    */
@@ -1457,6 +1487,12 @@ export interface GalleryBlockSelect<T extends boolean = true> {
         preset?: T;
         thumbnailEffect?: T;
       };
+  appearance?:
+    | T
+    | {
+        spacing?: T;
+        interaction?: T;
+      };
   id?: T;
   blockName?: T;
 }
@@ -1557,6 +1593,7 @@ export interface CardsBlockSelect<T extends boolean = true> {
     | {
         scheme?: T;
         spacing?: T;
+        interaction?: T;
       };
   items?:
     | T
@@ -1612,6 +1649,7 @@ export interface CTABlockSelect<T extends boolean = true> {
     | {
         scheme?: T;
         spacing?: T;
+        emphasis?: T;
         colors?:
           | T
           | {
@@ -1666,6 +1704,11 @@ export interface FAQAccordionBlockSelect<T extends boolean = true> {
   title?: T;
   description?: T;
   variant?: T;
+  appearance?:
+    | T
+    | {
+        scheme?: T;
+      };
   items?:
     | T
     | {

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useId, useRef, useState } from "react";
 import type { Media } from "../../payload-types";
 import { MediaColorScope, Text } from "../../components/ui";
 import { classNames } from "../../components/ui/classNames";
+import { normalizeInteractionPreset, type InteractionPreset } from "../../components/ui/interaction";
 import { MediaImage } from "../shared/MediaImage";
 import type {
   GalleryColumns,
@@ -15,6 +16,7 @@ import type {
 type GalleryLightboxProps = {
   columns: GalleryColumns;
   images: GalleryItem[];
+  interaction?: InteractionPreset;
   preset: GalleryPreset;
   thumbnailEffect: GalleryThumbnailEffect;
 };
@@ -29,8 +31,15 @@ const columnClasses: Record<GalleryColumns, string> = {
 // Para adicionar efeitos, inclua o valor no schema do GalleryBlock,
 // normalize em Component.tsx e registre aqui as classes aplicadas a miniatura.
 const thumbnailEffectClasses: Record<GalleryThumbnailEffect, string> = {
-  grow: "transition-transform duration-700 ease-out group-hover:scale-[1.03]",
+  grow: "motion-safe:transition-transform motion-safe:duration-700 motion-safe:ease-out group-hover:motion-safe:scale-[1.03]",
   none: "",
+};
+
+const thumbnailInteractionClasses: Record<InteractionPreset, string> = {
+  none: "",
+  subtle: "hover:border-[var(--block-foreground)]",
+  default: "hover:border-[var(--block-foreground)] hover:opacity-95",
+  emphasized: "hover:border-[var(--block-foreground)] hover:opacity-90",
 };
 
 const focusableSelector = [
@@ -50,6 +59,7 @@ function mediaLabel(item: GalleryItem, index: number): string {
 export function GalleryLightbox({
   columns,
   images,
+  interaction = "default",
   thumbnailEffect,
 }: GalleryLightboxProps) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
@@ -57,6 +67,7 @@ export function GalleryLightbox({
   const openerRef = useRef<HTMLElement | null>(null);
   const titleId = useId();
   const activeItem = activeIndex === null ? null : images[activeIndex];
+  const resolvedInteraction = normalizeInteractionPreset(interaction, "default");
   const hasMultiple = images.length > 1;
   const isOpen = activeIndex !== null;
 
@@ -142,7 +153,10 @@ export function GalleryLightbox({
             <li key={item.id ?? `${media.id}-${index}`}>
               <button
                 aria-label={`Abrir imagem ampliada: ${label}`}
-                className="group block w-full overflow-hidden rounded-lg border border-border bg-transparent text-left focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-focus"
+                className={classNames(
+                  "group block w-full overflow-hidden rounded-lg border border-[var(--block-border)] bg-transparent text-left transition-colors focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-focus motion-reduce:transition-none",
+                  thumbnailInteractionClasses[resolvedInteraction],
+                )}
                 onClick={(event) => {
                   openerRef.current = event.currentTarget;
                   setActiveIndex(index);
@@ -173,7 +187,7 @@ export function GalleryLightbox({
         <div
           aria-labelledby={titleId}
           aria-modal="true"
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/55 p-4 text-white backdrop-blur-md"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/55 p-4 text-[var(--block-foreground)] backdrop-blur-md"
           ref={dialogRef}
           role="dialog"
           tabIndex={-1}
@@ -185,7 +199,7 @@ export function GalleryLightbox({
               </h2>
               <button
                 aria-label="Fechar galeria"
-                className="rounded-md border border-white/50 px-4 py-2 text-sm font-semibold text-white hover:bg-white/10 focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-white"
+                className="rounded-md border border-[var(--block-border)] px-4 py-2 text-sm font-semibold text-[var(--block-foreground)] hover:bg-[var(--block-foreground)]/10 focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-focus"
                 onClick={close}
                 type="button"
               >
@@ -197,7 +211,7 @@ export function GalleryLightbox({
               {hasMultiple ? (
                 <button
                   aria-label="Imagem anterior"
-                  className="rounded-md border border-white/50 px-4 py-3 font-semibold text-white hover:bg-white/10 focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-white"
+                  className="rounded-md border border-[var(--block-border)] px-4 py-3 font-semibold text-[var(--block-foreground)] hover:bg-[var(--block-foreground)]/10 focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-focus"
                   onClick={showPrevious}
                   type="button"
                 >
@@ -228,7 +242,7 @@ export function GalleryLightbox({
               {hasMultiple ? (
                 <button
                   aria-label="Proxima imagem"
-                  className="rounded-md border border-white/50 px-4 py-3 font-semibold text-white hover:bg-white/10 focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-white"
+                  className="rounded-md border border-[var(--block-border)] px-4 py-3 font-semibold text-[var(--block-foreground)] hover:bg-[var(--block-foreground)]/10 focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-focus"
                   onClick={showNext}
                   type="button"
                 >

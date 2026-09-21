@@ -20,6 +20,7 @@ export const NEUTRAL_COLORS = Object.freeze({
 /** Not configurable through branding. */
 export const SYSTEM_COLORS = Object.freeze({
   focus: "#14b1f2",
+  info: "#0a6fb5",
   success: "#167c4a",
   warning: "#b86e00",
   danger: "#b42318",

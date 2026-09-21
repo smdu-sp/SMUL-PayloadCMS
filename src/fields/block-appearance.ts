@@ -4,6 +4,17 @@ import { colorSchemes, normalizeColorScheme, validateColorOverrides, type ColorS
 import { resolveSemanticTheme, type GlobalSemanticTheme } from "../lib/theme/semantic-theme";
 import { closedSelect } from "./editorial-validation";
 
+export const interactionOptions = [
+  { label: "Sem interacao", value: "none" },
+  { label: "Sutil", value: "subtle" },
+  { label: "Padrao", value: "default" },
+  { label: "Enfatizada", value: "emphasized" },
+] as const;
+export const emphasisOptions = [
+  { label: "Sutil", value: "subtle" },
+  { label: "Padrao", value: "default" },
+  { label: "Forte", value: "strong" },
+] as const;
 export const schemeOptions = [
   { label: "Padrao", value: "default" },
   { label: "Superficie neutra", value: "surface" },
@@ -25,6 +36,8 @@ export const alignmentOptions = [
 export type BlockSpacing = (typeof spacingOptions)[number]["value"];
 export type BlockWidth = (typeof widthOptions)[number]["value"];
 export type BlockAlignment = (typeof alignmentOptions)[number]["value"];
+export type BlockInteraction = (typeof interactionOptions)[number]["value"];
+export type BlockEmphasis = (typeof emphasisOptions)[number]["value"];
 
 export function createSchemeField(allowed: readonly ColorScheme[] = colorSchemes, defaultValue: ColorScheme = "default"): Field {
   return {
@@ -112,6 +125,56 @@ export function createAlignmentField(
     admin: {
       description:
         "Controla se os elementos de texto e botoes ficam alinhados a esquerda ou centralizados.",
+    },
+    options: filtered.map((o) => ({ label: o.label, value: o.value })),
+  };
+}
+
+export function createInteractionField(
+  allowedInteractions: readonly BlockInteraction[] = ["none", "subtle", "default", "emphasized"],
+  defaultValue: BlockInteraction = "default",
+): Field {
+  const filtered = interactionOptions.filter((opt) =>
+    allowedInteractions.includes(opt.value),
+  );
+
+  return {
+    name: "interaction",
+    type: "select",
+    label: "Interacao",
+    defaultValue,
+    validate: closedSelect(
+      allowedInteractions,
+      "Escolha uma interacao aprovada pelo Design System.",
+    ),
+    admin: {
+      description:
+        "Define feedback de hover, foco e movimento por presets controlados. Nao expõe CSS.",
+    },
+    options: filtered.map((o) => ({ label: o.label, value: o.value })),
+  };
+}
+
+export function createEmphasisField(
+  allowedEmphasis: readonly BlockEmphasis[] = ["subtle", "default", "strong"],
+  defaultValue: BlockEmphasis = "default",
+): Field {
+  const filtered = emphasisOptions.filter((opt) =>
+    allowedEmphasis.includes(opt.value),
+  );
+
+  return {
+    name: "emphasis",
+    type: "select",
+    label: "Enfase",
+    defaultValue,
+    validate: closedSelect(
+      allowedEmphasis,
+      "Escolha uma enfase aprovada pelo Design System.",
+    ),
+    admin: {
+      description:
+        "Controla intensidade visual dentro dos limites do Design System.",
     },
     options: filtered.map((o) => ({ label: o.label, value: o.value })),
   };

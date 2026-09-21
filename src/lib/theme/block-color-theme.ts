@@ -10,6 +10,7 @@ export type BlockColorTheme = {
   action: string;
   actionForeground: string;
   accent: string;
+  border: string;
 };
 export type BlockColorThemeOverrides = Partial<Record<keyof BlockColorTheme, string | null>>;
 /** The editor can override surface roles, never individual component colors. */
@@ -59,6 +60,7 @@ export function resolveBlockColorTheme(
     action === theme.action ? theme.actionForeground : contrastingForeground(action)
   );
   const requestedAccent = overrides.accent ?? theme.accent;
+  const requestedBorder = theme.border;
   return {
     background,
     foreground,
@@ -68,6 +70,7 @@ export function resolveBlockColorTheme(
       ? requestedActionForeground : contrastingForeground(action),
     // Accent is also used for small text; it must be readable, not merely decorative.
     accent: hasMinimumContrast(requestedAccent, background) ? requestedAccent : foreground,
+    border: hasMinimumContrast(requestedBorder, background, 1.5) ? requestedBorder : foreground,
   };
 }
 
@@ -100,5 +103,6 @@ export function mapBlockColorThemeToCssVariables(theme: BlockColorTheme) {
     "--block-action": theme.action,
     "--block-action-foreground": theme.actionForeground,
     "--block-accent": theme.accent,
+    "--block-border": theme.border,
   };
 }

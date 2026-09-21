@@ -1,6 +1,7 @@
 import type { CardsBlock as CardsBlockProps } from "../../payload-types";
 import { Card, Container, Heading, Section, Text } from "../../components/ui";
 import { classNames } from "../../components/ui/classNames";
+import { normalizeInteractionPreset, type InteractionPreset } from "../../components/ui/interaction";
 import type { ImagePresentation } from "../shared/image-presentation";
 import {
   getFocalPointStyle,
@@ -24,6 +25,7 @@ type CardsItem = CardsBlockProps["items"][number] & {
 };
 
 type CardsAppearance = {
+  interaction?: InteractionPreset | string | null;
   spacing?: "compact" | "default" | "spacious" | string | null;
   scheme?: "default" | "muted" | "surface" | string | null;
 };
@@ -139,7 +141,7 @@ function CardMedia({
         getImagePresentationClassName(presentation, {
           sizeClassNames: side ? cardImageSizeClasses.side : cardImageSizeClasses.top,
         }),
-        "rounded-md border border-border bg-background",
+        "rounded-md border border-[var(--block-border)] bg-[var(--block-background)]",
       )}
       media={item.image}
       style={getFocalPointStyle(
@@ -168,6 +170,10 @@ export function CardsBlock({
     appearance?.spacing,
     "default",
   );
+  const effectiveInteraction = normalizeInteractionPreset(
+    appearance?.interaction,
+    "default",
+  );
 
   return (
     <Section spacing={effectiveSpacing} scheme={effectiveTone}>
@@ -191,7 +197,12 @@ export function CardsBlock({
 
             return (
               <li key={item.id}>
-                <Card fullHeight interactive padding={modalities ? "lg" : "md"}>
+                <Card
+                  fullHeight
+                  interaction={effectiveInteraction}
+                  interactive
+                  padding={modalities ? "lg" : "md"}
+                >
                   <div
                     className={classNames(
                       sideMedia && "flex gap-5",

@@ -125,3 +125,32 @@ describe("Cards image presentation rendering", () => {
     assert.doesNotMatch(img, /aspect-|object-position/);
   });
 });
+
+describe("Cards interaction rendering", () => {
+  function renderInteraction(interaction: "emphasized" | "none") {
+    return renderToStaticMarkup(createElement(CardsBlock, {
+      appearance: { interaction },
+      blockType: "cards",
+      items: [{
+        id: "interaction-card",
+        title: "Card de teste",
+        description: "Descricao do card",
+        mediaSource: "none",
+      }],
+      variant: "default",
+    }));
+  }
+
+  it("applies the selected interaction to informational cards too", () => {
+    const markup = renderInteraction("emphasized");
+
+    assert.match(markup, /hover:-translate-y-2/);
+    assert.match(markup, /hover:shadow-xl/);
+  });
+
+  it("supports explicitly disabling card interaction", () => {
+    const markup = renderInteraction("none");
+
+    assert.doesNotMatch(markup, /hover:-translate|hover:shadow|hover:border-current/);
+  });
+});

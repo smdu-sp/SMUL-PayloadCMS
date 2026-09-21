@@ -3,6 +3,13 @@ import type { FAQAccordionBlock as FAQAccordionBlockProps } from "../../payload-
 import { ColorScope, Container, Heading, Section, Text } from "../../components/ui";
 
 type FAQVariant = "compact" | "default";
+type FAQTone = "default" | "muted" | "surface";
+
+type FAQBlockWithAppearanceProps = FAQAccordionBlockProps & {
+  appearance?: {
+    scheme?: FAQTone | string | null;
+  } | null;
+};
 
 export function normalizeFAQVariant(
   variant: FAQAccordionBlockProps["variant"] | string | null | undefined,
@@ -10,16 +17,25 @@ export function normalizeFAQVariant(
   return variant === "compact" ? "compact" : "default";
 }
 
+export function normalizeFAQTone(
+  tone?: string | null,
+): FAQTone {
+  if (tone === "default" || tone === "surface") return tone;
+  return "muted";
+}
+
 export function FAQAccordionBlock({
+  appearance,
   description,
   items,
   title,
   variant,
-}: FAQAccordionBlockProps) {
+}: FAQBlockWithAppearanceProps) {
   const normalizedVariant = normalizeFAQVariant(variant);
+  const effectiveTone = normalizeFAQTone(appearance?.scheme);
 
   return (
-    <Section spacing={normalizedVariant === "compact" ? "sm" : "md"} scheme="muted">
+    <Section spacing={normalizedVariant === "compact" ? "sm" : "md"} scheme={effectiveTone}>
       <Container size="md">
         <Heading level={2} size="lg">
           <span className="text-balance break-words">{title}</span>
@@ -29,7 +45,7 @@ export function FAQAccordionBlock({
             <Text variant="muted">{description}</Text>
           </div>
         ) : null}
-        <ColorScope scheme="surface" className="mt-8 divide-y divide-border rounded-lg border border-border">
+        <ColorScope scheme="surface" className="mt-8 divide-y divide-[var(--block-border)] rounded-lg border border-[var(--block-border)]">
           {items.map((item) => (
             <details className="group" key={item.id}>
               <summary className="flex cursor-pointer list-none items-start justify-between gap-4 px-5 py-4 font-semibold text-[var(--block-foreground)] outline-none focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-[-3px] focus-visible:outline-focus [&::-webkit-details-marker]:hidden">

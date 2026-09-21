@@ -3,6 +3,7 @@ import { characterLimitAdmin } from "../../fields/character-limit";
 import {
   createAppearanceGroup,
   createControlledColorAppearanceFields,
+  createEmphasisField,
   createSpacingField,
   createSchemeField,
 } from "../../fields/block-appearance";
@@ -77,6 +78,7 @@ export const CTABlock: Block = {
     createAppearanceGroup([
       createSchemeField(),
       createSpacingField(["compact", "default", "spacious"], "default"),
+      createEmphasisField(["subtle", "default", "strong"], "default"),
       ...createControlledColorAppearanceFields(),
     ]),
   ],

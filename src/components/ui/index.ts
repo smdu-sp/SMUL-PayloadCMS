@@ -13,3 +13,7 @@ export type { TextTone, TextVariant, TextWeight } from "./Text";
 export { Icon } from "./Icon";
 export type { IconProps, IconSize, IconTone } from "./Icon";
 export { ColorScope, MediaColorScope } from "./ColorScope";
+export { Status, normalizeStatusVariant, statusVariants } from "./Status";
+export type { StatusVariant } from "./Status";
+export { interactionPresets, normalizeInteractionPreset } from "./interaction";
+export type { InteractionPreset } from "./interaction";

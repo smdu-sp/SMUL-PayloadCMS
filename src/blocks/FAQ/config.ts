@@ -1,6 +1,10 @@
 import type { Block } from "payload";
 import { characterLimitAdmin } from "../../fields/character-limit";
 import {
+  createAppearanceGroup,
+  createSchemeField,
+} from "../../fields/block-appearance";
+import {
   closedSelect,
   requiredRichText,
   requiredText,
@@ -59,6 +63,9 @@ export const FAQBlock: Block = {
         { label: "Compacto", value: "compact" },
       ],
     },
+    createAppearanceGroup([
+      createSchemeField(["default", "surface", "muted"], "muted"),
+    ]),
     {
       name: "items",
       type: "array",

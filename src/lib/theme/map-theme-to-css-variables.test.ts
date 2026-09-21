@@ -15,12 +15,14 @@ describe("global semantic theme", () => {
       assert.ok(hasMinimumContrast(fg, bg), bg);
     }
     assert.equal(theme.focus, SYSTEM_COLORS.focus);
+    assert.equal(theme.info, SYSTEM_COLORS.info);
     const variables = mapThemeToCssVariables(theme);
     assert.equal(variables["--color-brand"], "#ffff00");
     assert.equal(variables["--color-action"], "#ff00ff");
     assert.equal(variables["--color-surface-foreground"], theme.surfaceForeground);
     assert.equal(variables["--block-foreground"], "#ffffff");
-    assert.equal(Object.keys(variables).length, 24);
+    assert.equal(variables["--block-border"], theme.border);
+    assert.equal(Object.keys(variables).length, 26);
     for (const name of ["primary", "secondary", "headline", "paragraph", "highlight", "link", "illustration-main"]) {
       assert.equal(variables[`--color-${name}`], undefined);
     }

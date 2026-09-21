@@ -8,6 +8,7 @@ import {
 } from "./ActionBanners/Component";
 import { normalizeAlertBoxType } from "./AlertBox/Component";
 import {
+  normalizeCTAEmphasis,
   normalizeCTASpacing,
   normalizeCTAVariant,
 } from "./CTA/Component";
@@ -23,7 +24,7 @@ import {
   normalizeCarouselNavigation,
   normalizeCarouselSlidesPerView,
 } from "./Carousel/Component";
-import { normalizeFAQVariant } from "./FAQ/Component";
+import { normalizeFAQTone, normalizeFAQVariant } from "./FAQ/Component";
 import {
   normalizeBannerContentPosition,
   normalizeBannerImageHeight,
@@ -34,6 +35,7 @@ import { GalleryBlock } from "./Gallery/config";
 import {
   normalizeGalleryColumns,
   normalizeGalleryPreset,
+  normalizeGallerySpacing,
   normalizeGalleryThumbnailEffect,
 } from "./Gallery/Component";
 import { HeroBlock } from "./Hero/config";
@@ -242,8 +244,13 @@ describe("block variant fallbacks", () => {
     assert.equal(normalizeFAQVariant("default"), "default");
     assert.equal(normalizeFAQVariant("compact"), "compact");
     assert.equal(normalizeFAQVariant("unknown"), "default");
+    assert.equal(normalizeFAQTone("default"), "default");
+    assert.equal(normalizeFAQTone("surface"), "surface");
+    assert.equal(normalizeFAQTone("unknown"), "muted");
     assert.equal(normalizeAlertBoxType("info"), "info");
+    assert.equal(normalizeAlertBoxType("success"), "success");
     assert.equal(normalizeAlertBoxType("warning"), "warning");
+    assert.equal(normalizeAlertBoxType("danger"), "danger");
     assert.equal(normalizeAlertBoxType("unknown"), "info");
   });
 
@@ -302,6 +309,9 @@ describe("block variant fallbacks", () => {
     assert.equal(normalizeCTASpacing("spacious"), "spacious");
     assert.equal(normalizeCTASpacing("invalid", "compact"), "compact");
     assert.equal(normalizeCTASpacing(undefined), "default");
+    assert.equal(normalizeCTAEmphasis("subtle"), "subtle");
+    assert.equal(normalizeCTAEmphasis("strong"), "strong");
+    assert.equal(normalizeCTAEmphasis("invalid"), "default");
 
     // RichText width & spacing
     assert.equal(normalizeRichTextWidth("narrow"), "narrow");
@@ -324,6 +334,9 @@ describe("block variant fallbacks", () => {
     assert.equal(normalizeCardsSpacing("compact"), "compact");
     assert.equal(normalizeCardsSpacing("spacious"), "spacious");
     assert.equal(normalizeCardsSpacing("unknown"), "default");
+    assert.equal(normalizeGallerySpacing("compact"), "compact");
+    assert.equal(normalizeGallerySpacing("spacious"), "spacious");
+    assert.equal(normalizeGallerySpacing("unknown"), "default");
 
     // ImageText tone & spacing
     assert.equal(normalizeImageTextTone("surface"), "surface");

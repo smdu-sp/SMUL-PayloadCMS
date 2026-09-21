@@ -42,16 +42,18 @@ export const AlertBoxBlock: Block = {
       required: true,
       defaultValue: "info",
       validate: closedSelect(
-        ["info", "warning"],
+        ["info", "success", "warning", "danger"],
         "Escolha um tipo de aviso aprovado.",
       ),
       admin: {
         description:
-          "Define apenas o tom visual do aviso dentro do Design System.",
+          "Define o estado semantico do aviso. O Design System resolve cor, icone e borda.",
       },
       options: [
         { label: "Informativo", value: "info" },
+        { label: "Sucesso", value: "success" },
         { label: "Atencao", value: "warning" },
+        { label: "Erro ou impedimento", value: "danger" },
       ],
     },
     {

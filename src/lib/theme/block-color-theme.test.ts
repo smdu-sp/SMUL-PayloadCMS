@@ -13,11 +13,12 @@ describe("complete color recipes", () => {
   it("resolves six readable roles for every scheme and palette", () => {
     for (const global of themes) for (const scheme of colorSchemes) {
       const scope = resolveBlockColorTheme(global, scheme);
-      assert.equal(Object.keys(scope).length, 6);
+      assert.equal(Object.keys(scope).length, 7);
       for (const fg of [scope.foreground, scope.heading, scope.accent]) assert.ok(hasMinimumContrast(fg, scope.background), scheme);
       assert.ok(hasMinimumContrast(scope.actionForeground, scope.action), scheme);
       assert.ok(hasMinimumContrast(scope.action, scope.background, 3), scheme);
-      assert.equal(Object.keys(mapBlockColorThemeToCssVariables(scope)).length, 6);
+      assert.ok(hasMinimumContrast(scope.border, scope.background, 1.5), scheme);
+      assert.equal(Object.keys(mapBlockColorThemeToCssVariables(scope)).length, 7);
     }
   });
   it("keeps neutral surfaces independent of dark global foreground", () => {

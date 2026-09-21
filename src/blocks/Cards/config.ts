@@ -2,6 +2,7 @@ import type { Block, UploadFieldSingleValidation } from "payload";
 import { characterLimitAdmin } from "../../fields/character-limit";
 import {
   createAppearanceGroup,
+  createInteractionField,
   createSpacingField,
   createSchemeField,
 } from "../../fields/block-appearance";
@@ -83,6 +84,7 @@ export const CardsBlock: Block = {
     createAppearanceGroup([
       createSchemeField(["default", "surface", "muted"], "default"),
       createSpacingField(["compact", "default", "spacious"], "default"),
+      createInteractionField(["none", "subtle", "default", "emphasized"], "default"),
     ]),
     {
       name: "items",

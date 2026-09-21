@@ -1,5 +1,6 @@
 import type { Media } from "../../payload-types";
 import { Container, Heading, Section } from "../../components/ui";
+import { normalizeInteractionPreset, type InteractionPreset } from "../../components/ui/interaction";
 import { GalleryLightbox } from "./GalleryLightbox";
 
 export type GalleryColumns = "2" | "3" | "4" | "8";
@@ -13,6 +14,10 @@ export type GalleryItem = {
 };
 
 export type GalleryBlockProps = {
+  appearance?: {
+    interaction?: InteractionPreset | string | null;
+    spacing?: "compact" | "default" | "spacious" | string | null;
+  } | null;
   blockType: "gallery";
   id?: string | null;
   images?: GalleryItem[] | null;
@@ -23,6 +28,13 @@ export type GalleryBlockProps = {
   } | null;
   title?: string | null;
 };
+
+export function normalizeGallerySpacing(
+  spacing?: string | null,
+): "compact" | "default" | "spacious" {
+  if (spacing === "compact" || spacing === "spacious") return spacing;
+  return "default";
+}
 
 export function normalizeGalleryColumns(
   columns: GalleryColumns | string | null | undefined,
@@ -43,7 +55,7 @@ export function normalizeGalleryThumbnailEffect(
   return effect === "none" ? "none" : "grow";
 }
 
-export function GalleryBlock({ images, layout, title }: GalleryBlockProps) {
+export function GalleryBlock({ appearance, images, layout, title }: GalleryBlockProps) {
   const usableImages =
     images?.filter((item) => item.media && typeof item.media === "object" && item.media.url) ?? [];
 
@@ -52,9 +64,11 @@ export function GalleryBlock({ images, layout, title }: GalleryBlockProps) {
   const columns = normalizeGalleryColumns(layout?.columns);
   const preset = normalizeGalleryPreset(layout?.preset);
   const thumbnailEffect = normalizeGalleryThumbnailEffect(layout?.thumbnailEffect);
+  const interaction = normalizeInteractionPreset(appearance?.interaction, "default");
+  const spacing = normalizeGallerySpacing(appearance?.spacing);
 
   return (
-    <Section spacing="default" scheme="default">
+    <Section spacing={spacing} scheme="default">
       <Container size="lg">
         {title ? (
           <div className="mb-8">
@@ -66,6 +80,7 @@ export function GalleryBlock({ images, layout, title }: GalleryBlockProps) {
         <GalleryLightbox
           columns={columns}
           images={usableImages}
+          interaction={interaction}
           preset={preset}
           thumbnailEffect={thumbnailEffect}
         />

@@ -17,6 +17,7 @@
   --color-accent-foreground: var(--color-accent-foreground);
   --color-border: var(--color-border);
   --color-focus: var(--color-focus);
+  --color-info: var(--color-info);
   --color-success: var(--color-success);
   --color-warning: var(--color-warning);
   --color-danger: var(--color-danger);
@@ -153,7 +154,7 @@ body {
 }
 
 .cms-rich-text :where(blockquote) {
-  border-inline-start: var(--space-1) solid currentColor;
+  border-inline-start: var(--space-1) solid var(--block-border);
   color: var(--block-foreground);
   padding-inline-start: var(--space-5);
 }
@@ -172,7 +173,7 @@ body {
 }
 
 .cms-rich-text :where(th, td) {
-  border: 1px solid currentColor;
+  border: 1px solid var(--block-border);
   padding: var(--space-3);
   text-align: start;
   vertical-align: top;
