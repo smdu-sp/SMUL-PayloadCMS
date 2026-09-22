@@ -1,4 +1,4 @@
-import { DEFAULT_THEME } from '../../lib/theme/default-theme';
+import { DEFAULT_PALETTE } from '../../lib/theme/default-theme';
 import React from 'react';
 
 /**
@@ -10,9 +10,9 @@ export const AdminTheme: React.FC = () => {
   const css = `
     /* 1. Tokens de Branding Institucionais */
     :root {
-      --brand-primary: ${DEFAULT_THEME.primaryColor || '#0a3299'};
-      --brand-secondary: ${DEFAULT_THEME.secondaryColor || '#0a3299'};
-      --brand-accent: ${DEFAULT_THEME.accentColor || '#5cd6c9'};
+      --brand-primary: ${DEFAULT_PALETTE.brand};
+      --brand-secondary: ${DEFAULT_PALETTE.action};
+      --brand-accent: ${DEFAULT_PALETTE.accent};
 
       /* 2. Tokens Semânticos Base (Light) */
       --semantic-surface: #ffffff;
