@@ -176,32 +176,6 @@ export function CarouselClient({ autoplay, items, navigation, slidesPerView }: C
     }
   }, [activeIndex]);
 
-setActiveIndex(index);
-    scrollToSlide(index, reducedMotion ? "auto" : "smooth");
-  }, [reducedMotion, scrollToSlide]);
-
-  const goToPrevious = useCallback((userAction = false) => {
-    setActiveIndex((current) => {
-      const nextIndex = (current - 1 + items.length) % items.length;
-      if (userAction) {
-        setUserInteracted(true);
-      }
-      scrollToSlide(nextIndex, reducedMotion ? "auto" : "smooth");
-      return nextIndex;
-    });
-  }, [items.length, reducedMotion, scrollToSlide]);
-
-  const goToNext = useCallback((userAction = false) => {
-    setActiveIndex((current) => {
-      const nextIndex = (current + 1) % items.length;
-      if (userAction) {
-        setUserInteracted(true);
-      }
-      scrollToSlide(nextIndex, reducedMotion ? "auto" : "smooth");
-      return nextIndex;
-    });
-  }, [items.length, reducedMotion, scrollToSlide]);
-
   // Autoplay timer
   useEffect(() => {
     if (!isRotationActive) return;
