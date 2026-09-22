@@ -19,6 +19,13 @@ export const Users: CollectionConfig = {
   },
   admin: {
     useAsTitle: "email",
+    components: {
+      edit: {
+        beforeDocumentControls: [
+          "/components/admin/AdminHelpBackButton#AdminHelpBackButton",
+        ],
+      },
+    },
   },
   endpoints: [ldapLoginEndpoint],
   hooks: {

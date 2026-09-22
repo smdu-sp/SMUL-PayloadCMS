@@ -31,10 +31,16 @@ export const Media: CollectionConfig = {
     plural: "Mídias",
   },
   admin: {
-    defaultColumns: ["alt", "usage", "caption", "updatedAt"],
-    description:
-      "Cadastre imagens e documentos usados nos blocos, SEO e identidade visual. O texto alternativo e obrigatorio para acessibilidade.",
+    defaultColumns: ["filename", "alt", "usage", "caption", "updatedAt"],
+    description: "Cadastre imagens e documentos usados nos blocos...",
     useAsTitle: "alt",
+    components: {
+      edit: {
+        beforeDocumentControls: [
+          "/components/admin/AdminHelpBackButton#AdminHelpBackButton",
+        ],
+      },
+    },
   },
   upload: {
     displayPreview: true,

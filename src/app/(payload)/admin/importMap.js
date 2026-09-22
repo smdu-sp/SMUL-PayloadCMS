@@ -1,3 +1,5 @@
+import { AdminHelpBackButton as AdminHelpBackButton_91d47573155c4345c3604f489d60a701 } from '../../../components/admin/AdminHelpBackButton'
+import { ViewPageButton as ViewPageButton_280befce703042c3892fc43e283cbc0b } from '../../../components/admin/ViewPageButton'
 import { CharacterLimitedTextField as CharacterLimitedTextField_e13edbeccdd76f669b096be564191153 } from '../../../components/admin/CharacterLimitedTextField'
 import { BlockSummaryLabel as BlockSummaryLabel_c15f5e6693bd920665b62c3211106b36 } from '../../../components/admin/BlockSummaryLabel'
 import { RscEntryLexicalCell as RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
@@ -24,6 +26,9 @@ import { UnderlineFeatureClient as UnderlineFeatureClient_e70f5e05f09f93e00b997e
 import { BoldFeatureClient as BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { ItalicFeatureClient as ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { ThemeColorReset as ThemeColorReset_477b42945c88043439e5d946a379222e } from '../../../components/admin/ThemeColorReset'
+import { CustomNav as CustomNav_6de4d01e9d2fdd107175007ae639960b } from '../../../components/admin/CustomNav'
+import { Icon as Icon_dfe4008080d895d460898c3a6155e9ba } from '../../../components/admin/Icon'
+import { Logo as Logo_91a09b539d3c86b0aebf520e7564ce08 } from '../../../components/admin/Logo'
 import { AdminHelpNavLink as AdminHelpNavLink_97aa2727c272c4500ac40e4898186bc0 } from '../../../components/admin/AdminHelpNavLink'
 import { AdminIconsNavLink as AdminIconsNavLink_f81e35ad6de1a07a07cf8fa1b2238f89 } from '../../../components/admin/AdminIconsNavLink'
 import { LdapLoginForm as LdapLoginForm_ed57e8278d8fc41bbde4f1158ced6162 } from '../../../components/admin/LdapLoginForm'
@@ -33,6 +38,8 @@ import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } f
 
 /** @type import('payload').ImportMap */
 export const importMap = {
+  "/components/admin/AdminHelpBackButton#AdminHelpBackButton": AdminHelpBackButton_91d47573155c4345c3604f489d60a701,
+  "/components/admin/ViewPageButton#ViewPageButton": ViewPageButton_280befce703042c3892fc43e283cbc0b,
   "/components/admin/CharacterLimitedTextField#CharacterLimitedTextField": CharacterLimitedTextField_e13edbeccdd76f669b096be564191153,
   "/components/admin/BlockSummaryLabel#BlockSummaryLabel": BlockSummaryLabel_c15f5e6693bd920665b62c3211106b36,
   "@payloadcms/richtext-lexical/rsc#RscEntryLexicalCell": RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e,
@@ -59,6 +66,9 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#BoldFeatureClient": BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#ItalicFeatureClient": ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "/components/admin/ThemeColorReset#ThemeColorReset": ThemeColorReset_477b42945c88043439e5d946a379222e,
+  "/components/admin/CustomNav#CustomNav": CustomNav_6de4d01e9d2fdd107175007ae639960b,
+  "/components/admin/Icon#Icon": Icon_dfe4008080d895d460898c3a6155e9ba,
+  "/components/admin/Logo#Logo": Logo_91a09b539d3c86b0aebf520e7564ce08,
   "/components/admin/AdminHelpNavLink#AdminHelpNavLink": AdminHelpNavLink_97aa2727c272c4500ac40e4898186bc0,
   "/components/admin/AdminIconsNavLink#AdminIconsNavLink": AdminIconsNavLink_f81e35ad6de1a07a07cf8fa1b2238f89,
   "/components/admin/LdapLoginForm#LdapLoginForm": LdapLoginForm_ed57e8278d8fc41bbde4f1158ced6162,

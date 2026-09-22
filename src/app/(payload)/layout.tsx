@@ -1,5 +1,4 @@
 import type { ServerFunctionClient } from "payload";
-
 import "@payloadcms/next/css";
 
 import config from "@payload-config";
@@ -10,6 +9,7 @@ import {
 import React from "react";
 import { importMap } from "./admin/importMap.js";
 import "./custom.scss";
+import { AdminTheme } from "../../components/admin/AdminTheme";
 
 export const metadata = {
   title: "Meu Imovel Regular Admin",
@@ -37,6 +37,7 @@ const Layout = ({ children }: Args) => (
     importMap={importMap}
     serverFunction={serverFunction}
   >
+    <AdminTheme />
     {children}
   </RootLayout>
 );

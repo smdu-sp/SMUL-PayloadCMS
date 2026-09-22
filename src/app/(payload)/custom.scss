@@ -1,12 +1,144 @@
+/* ==========================================================================
+   CORES DOS BOTÕES (TEMA CLARO E ESCURO) - PAYLOAD CMS
+   ========================================================================== */
+
+.btn--style-primary,
+.btn--style-primary:not(:disabled) {
+  background-color: var(--admin-brand-primary);
+  border-color: var(--admin-brand-primary);
+  color: #ffffff;
+
+  &:hover,
+  &:focus-visible {
+    opacity: 0.9;
+  }
+}
+
+/* ==========================================================================
+   MENU LATERAL - FIXO NA TELA (STICKY SEM QUEBRAR O LAYOUT)
+   ========================================================================== */
+.modern-nav {
+  /* 👇 FIXAÇÃO DA NAVBAR SEM SAIR DO FLUXO DO FLEXBOX 👇 */
+  position: sticky !important;
+  top: 0 !important;
+  align-self: flex-start !important;
+  height: 100vh !important;
+  width: 260px !important;
+  min-width: 260px !important;
+  flex-shrink: 0 !important;
+  overflow-y: auto !important;
+  box-sizing: border-box !important;
+
+  /* Estilos visuais originais */
+  display: flex;
+  flex-direction: column;
+  background-color: var(--admin-sidebar-bg);
+  border-right: 1px solid var(--admin-sidebar-border);
+  padding: 60px 16px 24px 16px;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 15px;
+  transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--theme-elevation-200);
+    border-radius: 4px;
+  }
+
+  /* Botão Menu Principal */
+  .btn-dashboard {
+    display: block;
+    color: var(--theme-text);
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    padding: 10px 14px;
+    border-radius: 6px;
+    background-color: var(--admin-input-bg);
+    border: 1px solid var(--admin-input-border);
+    margin-bottom: 24px;
+    transition: all 0.2s ease;
+    text-align: left;
+
+    &:hover {
+      background-color: var(--admin-nav-item-active-bg);
+      border-color: var(--admin-nav-item-active-color);
+      color: var(--admin-nav-item-active-color);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  .nav-section {
+    margin-bottom: 24px;
+  }
+
+  .nav-label {
+    display: block;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--semantic-muted);
+    font-weight: 600;
+    margin-bottom: 8px;
+    padding-left: 4px;
+  }
+
+  /* Links de Collections e Globals */
+  .nav-link {
+    display: block;
+    color: var(--theme-text);
+    text-decoration: none;
+    font-size: 0.95rem;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    margin-bottom: 2px;
+
+    &:hover {
+      background-color: var(--admin-nav-item-active-bg);
+      color: var(--admin-nav-item-active-color);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  .nav-footer {
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: 1px solid var(--admin-sidebar-border);
+  }
+
+  .link-danger {
+    color: var(--state-error);
+
+    &:hover {
+      background-color: rgba(239, 68, 68, 0.1);
+      color: var(--state-error);
+      box-shadow: none;
+    }
+  }
+}
+
+/* TEMA CLARO OVERRIDES REMOVED: Now managed by CSS Variables */
+
+/* ==========================================================================
+   OUTROS ESTILOS DO PROJETO (HELP, ICONS, LOGOS)
+   ========================================================================== */
+
+.payload-home-icon {
+  color: var(--admin-brand-primary) !important;
+  display: block;
+  transition: color 0.2s ease;
+}
+
 .admin-help-nav-link {
   color: var(--theme-text);
   display: block;
   font-size: 14px;
   padding: 8px var(--base);
   text-decoration: none;
-  transition:
-    background 0.15s ease,
-    color 0.15s ease;
+  transition: background 0.15s ease, color 0.15s ease;
 }
 
 .admin-help-nav-link:hover,
@@ -140,7 +272,6 @@
   margin: 4px 0 0;
 }
 
-/* Admin Icons Page Styling — SPEC-035 */
 .admin-icons__header-row {
   align-items: flex-start;
   display: flex;
@@ -168,8 +299,8 @@
 .admin-icons__btn-secondary:hover,
 .admin-icons__btn-secondary:focus-visible {
   background: var(--theme-elevation-150);
-  border-color: #007a73;
-  color: #007a73;
+  border-color: var(--brand-primary);
+  color: var(--brand-primary);
 }
 
 .admin-icons__section-intro {
@@ -192,14 +323,12 @@
   display: flex;
   gap: 16px;
   padding: 16px;
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .admin-icons__card:hover {
-  border-color: #007a73;
-  box-shadow: 0 4px 12px rgba(0, 122, 115, 0.08);
+  border-color: var(--brand-primary);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .admin-icons__icon-wrapper {
@@ -207,7 +336,7 @@
   background: var(--theme-elevation-100);
   border: 1px solid var(--theme-elevation-200);
   border-radius: 8px;
-  color: #007a73;
+  color: var(--brand-primary);
   display: flex;
   flex-shrink: 0;
   height: 52px;
@@ -302,4 +431,43 @@
 .admin-icons__token-info span {
   color: var(--theme-elevation-600);
   font-size: 12px;
+}
+
+.custom-logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.custom-logo-container img {
+  height: 300px;
+  width: auto;
+  object-fit: contain;
+}
+
+.logo-theme-light {
+  height: 200px;
+}
+
+.logo-theme-dark {
+  height: 200px;
+}
+
+[data-theme="light"] {
+  .logo-theme-light {
+    display: block !important;
+  }
+  .logo-theme-dark {
+    display: none !important;
+  }
+}
+
+[data-theme="dark"] {
+  .logo-theme-light {
+    display: none !important;
+  }
+  .logo-theme-dark {
+    display: block !important;
+  }
 }

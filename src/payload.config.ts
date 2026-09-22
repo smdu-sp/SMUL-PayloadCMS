@@ -12,7 +12,6 @@ import { Header } from "./globals/Header.ts";
 import { SiteSettings } from "./globals/SiteSettings.ts";
 import { getLdapDevUser } from "./lib/ldap/dev-user.ts";
 
-// Fail at configuration loading as well as on requests if mock auth is unsafe.
 getLdapDevUser();
 
 const filename = fileURLToPath(import.meta.url);
@@ -22,6 +21,10 @@ const databaseUrl = process.env.DATABASE_URI || "file:./payload.db";
 const payloadSecret =
   process.env.PAYLOAD_SECRET || "dev-only-payload-secret-change-me";
 const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3000";
+
+export const adminLogoComponent = "/components/admin/Logo#Logo";
+export const adminIconComponent = "/components/admin/Icon#Icon"; // 👈 VOLTOU AQUI
+export const customNavComponent = "/components/admin/CustomNav#CustomNav";
 
 export const adminHelpView = {
   Component: "/components/admin/AdminHelpPage#AdminHelpPage",
@@ -46,7 +49,13 @@ export default buildConfig({
   editor: lexicalEditor(),
   admin: {
     user: Users.slug,
+    
     components: {
+      Nav: customNavComponent,
+      graphics: {
+        Logo: adminLogoComponent,
+        Icon: adminIconComponent, // 👈 REGISTRADO AQUI DE VOLTA
+      },
       afterNavLinks: [adminHelpNavLink, adminIconsNavLink],
       beforeLogin: [ldapLoginFormComponent],
       views: {
