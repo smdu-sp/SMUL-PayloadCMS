@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" role="img" aria-labelledby="title">
+  <title id="title">Grade de cards do catálogo</title>
+  <rect width="600" height="400" rx="24" fill="#f1f5f9"/>
+  <text x="42" y="63" fill="#1e293b" font-family="Arial, sans-serif" font-size="25" font-weight="700">Opções relacionadas</text>
+  <g fill="#fff" stroke="#cbd5e1" stroke-width="2"><rect x="42" y="94" width="158" height="250" rx="14"/><rect x="221" y="94" width="158" height="250" rx="14"/><rect x="400" y="94" width="158" height="250" rx="14"/></g>
+  <g fill="#5cd6c9"><circle cx="83" cy="139" r="22"/><circle cx="262" cy="139" r="22"/><circle cx="441" cy="139" r="22"/></g>
+  <g fill="#1e293b" font-family="Arial, sans-serif" font-size="17" font-weight="700"><text x="65" y="191">Card com</text><text x="65" y="213">ação</text><text x="244" y="191">Card</text><text x="244" y="213">informativo</text><text x="423" y="191">Quantidade</text><text x="423" y="213">flexível</text></g>
+  <g fill="#94a3b8"><rect x="65" y="239" width="110" height="8" rx="4"/><rect x="65" y="260" width="92" height="8" rx="4"/><rect x="244" y="239" width="110" height="8" rx="4"/><rect x="244" y="260" width="88" height="8" rx="4"/><rect x="423" y="239" width="110" height="8" rx="4"/><rect x="423" y="260" width="94" height="8" rx="4"/></g>
+</svg>

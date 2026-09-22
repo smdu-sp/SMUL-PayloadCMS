@@ -24,7 +24,10 @@ export const VideoBlock: Block = {
   slug: "videoBlock",
   dbName: "vidBlk",
   interfaceName: "VideoBlock",
-  admin: createBlockAdmin("Mídia"),
+  admin: createBlockAdmin("Mídia", {
+    slug: "video",
+    alt: "Prévia de um vídeo incorporado",
+  }),
   labels: {
     singular: "Video incorporado",
     plural: "Videos incorporados",

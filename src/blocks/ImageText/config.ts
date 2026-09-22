@@ -17,7 +17,10 @@ import { createBlockAdmin } from "../shared/admin";
 export const ImageTextBlock: Block = {
   slug: "imageText",
   interfaceName: "ImageTextBlock",
-  admin: createBlockAdmin("Mídia"),
+  admin: createBlockAdmin("Mídia", {
+    slug: "image-text",
+    alt: "Prévia de uma composição de imagem e texto",
+  }),
   labels: {
     singular: "Mídia e texto / imagem de destaque",
     plural: "Mídia e texto / imagens de destaque",

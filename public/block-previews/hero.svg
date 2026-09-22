@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" role="img" aria-labelledby="title">
+  <title id="title">Destaque principal do catálogo editorial</title>
+  <rect width="600" height="400" rx="24" fill="#0a3299"/>
+  <text x="300" y="95" text-anchor="middle" fill="#5cd6c9" font-family="Arial, sans-serif" font-size="18" font-weight="700">CATÁLOGO EDITORIAL</text>
+  <text x="300" y="155" text-anchor="middle" fill="#fff" font-family="Arial, sans-serif" font-size="30" font-weight="700">Conheça os blocos</text>
+  <text x="300" y="193" text-anchor="middle" fill="#fff" font-family="Arial, sans-serif" font-size="30" font-weight="700">disponíveis</text>
+  <text x="300" y="242" text-anchor="middle" fill="#dbeafe" font-family="Arial, sans-serif" font-size="16">Título, resumo e ação principal</text>
+  <rect x="207" y="280" width="186" height="48" rx="8" fill="#5cd6c9"/>
+  <text x="300" y="311" text-anchor="middle" fill="#102a43" font-family="Arial, sans-serif" font-size="16" font-weight="700">Explorar catálogo</text>
+</svg>

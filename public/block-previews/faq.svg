@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" role="img" aria-labelledby="title">
+  <title id="title">Lista de perguntas frequentes</title>
+  <rect width="600" height="400" rx="24" fill="#fff"/>
+  <text x="42" y="64" fill="#1e293b" font-family="Arial, sans-serif" font-size="26" font-weight="700">Perguntas frequentes</text>
+  <g fill="#f1f5f9" stroke="#cbd5e1"><rect x="42" y="94" width="516" height="66" rx="10"/><rect x="42" y="177" width="516" height="66" rx="10"/><rect x="42" y="260" width="516" height="66" rx="10"/></g>
+  <g fill="#1e293b" font-family="Arial, sans-serif" font-size="17" font-weight="700"><text x="66" y="135">Quando devo usar este bloco?</text><text x="66" y="218">O acordeão funciona com teclado?</text><text x="66" y="301">Como organizar as respostas?</text></g>
+  <g fill="#0a3299" font-family="Arial, sans-serif" font-size="28"><text x="519" y="138">+</text><text x="519" y="221">+</text><text x="519" y="304">+</text></g>
+</svg>

@@ -10,7 +10,10 @@ import { createBlockAdmin } from "../shared/admin";
 export const RichTextBlock: Block = {
   slug: "richText",
   interfaceName: "RichTextBlock",
-  admin: createBlockAdmin("Conteúdo"),
+  admin: createBlockAdmin("Conteúdo", {
+    slug: "rich-text",
+    alt: "Prévia de conteúdo editorial em texto",
+  }),
   labels: {
     singular: "Texto editorial",
     plural: "Textos editoriais",

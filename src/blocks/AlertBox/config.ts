@@ -7,7 +7,10 @@ import { createBlockAdmin } from "../shared/admin";
 export const AlertBoxBlock: Block = {
   slug: "alertBox",
   interfaceName: "AlertBoxBlock",
-  admin: createBlockAdmin("Conteúdo"),
+  admin: createBlockAdmin("Conteúdo", {
+    slug: "alert-box",
+    alt: "Prévia de uma caixa de aviso",
+  }),
   labels: {
     singular: "Caixa de aviso",
     plural: "Caixas de aviso",

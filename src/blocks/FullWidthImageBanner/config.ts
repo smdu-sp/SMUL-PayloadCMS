@@ -60,7 +60,10 @@ export const FullWidthImageBannerBlock: Block = {
   slug: "fullWidthImageBanner",
   dbName: "fwib",
   interfaceName: "FullWidthImageBannerBlock",
-  admin: createBlockAdmin("Mídia"),
+  admin: createBlockAdmin("Mídia", {
+    slug: "full-width-image-banner",
+    alt: "Prévia de um banner de imagem em largura total",
+  }),
   labels: {
     singular: "Banner de imagem",
     plural: "Banners de imagem",

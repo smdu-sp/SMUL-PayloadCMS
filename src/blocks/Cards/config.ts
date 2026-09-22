@@ -34,7 +34,10 @@ const mediaPositionOptions = [
 export const CardsBlock: Block = {
   slug: "cards",
   interfaceName: "CardsBlock",
-  admin: createBlockAdmin("Conteúdo"),
+  admin: createBlockAdmin("Conteúdo", {
+    slug: "cards",
+    alt: "Prévia de uma grade de cards",
+  }),
   labels: {
     singular: "Cards e grades de benefícios",
     plural: "Cards e grades de benefícios",

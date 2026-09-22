@@ -15,7 +15,10 @@ import { createBlockAdmin } from "../shared/admin";
 export const CTABlock: Block = {
   slug: "cta",
   interfaceName: "CTABlock",
-  admin: createBlockAdmin("Ações"),
+  admin: createBlockAdmin("Ações", {
+    slug: "cta",
+    alt: "Prévia de uma chamada de ação",
+  }),
   labels: {
     singular: "Chamada de acao",
     plural: "Chamadas de acao",

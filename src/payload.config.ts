@@ -1,5 +1,6 @@
 import { sqliteAdapter } from "@payloadcms/db-sqlite";
 import { lexicalEditor } from "@payloadcms/richtext-lexical";
+import { pt } from "@payloadcms/translations/languages/pt";
 import path from "path";
 import { buildConfig } from "payload";
 import { fileURLToPath } from "url";
@@ -47,6 +48,10 @@ export const adminIconsNavLink =
 
 export default buildConfig({
   editor: lexicalEditor(),
+  i18n: {
+    fallbackLanguage: "pt",
+    supportedLanguages: { pt },
+  },
   admin: {
     user: Users.slug,
     

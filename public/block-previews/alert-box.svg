@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" role="img" aria-labelledby="title">
+  <title id="title">Caixa de aviso editorial</title>
+  <rect width="600" height="400" rx="24" fill="#fff"/>
+  <rect x="50" y="78" width="500" height="244" rx="16" fill="#fff7ed" stroke="#b86e00" stroke-width="3"/>
+  <circle cx="108" cy="139" r="28" fill="#b86e00"/><text x="108" y="150" text-anchor="middle" fill="#fff" font-family="Arial, sans-serif" font-size="31" font-weight="700">!</text>
+  <text x="158" y="135" fill="#7c2d12" font-family="Arial, sans-serif" font-size="24" font-weight="700">Informação importante</text>
+  <rect x="158" y="161" width="316" height="10" rx="5" fill="#c2410c" opacity=".55"/><rect x="158" y="188" width="286" height="10" rx="5" fill="#c2410c" opacity=".4"/><rect x="158" y="215" width="326" height="10" rx="5" fill="#c2410c" opacity=".4"/>
+  <text x="158" y="271" fill="#9a3412" font-family="Arial, sans-serif" font-size="16" font-weight="700">Consultar orientação →</text>
+</svg>

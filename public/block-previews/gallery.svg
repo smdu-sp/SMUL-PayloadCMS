@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" role="img" aria-labelledby="title">
+  <title id="title">Galeria de imagens do catálogo</title>
+  <rect width="600" height="400" rx="24" fill="#f1f5f9"/>
+  <text x="42" y="60" fill="#1e293b" font-family="Arial, sans-serif" font-size="25" font-weight="700">Galeria de imagens</text>
+  <g fill="#0a3299"><rect x="42" y="90" width="245" height="120" rx="12"/><rect x="313" y="90" width="245" height="120" rx="12"/></g>
+  <g fill="#5cd6c9"><rect x="42" y="232" width="245" height="120" rx="12"/><rect x="313" y="232" width="245" height="120" rx="12"/></g>
+  <g fill="#fff" opacity=".8"><circle cx="235" cy="122" r="18"/><circle cx="506" cy="122" r="18"/><circle cx="235" cy="264" r="18"/><circle cx="506" cy="264" r="18"/></g>
+</svg>

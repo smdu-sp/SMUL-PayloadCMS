@@ -14,7 +14,10 @@ import { createBlockAdmin } from "../shared/admin";
 export const IconGridBlock: Block = {
   slug: "iconGrid",
   interfaceName: "IconGridBlock",
-  admin: createBlockAdmin("Conteúdo"),
+  admin: createBlockAdmin("Conteúdo", {
+    slug: "icon-grid",
+    alt: "Prévia de uma grade de ícones e informações",
+  }),
   labels: {
     singular: "Grade de ícones e informações",
     plural: "Grades de ícones e informações",

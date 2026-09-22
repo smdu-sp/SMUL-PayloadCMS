@@ -7,7 +7,10 @@ export const ImageBlock: Block = {
   slug: "imageBlock",
   dbName: "imgBlk",
   interfaceName: "ImageBlock",
-  admin: createBlockAdmin("Mídia"),
+  admin: createBlockAdmin("Mídia", {
+    slug: "image",
+    alt: "Prévia de uma imagem editorial com legenda",
+  }),
   labels: {
     singular: "Imagem",
     plural: "Imagens",

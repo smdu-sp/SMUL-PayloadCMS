@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" role="img" aria-labelledby="title">
+  <title id="title">Conteúdo editorial em texto</title>
+  <rect width="600" height="400" rx="24" fill="#f1f5f9"/>
+  <rect x="92" y="48" width="416" height="304" rx="14" fill="#fff" stroke="#cbd5e1" stroke-width="2"/>
+  <text x="132" y="112" fill="#1e293b" font-family="Arial, sans-serif" font-size="27" font-weight="700">Texto editorial</text>
+  <rect x="132" y="145" width="328" height="10" rx="5" fill="#64748b"/>
+  <rect x="132" y="172" width="298" height="10" rx="5" fill="#94a3b8"/>
+  <rect x="132" y="199" width="336" height="10" rx="5" fill="#94a3b8"/>
+  <rect x="132" y="244" width="310" height="10" rx="5" fill="#64748b"/>
+  <rect x="132" y="271" width="335" height="10" rx="5" fill="#94a3b8"/>
+  <rect x="132" y="298" width="225" height="10" rx="5" fill="#94a3b8"/>
+</svg>

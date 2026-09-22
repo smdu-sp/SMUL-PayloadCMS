@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" role="img" aria-labelledby="title">
+  <title id="title">Composição de imagem e texto</title>
+  <rect width="600" height="400" rx="24" fill="#fff"/>
+  <rect x="42" y="52" width="242" height="296" rx="16" fill="#0a3299"/>
+  <circle cx="225" cy="112" r="28" fill="#5cd6c9"/>
+  <path d="M42 306l76-87 58 56 46-38 62 69v42H42z" fill="#5cd6c9" opacity=".72"/>
+  <text x="324" y="112" fill="#1e293b" font-family="Arial, sans-serif" font-size="26" font-weight="700">Imagem e texto</text>
+  <rect x="324" y="149" width="222" height="10" rx="5" fill="#64748b"/><rect x="324" y="177" width="196" height="10" rx="5" fill="#94a3b8"/><rect x="324" y="205" width="215" height="10" rx="5" fill="#94a3b8"/>
+  <rect x="324" y="260" width="154" height="44" rx="8" fill="#0a3299"/><text x="401" y="288" text-anchor="middle" fill="#fff" font-family="Arial, sans-serif" font-size="15" font-weight="700">Saiba mais</text>
+</svg>

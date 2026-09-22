@@ -17,6 +17,7 @@ import { ImageBlock } from "./ImageBlock/config";
 import { ImageTextBlock } from "./ImageText/config";
 import { RichTextBlock } from "./RichText/config";
 import { blockSummaryLabel } from "./shared/admin";
+import { VideoBlock } from "./VideoBlock/config";
 import { getBlockSummary } from "./shared/get-block-summary";
 
 const blocks = [
@@ -25,6 +26,7 @@ const blocks = [
   ImageBlock,
   GalleryBlock,
   CarouselBlock,
+  VideoBlock,
   ImageTextBlock,
   CardsBlock,
   CTABlock,
@@ -58,6 +60,7 @@ describe("SPEC-024 admin UX and block visualization", () => {
         ImageBlock.admin?.group,
         GalleryBlock.admin?.group,
         CarouselBlock.admin?.group,
+        VideoBlock.admin?.group,
         ImageTextBlock.admin?.group,
         CardsBlock.admin?.group,
         CTABlock.admin?.group,
@@ -72,6 +75,13 @@ describe("SPEC-024 admin UX and block visualization", () => {
     for (const block of blocks) {
       assert.ok(block.labels?.singular);
       assert.equal(block.admin?.components?.Label, blockSummaryLabel);
+      const thumbnail = block.admin?.images?.thumbnail;
+      assert.equal(typeof thumbnail, "object");
+      assert.match(
+        thumbnail && typeof thumbnail === "object" ? thumbnail.url : "",
+        /^\/block-previews\/[a-z-]+\.svg$/,
+      );
+      assert.ok(thumbnail && typeof thumbnail === "object" && thumbnail.alt);
     }
   });
 

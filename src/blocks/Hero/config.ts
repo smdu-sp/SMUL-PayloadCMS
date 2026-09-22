@@ -28,7 +28,10 @@ const focalPointOptions = [
 export const HeroBlock: Block = {
   slug: "hero",
   interfaceName: "HeroBlock",
-  admin: createBlockAdmin("Conteúdo"),
+  admin: createBlockAdmin("Conteúdo", {
+    slug: "hero",
+    alt: "Prévia de um destaque principal",
+  }),
   labels: {
     singular: "Destaque principal",
     plural: "Destaques principais",

@@ -45,7 +45,10 @@ export const GalleryBlock: Block = {
   slug: "gallery",
   dbName: "gal",
   interfaceName: "GalleryBlock",
-  admin: createBlockAdmin("Mídia"),
+  admin: createBlockAdmin("Mídia", {
+    slug: "gallery",
+    alt: "Prévia de uma galeria de imagens",
+  }),
   labels: {
     singular: "Galeria de imagens",
     plural: "Galerias de imagens",

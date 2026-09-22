@@ -36,3 +36,10 @@ Este guia registra como montar as três composições de referência no catálog
 ## Limites desta entrega
 
 Os roteiros validam a montagem com os nove Blocks existentes. Não foram criados Hero Countdown, Benefits Grid, Media Highlight ou Step-by-Step como novos schemas: seus usos possíveis foram orientados pelo catálogo consolidado, sem antecipar Blocks adiados por specs anteriores.
+
+## Localização e miniaturas do catálogo
+
+- O Admin usa a tradução oficial em português distribuída por `@payloadcms/translations`.
+- Cada Block registra uma miniatura 3:2 por `admin.images.thumbnail`, sem alterar o `slug` ou os dados persistidos.
+- As miniaturas em `public/block-previews` reproduzem a estrutura e o conteúdo demonstrativo de `seed-showcase.ts` com os tokens institucionais.
+- O Block de vídeo possui uma amostra representativa baseada no componente atual, pois ainda não integra o catálogo seed.

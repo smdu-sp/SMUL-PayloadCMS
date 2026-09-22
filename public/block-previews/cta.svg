@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" role="img" aria-labelledby="title">
+  <title id="title">Chamada de ação institucional</title>
+  <rect width="600" height="400" rx="24" fill="#0a3299"/>
+  <rect x="52" y="62" width="496" height="276" rx="18" fill="#fff" opacity=".08" stroke="#fff" stroke-width="2"/>
+  <text x="300" y="139" text-anchor="middle" fill="#fff" font-family="Arial, sans-serif" font-size="29" font-weight="700">Indique o próximo passo</text>
+  <text x="300" y="183" text-anchor="middle" fill="#dbeafe" font-family="Arial, sans-serif" font-size="17">Mensagem final com destino obrigatório</text>
+  <rect x="205" y="228" width="190" height="54" rx="9" fill="#5cd6c9"/>
+  <text x="300" y="262" text-anchor="middle" fill="#102a43" font-family="Arial, sans-serif" font-size="17" font-weight="700">Acessar serviço</text>
+</svg>

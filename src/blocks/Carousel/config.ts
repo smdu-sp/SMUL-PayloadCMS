@@ -24,7 +24,10 @@ export const CarouselBlock: Block = {
   slug: "carousel",
   dbName: "car",
   interfaceName: "CarouselBlock",
-  admin: createBlockAdmin("Mídia"),
+  admin: createBlockAdmin("Mídia", {
+    slug: "carousel",
+    alt: "Prévia de um carrossel de conteúdo",
+  }),
   labels: {
     singular: "Carrossel",
     plural: "Carrosseis",

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" role="img" aria-labelledby="title">
+  <title id="title">Carrossel com conteúdo em sequência</title>
+  <rect width="600" height="400" rx="24" fill="#f1f5f9"/>
+  <text x="44" y="58" fill="#1e293b" font-family="Arial, sans-serif" font-size="24" font-weight="700">Conteúdo em sequência</text>
+  <rect x="90" y="82" width="420" height="245" rx="16" fill="#fff" stroke="#cbd5e1" stroke-width="2"/>
+  <rect x="90" y="82" width="420" height="135" rx="16" fill="#0a3299"/><rect x="90" y="201" width="420" height="16" fill="#0a3299"/>
+  <text x="120" y="254" fill="#1e293b" font-family="Arial, sans-serif" font-size="21" font-weight="700">Primeiro slide</text>
+  <rect x="120" y="275" width="270" height="9" rx="5" fill="#94a3b8"/>
+  <circle cx="54" cy="204" r="24" fill="#fff" stroke="#cbd5e1"/><text x="54" y="213" text-anchor="middle" font-size="28" fill="#0a3299">‹</text>
+  <circle cx="546" cy="204" r="24" fill="#fff" stroke="#cbd5e1"/><text x="546" y="213" text-anchor="middle" font-size="28" fill="#0a3299">›</text>
+  <circle cx="284" cy="360" r="6" fill="#0a3299"/><circle cx="304" cy="360" r="6" fill="#94a3b8"/><circle cx="324" cy="360" r="6" fill="#94a3b8"/>
+</svg>

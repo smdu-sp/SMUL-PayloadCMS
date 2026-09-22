@@ -14,7 +14,10 @@ import { createBlockAdmin } from "../shared/admin";
 export const FAQBlock: Block = {
   slug: "faqAccordion",
   interfaceName: "FAQAccordionBlock",
-  admin: createBlockAdmin("Conteúdo"),
+  admin: createBlockAdmin("Conteúdo", {
+    slug: "faq",
+    alt: "Prévia de perguntas frequentes",
+  }),
   labels: {
     singular: "Perguntas frequentes",
     plural: "Perguntas frequentes",

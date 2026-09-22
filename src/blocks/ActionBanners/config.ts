@@ -7,7 +7,10 @@ import { createBlockAdmin } from "../shared/admin";
 export const ActionBannersBlock: Block = {
   slug: "actionBanners",
   interfaceName: "ActionBannersBlock",
-  admin: createBlockAdmin("Ações"),
+  admin: createBlockAdmin("Ações", {
+    slug: "action-banners",
+    alt: "Prévia de faixas de ação em grade",
+  }),
   labels: {
     singular: "Faixas de ação",
     plural: "Faixas de ação",
