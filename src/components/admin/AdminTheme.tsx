@@ -37,19 +37,19 @@ export const AdminTheme: React.FC = () => {
 
     /* 4. Camada Derivada do Admin (Payload Native overrides) */
     :root, [data-theme="light"] {
-      --theme-bg: var(--semantic-surface);
+      --theme-bg: #edf2f7;
       --theme-text: var(--semantic-foreground);
       
-      /* Escala de Elevações (Light) */
-      --theme-elevation-0: #ffffff;
-      --theme-elevation-50: #f8fafc;
-      --theme-elevation-100: #f1f5f9;
-      --theme-elevation-150: #e2e8f0;
-      --theme-elevation-200: #cbd5e1;
-      --theme-elevation-250: #94a3b8;
-      --theme-elevation-300: #64748b;
-      --theme-elevation-400: #475569;
-      --theme-elevation-500: #334155;
+      /* Escala de Elevações (Light) - mais escura para melhorar contraste */
+      --theme-elevation-0: #edf2f7;
+      --theme-elevation-50: #e7edf5;
+      --theme-elevation-100: #dde7f1;
+      --theme-elevation-150: #d0dae6;
+      --theme-elevation-200: #bccad9;
+      --theme-elevation-250: #95a6ba;
+      --theme-elevation-300: #64768a;
+      --theme-elevation-400: #4b5d73;
+      --theme-elevation-500: #33465d;
       --theme-elevation-800: #1e293b;
 
       /* Estados */
@@ -62,14 +62,14 @@ export const AdminTheme: React.FC = () => {
 
       /* Componentes Admin */
       --admin-brand-primary: var(--brand-primary);
-      --admin-sidebar-bg: var(--semantic-surface);
-      --admin-sidebar-border: var(--semantic-border);
-      --admin-nav-item-active-bg: rgba(10, 50, 153, 0.08);
-      --admin-nav-item-active-color: var(--brand-primary);
-      --admin-card-bg: var(--semantic-surface);
-      --admin-card-border: var(--semantic-border);
-      --admin-input-bg: var(--semantic-surface);
-      --admin-input-border: var(--semantic-border);
+      --admin-sidebar-bg: #e8edf5;
+      --admin-sidebar-border: #d5deea;
+      --admin-nav-item-active-bg: rgba(15, 23, 42, 0.10);
+      --admin-nav-item-active-color: var(--theme-elevation-800);
+      --admin-card-bg: var(--theme-elevation-50);
+      --admin-card-border: var(--theme-elevation-200);
+      --admin-input-bg: var(--theme-elevation-50);
+      --admin-input-border: var(--theme-elevation-200);
     }
 
     [data-theme="dark"] {
