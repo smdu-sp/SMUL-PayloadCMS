@@ -1,6 +1,7 @@
 import { RichText } from "@payloadcms/richtext-lexical/react";
 import type { ImageTextBlock as ImageTextBlockProps } from "../../payload-types";
-import { Container, Heading, Section } from "../../components/ui";
+import { BlockThemeScope, Container, Heading, Section } from "../../components/ui";
+import type { EditorialColorOverrides } from "../../lib/theme/block-color-theme";
 import {
   getFocalPointStyle,
   getImagePresentationClassName,
@@ -11,8 +12,9 @@ import { BlockLink } from "../shared/BlockLink";
 type ImageTextVariant = "image-left" | "image-right";
 
 type ImageTextAppearance = {
+  colors?: EditorialColorOverrides | null;
   spacing?: "compact" | "default" | "spacious" | string | null;
-  scheme?: "default" | "muted" | "surface" | string | null;
+  scheme?: "custom" | "default" | "muted" | "surface" | string | null;
 };
 
 type ImageTextBlockWithLegacyProps = ImageTextBlockProps & {
@@ -55,13 +57,13 @@ export function ImageTextBlock({
   const imageOnRight = normalizedVariant === "image-right";
   const effectiveTone = normalizeImageTextTone(appearance?.scheme);
   const effectiveSpacing = normalizeImageTextSpacing(appearance?.spacing);
-
-  return (
-    <Section spacing={effectiveSpacing} scheme={effectiveTone}>
+  const customTheme = appearance?.scheme === "custom";
+  const section = (
+    <Section spacing={effectiveSpacing} scheme={customTheme ? "default" : effectiveTone}>
       <Container size="lg">
         <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
           <MediaImage
-            className={`h-auto rounded-xl border border-border ${getImagePresentationClassName(imagePresentation)} ${imageOnRight ? "lg:order-2" : ""}`}
+            className={`h-auto rounded-xl border border-(--block-border) ${getImagePresentationClassName(imagePresentation)} ${imageOnRight ? "lg:order-2" : ""}`}
             media={image}
             sizes="(min-width: 1024px) 50vw, 100vw"
             style={getFocalPointStyle(
@@ -87,4 +89,8 @@ export function ImageTextBlock({
       </Container>
     </Section>
   );
+
+  return customTheme
+    ? <BlockThemeScope palette={appearance?.colors}>{section}</BlockThemeScope>
+    : section;
 }

@@ -2,6 +2,8 @@ import type { Block } from "payload";
 import { characterLimitAdmin } from "../../fields/character-limit";
 import {
   createAppearanceGroup,
+  createBlockContrastStatusField,
+  createControlledColorAppearanceFields,
   createSpacingField,
   createSchemeField,
 } from "../../fields/block-appearance";
@@ -105,8 +107,10 @@ export const ImageTextBlock: Block = {
       fields: createLinkFields(),
     },
     createAppearanceGroup([
-      createSchemeField(["default", "surface", "muted"], "default"),
+      createSchemeField(["default", "surface", "muted", "custom"], "default"),
       createSpacingField(["compact", "default", "spacious"], "default"),
+      ...createControlledColorAppearanceFields(),
+      createBlockContrastStatusField(),
     ]),
   ],
 };

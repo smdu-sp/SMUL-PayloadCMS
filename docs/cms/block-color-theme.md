@@ -23,7 +23,7 @@ O contrato e implementado por `resolveBlockColorTheme()` em
 - `inherit`: usa os papeis do tema semantico global.
 - `preset`: transforma um `tone` aprovado em uma receita completa.
 - `custom`: cria uma paleta semantica local a partir de overrides editoriais.
-  CTA e RichText estao habilitados para esse modo.
+  CTA, RichText e ImageText estao habilitados para esse modo.
 
 Nos Blocks habilitados, selecionar outro preset oculta e desativa a paleta customizada. Os
 valores permanecem armazenados para uma eventual volta ao modo `custom`, mas

@@ -124,6 +124,17 @@ describe("SPEC-026 content validation", () => {
     );
     assert.equal(fieldByName(richTextAppearance.fields, "colors").type, "group");
     assert.equal(fieldByName(richTextAppearance.fields, "contrastStatus").type, "ui");
+
+    const imageTextAppearance = fieldByName(ImageTextBlock.fields, "appearance");
+    assert.ok("fields" in imageTextAppearance);
+    const imageTextScheme = fieldByName(imageTextAppearance.fields, "scheme");
+    assert.ok("options" in imageTextScheme && Array.isArray(imageTextScheme.options));
+    assert.deepEqual(
+      imageTextScheme.options.map((option) => typeof option === "object" ? option.value : option),
+      ["default", "surface", "muted", "custom"],
+    );
+    assert.equal(fieldByName(imageTextAppearance.fields, "colors").type, "group");
+    assert.equal(fieldByName(imageTextAppearance.fields, "contrastStatus").type, "ui");
   });
 
   it("rejects partially completed optional and required links", async () => {

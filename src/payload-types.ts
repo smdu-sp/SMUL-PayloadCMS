@@ -678,11 +678,21 @@ export interface ImageTextBlock {
     /**
      * Seleciona uma combinacao completa de fundo, texto, acao e destaque.
      */
-    scheme?: ('default' | 'surface' | 'muted') | null;
+    scheme?: ('default' | 'surface' | 'muted' | 'custom') | null;
     /**
      * Controla a distancia vertical do bloco em relacao aos blocos adjacentes.
      */
     spacing?: ('compact' | 'default' | 'spacious') | null;
+    /**
+     * Deixe um campo vazio para herdar o token global. O contraste considera a paleta efetiva. Nao configura elementos individuais.
+     */
+    colors?: {
+      background?: string | null;
+      foreground?: string | null;
+      brand?: string | null;
+      action?: string | null;
+      accent?: string | null;
+    };
   };
   id?: string | null;
   blockName?: string | null;
@@ -1602,6 +1612,15 @@ export interface ImageTextBlockSelect<T extends boolean = true> {
     | {
         scheme?: T;
         spacing?: T;
+        colors?:
+          | T
+          | {
+              background?: T;
+              foreground?: T;
+              brand?: T;
+              action?: T;
+              accent?: T;
+            };
       };
   id?: T;
   blockName?: T;
