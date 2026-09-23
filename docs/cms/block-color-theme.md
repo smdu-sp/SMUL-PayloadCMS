@@ -22,8 +22,12 @@ O contrato e implementado por `resolveBlockColorTheme()` em
 
 - `inherit`: usa os papeis do tema semantico global.
 - `preset`: transforma um `tone` aprovado em uma receita completa.
-- `custom`: aplica overrides semanticos sobre uma receita. O modo existe para
-  integracao arquitetural; esta implementacao nao adiciona controles editoriais.
+- `custom`: cria uma paleta semantica local a partir de overrides editoriais.
+  O CTA e o primeiro Block habilitado para esse modo.
+
+No CTA, selecionar outro preset oculta e desativa a paleta customizada. Os
+valores permanecem armazenados para uma eventual volta ao modo `custom`, mas
+nao alteram a renderizacao enquanto outro preset estiver ativo.
 
 ## Presets
 
@@ -63,14 +67,68 @@ override semantico explicito
 Os campos legados de `SiteSettings.branding` continuam sendo fontes de fallback
 do tema global. Nenhum field foi renomeado ou removido.
 
+## Protecao automatica de contraste
+
+A protecao funciona em duas camadas:
+
+1. o CMS valida a paleta e informa combinacoes editoriais invalidas;
+2. o renderer resolve novamente os tokens e substitui valores inseguros caso
+   dados invalidos cheguem por draft, API, importacao ou documento legado.
+
+No CTA, o modo `Tema customizado` tambem exibe uma verificacao em tempo real.
+Ela compara texto, acao e destaque com o fundo efetivo, identifica tokens
+herdados e, quando houver fallback, mostra a cor solicitada e a cor que sera
+usada na pagina. O campo e apenas de interface e nao altera o documento salvo.
+
+O renderer aplica as seguintes regras:
+
+| Token | Contraste minimo | Fallback seguro |
+|---|---:|---|
+| `foreground` | `4.5:1` contra `background` | preto ou branco, escolhendo o maior contraste |
+| `heading` | `4.5:1` contra `background` | `foreground` efetivo |
+| `action` | `3:1` contra `background` | `foreground` efetivo |
+| `actionForeground` | `4.5:1` contra `action` | preto ou branco, escolhendo o maior contraste |
+| `accent` | `4.5:1` contra `background` | `foreground` efetivo |
+| `border` | `1.5:1` contra `background` | `foreground` efetivo |
+
+`contrastingForeground()` compara as opcoes neutras clara e escura e seleciona
+a de maior contraste. A implementacao fica em `src/lib/theme/semantic-theme.ts`;
+as regras por token ficam em `src/lib/theme/block-color-theme.ts`.
+
+### Exemplo
+
+Usar a mesma cor em todos os papeis produz contraste `1:1`:
+
+```text
+background: #09edd3
+foreground: #09edd3
+action:     #09edd3
+accent:     #09edd3
+```
+
+Nesse caso, o fundo permanece `#09edd3`, enquanto texto, titulo, acao e destaque
+sao substituidos pelos fallbacks seguros. No Live Preview isso pode parecer que
+somente o campo de fundo foi aplicado; o comportamento e intencional e evita
+publicar conteudo ilegivel.
+
+## Consumo atual no CTA
+
+| Token | Uso visual |
+|---|---|
+| `background` | Fundo do Card |
+| `foreground` | Titulo e descricao |
+| `action` | Botao ou link principal preenchido |
+| `brand` | Disponivel no tema local, mas sem consumidor visual direto no CTA atual |
+| `accent` | Disponivel no tema local, mas sem consumidor visual direto no CTA atual |
+
 ## Limites
 
 - Tokens de ilustracao continuam separados em `--color-illustration-*`.
 - Nenhum campo por elemento interno foi criado.
 - Nenhum CSS ou classe Tailwind pode ser informado pelo editor.
-- Nenhum Color Picker foi criado nesta etapa.
-- Os controles customizados que ja existiam no CTA foram apenas adaptados ao
-  contrato central, sem expansao para outros Blocks.
+- Os controles atuais recebem HEX; nenhum Color Picker grafico foi criado.
+- A paleta customizada foi habilitada somente no CTA, sem expansao automatica
+  para outros Blocks.
 
 ## Divida tecnica auditada
 

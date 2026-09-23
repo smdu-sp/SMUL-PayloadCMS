@@ -1,5 +1,6 @@
 import type { Block } from "payload";
 import { characterLimitAdmin } from "../../fields/character-limit";
+import { colorSchemes } from "../../lib/theme/block-color-theme";
 import {
   createAppearanceGroup,
   createControlledColorAppearanceFields,
@@ -79,10 +80,20 @@ export const CTABlock: Block = {
       ],
     },
     createAppearanceGroup([
-      createSchemeField(),
+      createSchemeField([...colorSchemes, "custom"]),
       createSpacingField(["compact", "default", "spacious"], "default"),
       createEmphasisField(["subtle", "default", "strong"], "default"),
       ...createControlledColorAppearanceFields(),
+      {
+        name: "contrastStatus",
+        type: "ui",
+        admin: {
+          condition: (_data, siblingData) => siblingData?.scheme === "custom",
+          components: {
+            Field: "/components/admin/CTAContrastStatus#CTAContrastStatus",
+          },
+        },
+      },
     ]),
   ],
 };

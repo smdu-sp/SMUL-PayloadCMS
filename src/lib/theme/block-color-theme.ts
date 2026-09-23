@@ -1,5 +1,10 @@
-import { hasMinimumContrast, normalizeHexColor } from "./colors";
-import { contrastingForeground, type GlobalSemanticTheme } from "./semantic-theme";
+import { getContrastRatio, hasMinimumContrast, normalizeHexColor } from "./colors";
+import {
+  contrastingForeground,
+  resolveNestedSemanticTheme,
+  type BlockPaletteOverrides,
+  type GlobalSemanticTheme,
+} from "./semantic-theme";
 
 export const colorSchemes = ["default", "surface", "muted", "brand", "accent", "inverse"] as const;
 export type ColorScheme = (typeof colorSchemes)[number];
@@ -13,8 +18,17 @@ export type BlockColorTheme = {
   border: string;
 };
 export type BlockColorThemeOverrides = Partial<Record<keyof BlockColorTheme, string | null>>;
-/** The editor can override surface roles, never individual component colors. */
-export type EditorialColorOverrides = Pick<BlockColorThemeOverrides, "background" | "foreground" | "accent">;
+/** The editor can override semantic palette roles, never individual component colors. */
+export type EditorialColorOverrides = BlockPaletteOverrides;
+export type BlockContrastToken = "foreground" | "action" | "accent";
+export type BlockContrastCheck = {
+  effective: string;
+  minimum: number;
+  passes: boolean;
+  ratio: number;
+  requested: string;
+  token: BlockContrastToken;
+};
 
 export function normalizeColorScheme(value: unknown, fallback: ColorScheme = "default"): ColorScheme {
   return colorSchemes.includes(value as ColorScheme) ? value as ColorScheme : fallback;
@@ -74,12 +88,47 @@ export function resolveBlockColorTheme(
   };
 }
 
+/** Shared by the CMS warning and tests so their contrast verdict matches the renderer. */
+export function analyzeCustomBlockPalette(
+  parentTheme: GlobalSemanticTheme,
+  input?: EditorialColorOverrides | null,
+): { background: string; checks: BlockContrastCheck[]; resolved: BlockColorTheme } {
+  const background = normalizeHexColor(input?.background) ?? parentTheme.background;
+  const requested = {
+    foreground: normalizeHexColor(input?.foreground) ?? parentTheme.foreground,
+    action: normalizeHexColor(input?.action) ?? parentTheme.action,
+    accent: normalizeHexColor(input?.accent) ?? parentTheme.accent,
+  } satisfies Record<BlockContrastToken, string>;
+  const nestedTheme = resolveNestedSemanticTheme(parentTheme, input);
+  const resolved = resolveBlockColorTheme(nestedTheme);
+  const minimums = { foreground: 4.5, action: 3, accent: 4.5 } satisfies Record<BlockContrastToken, number>;
+  const checks = (Object.keys(minimums) as BlockContrastToken[]).map((token) => {
+    const ratio = getContrastRatio(requested[token], background) ?? 0;
+    return {
+      token,
+      requested: requested[token],
+      effective: resolved[token],
+      ratio,
+      minimum: minimums[token],
+      passes: ratio >= minimums[token],
+    };
+  });
+
+  return { background, checks, resolved };
+}
+
+/**
+ * Bloqueia no CMS valores malformados ou sem contraste suficiente. Esta e a
+ * camada de feedback editorial; resolveBlockColorTheme() repete a protecao no
+ * renderer e substitui valores inseguros caso a validacao seja contornada por
+ * draft, API, importacao ou documento legado.
+ */
 export function validateColorOverrides(
   theme: GlobalSemanticTheme,
   scheme: ColorScheme,
   input?: EditorialColorOverrides | null,
 ): true | string {
-  for (const key of ["background", "foreground", "accent"] as const) {
+  for (const key of ["background", "foreground", "brand", "action", "accent"] as const) {
     const value = input?.[key];
     if (value != null && value !== "" && !normalizeHexColor(value)) {
       return "Informe cores hexadecimais validas.";

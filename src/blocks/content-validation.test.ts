@@ -81,11 +81,30 @@ describe("SPEC-026 content validation", () => {
       return { theme: { colors: { background: "#111111", foreground: "#ffffff" } } };
     } } };
     const args = { req } as never;
-    assert.equal(await appearance.validate({ scheme: "default", colors: { foreground: "#ffffff" } }, args), true);
+    assert.equal(await appearance.validate({ scheme: "default", colors: { foreground: "#111111" } }, args), true);
+    assert.equal(reads, 0);
+    assert.equal(await appearance.validate({ scheme: "custom", colors: { brand: "#003399", action: "#0055aa" } }, args), true);
     assert.equal(reads, 1);
-    assert.notEqual(await appearance.validate({ scheme: "default", colors: { foreground: "#111111" } }, args), true);
-    assert.equal(await appearance.validate({ scheme: "surface", colors: { foreground: "#111111" } }, args), true);
-    assert.notEqual(await appearance.validate({ scheme: "surface", colors: { accent: "var(--evil)" } }, args), true);
+    assert.notEqual(await appearance.validate({ scheme: "custom", colors: { brand: "blue" } }, args), true);
+
+    assert.ok("fields" in appearance);
+    const scheme = fieldByName(appearance.fields, "scheme");
+    assert.ok("options" in scheme && Array.isArray(scheme.options));
+    assert.ok(scheme.options.some((option) => typeof option === "object" && "value" in option && option.value === "custom"));
+
+    const colors = fieldByName(appearance.fields, "colors");
+    assert.ok("fields" in colors);
+    assert.deepEqual(
+      colors.fields.map((field) => "name" in field ? field.name : null),
+      ["background", "foreground", "brand", "action", "accent"],
+    );
+    assert.equal(colors.admin?.condition?.({}, { scheme: "custom" }, { user: null } as never), true);
+    assert.equal(colors.admin?.condition?.({}, { scheme: "default", colors: { background: "#000000" } }, { user: null } as never), false);
+
+    const contrastStatus = fieldByName(appearance.fields, "contrastStatus");
+    assert.equal(contrastStatus.type, "ui");
+    assert.equal(contrastStatus.admin?.condition?.({}, { scheme: "custom" }, { user: null } as never), true);
+    assert.equal(contrastStatus.admin?.condition?.({}, { scheme: "default" }, { user: null } as never), false);
   });
 
   it("rejects partially completed optional and required links", async () => {

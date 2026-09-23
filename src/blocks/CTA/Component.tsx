@@ -1,14 +1,19 @@
 import type { CTABlock as CTABlockProps } from "../../payload-types";
-import { Card, Container, Heading, Section, Text } from "../../components/ui";
-import { normalizeColorScheme } from "../../lib/theme/block-color-theme";
+import { BlockThemeScope, Card, Container, Heading, Section, Text } from "../../components/ui";
+import {
+  normalizeColorScheme,
+  type EditorialColorOverrides,
+} from "../../lib/theme/block-color-theme";
 import { BlockLink } from "../shared/BlockLink";
 
 type CTAVariant = "brand" | "compact" | "default";
 type CTAEmphasis = "default" | "strong" | "subtle";
-type CTABlockWithAppearanceProps = CTABlockProps & {
-  appearance?: CTABlockProps["appearance"] & {
+type CTABlockWithAppearanceProps = Omit<CTABlockProps, "appearance"> & {
+  appearance?: (Omit<NonNullable<CTABlockProps["appearance"]>, "colors" | "scheme"> & {
+    colors?: EditorialColorOverrides | null;
     emphasis?: CTAEmphasis | string | null;
-  };
+    scheme?: "custom" | string | null;
+  }) | null;
 };
 const ctaVariantStyles = {
   brand: { containerSize: "lg", headingSize: "lg", linkSize: "md" },
@@ -37,22 +42,28 @@ export function CTABlock({ action, appearance, description, title, variant }: CT
   const normalizedVariant = normalizeCTAVariant(variant);
   const emphasis = normalizeCTAEmphasis(appearance?.emphasis);
   const styles = ctaVariantStyles[normalizedVariant];
+  const customTheme = appearance?.scheme === "custom";
+  const card = (
+    <Card
+      scheme={customTheme ? "default" : normalizeColorScheme(appearance?.scheme)}
+      padding={ctaEmphasisPadding[emphasis]}
+    >
+      <Heading level={2} size={styles.headingSize}>
+        <span className="text-balance wrap-break-word">{title}</span>
+      </Heading>
+      {description ? <div className="mt-4 max-w-container-sm"><Text variant="lead">{description}</Text></div> : null}
+      {action?.label ? (
+        <div className="mt-7"><BlockLink appearance="solid" link={action} size={styles.linkSize} /></div>
+      ) : null}
+    </Card>
+  );
+
   return (
     <Section spacing={normalizeCTASpacing(appearance?.spacing, normalizedVariant === "compact" ? "compact" : "default")}>
       <Container size={styles.containerSize}>
-        <Card
-          scheme={normalizeColorScheme(appearance?.scheme)}
-          overrides={appearance?.colors}
-          padding={ctaEmphasisPadding[emphasis]}
-        >
-          <Heading level={2} size={styles.headingSize}>
-            <span className="text-balance break-words">{title}</span>
-          </Heading>
-          {description ? <div className="mt-4 max-w-container-sm"><Text variant="lead">{description}</Text></div> : null}
-          {action?.label ? (
-            <div className="mt-7"><BlockLink appearance="solid" link={action} size={styles.linkSize} /></div>
-          ) : null}
-        </Card>
+        {customTheme ? (
+          <BlockThemeScope palette={appearance?.colors}>{card}</BlockThemeScope>
+        ) : card}
       </Container>
     </Section>
   );

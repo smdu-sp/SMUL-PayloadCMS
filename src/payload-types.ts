@@ -848,7 +848,7 @@ export interface CTABlock {
     /**
      * Seleciona uma combinacao completa de fundo, texto, acao e destaque.
      */
-    scheme?: ('default' | 'surface' | 'muted' | 'brand' | 'accent' | 'inverse') | null;
+    scheme?: ('default' | 'surface' | 'muted' | 'brand' | 'accent' | 'inverse' | 'custom') | null;
     /**
      * Controla a distancia vertical do bloco em relacao aos blocos adjacentes.
      */
@@ -858,11 +858,13 @@ export interface CTABlock {
      */
     emphasis?: ('subtle' | 'default' | 'strong') | null;
     /**
-     * Deixe vazio para usar o esquema. O contraste considera o tema atual. Nao configura elementos individuais.
+     * Deixe um campo vazio para herdar o token global. O contraste considera a paleta efetiva. Nao configura elementos individuais.
      */
     colors?: {
       background?: string | null;
       foreground?: string | null;
+      brand?: string | null;
+      action?: string | null;
       accent?: string | null;
     };
   };
@@ -1655,6 +1657,8 @@ export interface CTABlockSelect<T extends boolean = true> {
           | {
               background?: T;
               foreground?: T;
+              brand?: T;
+              action?: T;
               accent?: T;
             };
       };

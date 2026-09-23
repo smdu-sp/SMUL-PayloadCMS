@@ -2,7 +2,11 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { getContrastRatio, hasMinimumContrast, isHexColor } from "./colors";
 import { DEFAULT_PALETTE, SYSTEM_COLORS } from "./default-theme";
-import { resolveSemanticTheme, validateBasePalette } from "./semantic-theme";
+import {
+  resolveNestedSemanticTheme,
+  resolveSemanticTheme,
+  validateBasePalette,
+} from "./semantic-theme";
 import { mapThemeToCssVariables } from "./map-theme-to-css-variables";
 
 describe("global semantic theme", () => {
@@ -32,6 +36,26 @@ describe("global semantic theme", () => {
     assert.deepEqual(resolveSemanticTheme(reset), resolveSemanticTheme());
     assert.equal(resolveSemanticTheme().brand, DEFAULT_PALETTE.brand);
     assert.deepEqual(resolveSemanticTheme({ brand: "<script>", action: "url(evil)" }), resolveSemanticTheme());
+  });
+  it("creates a local palette while inheriting omitted global tokens", () => {
+    const parent = resolveSemanticTheme({
+      background: "#111111",
+      foreground: "#ffffff",
+      brand: "#ffff00",
+      action: "#ff00ff",
+      accent: "#00ff00",
+    });
+    const nested = resolveNestedSemanticTheme(parent, {
+      background: "#ffffff",
+      foreground: "#222222",
+      action: "#003399",
+    });
+
+    assert.equal(nested.background, "#ffffff");
+    assert.equal(nested.foreground, "#222222");
+    assert.equal(nested.action, "#003399");
+    assert.equal(nested.brand, parent.brand);
+    assert.equal(nested.accent, parent.accent);
   });
   it("validates pairs and protects rendering from malformed data", () => {
     assert.equal(validateBasePalette({}), true);

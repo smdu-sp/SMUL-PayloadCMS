@@ -3,6 +3,9 @@ import { DEFAULT_PALETTE, NEUTRAL_COLORS, SYSTEM_COLORS } from "./default-theme"
 
 export type MinimalBasePalette = { [K in keyof typeof DEFAULT_PALETTE]: string };
 export type PaletteInput = Partial<Record<keyof MinimalBasePalette, unknown>>;
+export type BlockPaletteOverrides = Partial<
+  Record<keyof MinimalBasePalette, string | null>
+>;
 export type GlobalSemanticTheme = MinimalBasePalette & {
   heading: string;
   surface: string;
@@ -73,4 +76,17 @@ export function resolveSemanticTheme(
     border: NEUTRAL_COLORS.border,
     ...SYSTEM_COLORS,
   };
+}
+
+export function resolveNestedSemanticTheme(
+  parent: GlobalSemanticTheme,
+  input?: BlockPaletteOverrides | null,
+): GlobalSemanticTheme {
+  return resolveSemanticTheme({
+    background: normalizeHexColor(input?.background) ?? parent.background,
+    foreground: normalizeHexColor(input?.foreground) ?? parent.foreground,
+    brand: normalizeHexColor(input?.brand) ?? parent.brand,
+    action: normalizeHexColor(input?.action) ?? parent.action,
+    accent: normalizeHexColor(input?.accent) ?? parent.accent,
+  });
 }

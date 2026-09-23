@@ -5,13 +5,32 @@ import {
   mapBlockColorThemeToCssVariables, resolveBlockColorTheme,
   type ColorScheme, type EditorialColorOverrides,
 } from "../../lib/theme/block-color-theme";
-import { resolveMediaTheme, resolveSemanticTheme, type GlobalSemanticTheme } from "../../lib/theme/semantic-theme";
+import {
+  resolveMediaTheme,
+  resolveNestedSemanticTheme,
+  resolveSemanticTheme,
+  type BlockPaletteOverrides,
+  type GlobalSemanticTheme,
+} from "../../lib/theme/semantic-theme";
 import { classNames } from "./classNames";
 
 const ThemeContext = createContext<GlobalSemanticTheme>(resolveSemanticTheme());
 
 /** Receives only resolved, serializable colors; never imports Payload into the client. */
 export function ThemeProvider({ theme, children }: { theme: GlobalSemanticTheme; children?: ReactNode }) {
+  return <ThemeContext.Provider value={theme}>{children}</ThemeContext.Provider>;
+}
+
+export function BlockThemeScope({
+  children,
+  palette,
+}: {
+  children?: ReactNode;
+  palette?: BlockPaletteOverrides | null;
+}) {
+  const parentTheme = useContext(ThemeContext);
+  const theme = resolveNestedSemanticTheme(parentTheme, palette);
+
   return <ThemeContext.Provider value={theme}>{children}</ThemeContext.Provider>;
 }
 

@@ -4,7 +4,7 @@ import { describe, it } from "node:test";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { readFileSync } from "node:fs";
-import { Button, Card, Container, Heading, Section, Text, ColorScope, Status } from "./index";
+import { BlockThemeScope, Button, Card, Container, Heading, Section, Text, ColorScope, Status } from "./index";
 import { ThemeProvider, MediaColorScope } from "./ColorScope";
 import { resolveSemanticTheme } from "../../lib/theme/semantic-theme";
 
@@ -74,6 +74,38 @@ describe("ui primitives and nested scopes", () => {
     ));
     assert.match(markup, /--block-background:#ffffff/);
     assert.match(markup, /--block-foreground:#000000/);
+  });
+  it("publishes a custom block palette without changing the parent theme", () => {
+    const theme = resolveSemanticTheme({
+      background: "#111111",
+      foreground: "#ffffff",
+      brand: "#ffdd00",
+      action: "#ff88cc",
+      accent: "#66ffaa",
+    });
+    const markup = renderToStaticMarkup(createElement(ThemeProvider, { theme }, [
+      createElement(BlockThemeScope, {
+        key: "custom",
+        palette: {
+          background: "#ffffff",
+          foreground: "#222222",
+          brand: "#663399",
+          action: "#003399",
+          accent: "#006644",
+        },
+        children: [
+          createElement(Card, { key: "default", scheme: "default", children: "Custom" }),
+          createElement(ColorScope, { key: "brand", scheme: "brand", children: "Brand" }),
+        ],
+      }),
+      createElement(Card, { key: "global", scheme: "default", children: "Global" }),
+    ]));
+
+    assert.match(markup, /--block-background:#ffffff[^>]*--block-foreground:#222222/);
+    assert.match(markup, /--block-action:#003399/);
+    assert.match(markup, /--block-accent:#006644/);
+    assert.match(markup, /--block-background:#663399/);
+    assert.match(markup, /--block-background:#111111[^>]*--block-foreground:#ffffff/);
   });
   it("renders semantic statuses without relying only on color", () => {
     const markup = renderToStaticMarkup(createElement(Status, {

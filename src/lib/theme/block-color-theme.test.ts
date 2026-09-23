@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { colorSchemes, mapBlockColorThemeToCssVariables, normalizeColorScheme, resolveBlockColorTheme, validateColorOverrides } from "./block-color-theme";
+import { analyzeCustomBlockPalette, colorSchemes, mapBlockColorThemeToCssVariables, normalizeColorScheme, resolveBlockColorTheme, validateColorOverrides } from "./block-color-theme";
 import { hasMinimumContrast } from "./colors";
 import { resolveSemanticTheme } from "./semantic-theme";
 
@@ -43,5 +43,18 @@ describe("complete color recipes", () => {
     assert.equal(validateColorOverrides(themes[1], "surface", { foreground: "#fff" }) === true, false);
     assert.equal(validateColorOverrides(themes[1], "default", { foreground: "#fff" }), true);
     assert.deepEqual(resolveBlockColorTheme(themes[0], "surface", { background: "url(evil)" }), resolveBlockColorTheme(themes[0], "surface"));
+  });
+  it("reports the substitutions made by the custom palette guardrail", () => {
+    const analysis = analyzeCustomBlockPalette(themes[0], {
+      background: "#09edd3",
+      foreground: "#09edd3",
+      action: "#09edd3",
+      accent: "#09edd3",
+    });
+
+    assert.equal(analysis.background, "#09edd3");
+    assert.ok(analysis.checks.every((check) => !check.passes));
+    assert.ok(analysis.checks.every((check) => check.requested === "#09edd3"));
+    assert.ok(analysis.checks.every((check) => check.effective !== check.requested));
   });
 });

@@ -4,6 +4,8 @@ import { colorSchemes, normalizeColorScheme, validateColorOverrides, type ColorS
 import { resolveSemanticTheme, type GlobalSemanticTheme } from "../lib/theme/semantic-theme";
 import { closedSelect } from "./editorial-validation";
 
+type BlockSchemeOption = ColorScheme | "custom";
+
 export const interactionOptions = [
   { label: "Sem interacao", value: "none" },
   { label: "Sutil", value: "subtle" },
@@ -22,6 +24,7 @@ export const schemeOptions = [
   { label: "Institucional", value: "brand" },
   { label: "Destaque", value: "accent" },
   { label: "Invertido", value: "inverse" },
+  { label: "Tema customizado", value: "custom" },
 ] as const;
 export const spacingOptions = [
   { label: "Compacto", value: "compact" }, { label: "Padrao", value: "default" }, { label: "Espacoso", value: "spacious" },
@@ -39,7 +42,10 @@ export type BlockAlignment = (typeof alignmentOptions)[number]["value"];
 export type BlockInteraction = (typeof interactionOptions)[number]["value"];
 export type BlockEmphasis = (typeof emphasisOptions)[number]["value"];
 
-export function createSchemeField(allowed: readonly ColorScheme[] = colorSchemes, defaultValue: ColorScheme = "default"): Field {
+export function createSchemeField(
+  allowed: readonly BlockSchemeOption[] = colorSchemes,
+  defaultValue: BlockSchemeOption = "default",
+): Field {
   return {
     name: "scheme", type: "select", label: "Esquema de cores", defaultValue,
     validate: closedSelect(allowed, "Escolha um esquema aprovado pelo Design System."),
@@ -185,7 +191,11 @@ export function createAppearanceGroup(fields: Field[]): GroupField {
     name: "appearance", type: "group", label: "Aparencia e estilo",
     validate: async (value, { req }) => {
       const appearance = value as { scheme?: string | null; colors?: EditorialColorOverrides | null } | null;
-      if (!appearance?.colors || !Object.values(appearance.colors).some(Boolean)) return true;
+      if (
+        appearance?.scheme !== "custom" ||
+        !appearance.colors ||
+        !Object.values(appearance.colors).some(Boolean)
+      ) return true;
       // Validate against the same global values used by the renderer, not fixed preset hexes.
       const settings = await req.payload.findGlobal({ slug: "site-settings", depth: 0, req });
       return validateControlledBlockColors(appearance, resolveSemanticTheme(settings.theme?.colors));
@@ -197,12 +207,17 @@ export function createAppearanceGroup(fields: Field[]): GroupField {
 
 export function createControlledColorAppearanceFields(): Field[] {
   return [{
-    name: "colors", type: "group", label: "Overrides semanticos (opcional)",
-    admin: { description: "Deixe vazio para usar o esquema. O contraste considera o tema atual. Nao configura elementos individuais." },
+    name: "colors", type: "group", label: "Paleta customizada",
+    admin: {
+      condition: (_data, siblingData) => siblingData?.scheme === "custom",
+      description: "Deixe um campo vazio para herdar o token global. O contraste considera a paleta efetiva. Nao configura elementos individuais.",
+    },
     fields: [
-      { name: "background", label: "Fundo" },
-      { name: "foreground", label: "Texto" },
-      { name: "accent", label: "Destaque" },
+      { name: "background", label: "Fundo principal (Background)" },
+      { name: "foreground", label: "Texto principal (Foreground)" },
+      { name: "brand", label: "Identidade Institucional (Brand)" },
+      { name: "action", label: "Acao e Interatividade (Action)" },
+      { name: "accent", label: "Detalhes de Apoio (Accent)" },
     ].map(({ name, label }) => ({ name, label, type: "text" as const, validate: validateOptionalHexColor })),
   }];
 }
