@@ -98,6 +98,14 @@ describe("SPEC-026 content validation", () => {
       colors.fields.map((field) => "name" in field ? field.name : null),
       ["background", "foreground", "brand", "action", "accent"],
     );
+    for (const field of colors.fields) {
+      if (field.type !== "text") assert.fail("Expected a text color field");
+      assert.ok(field.admin?.components);
+      assert.deepEqual(
+        field.admin.components.beforeInput,
+        ["/components/admin/HexColorPicker#HexColorPicker"],
+      );
+    }
     assert.equal(colors.admin?.condition?.({}, { scheme: "custom" }, { user: null } as never), true);
     assert.equal(colors.admin?.condition?.({}, { scheme: "default", colors: { background: "#000000" } }, { user: null } as never), false);
 

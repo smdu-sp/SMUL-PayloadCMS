@@ -1,13 +1,13 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useSyncExternalStore } from "react";
 
-function getCollectionListHref(): string {
-  if (typeof window === "undefined") {
-    return "/admin";
-  }
+const subscribeToHydration = () => () => {};
 
-  const segments = window.location.pathname.split("/").filter(Boolean);
+export function resolveAdminBackHref(pathname: string): string {
+  const segments = pathname.split("/").filter(Boolean);
 
   if (segments[0] === "admin" && segments[1] === "collections" && segments[2]) {
     return `/admin/collections/${segments[2]}`;
@@ -21,7 +21,9 @@ function getCollectionListHref(): string {
 }
 
 export function AdminHelpBackButton() {
-  const href = getCollectionListHref();
+  const pathname = usePathname();
+  const hydrated = useSyncExternalStore(subscribeToHydration, () => true, () => false);
+  const href = hydrated ? resolveAdminBackHref(pathname) : "/admin";
 
   return (
     <Link aria-label="Voltar" className="admin-help__back-button" href={href} rel="noopener noreferrer" target="_self">

@@ -65,7 +65,7 @@ function ContrastRow({ check, rawValue }: { check: BlockContrastCheck; rawValue:
   );
 }
 
-export function CTAContrastStatus({ path }: UIFieldClientProps) {
+export function BlockContrastStatus({ path }: UIFieldClientProps) {
   const appearancePath = path.replace(/\.contrastStatus$/, "");
   const background = useField<string | null>({ path: `${appearancePath}.colors.background` }).value;
   const foreground = useField<string | null>({ path: `${appearancePath}.colors.foreground` }).value;
@@ -93,7 +93,7 @@ export function CTAContrastStatus({ path }: UIFieldClientProps) {
     <section
       role="status"
       aria-live="polite"
-      aria-label="Verificação de contraste do CTA"
+      aria-label="Verificação de contraste do bloco"
       style={{
         background: "var(--theme-elevation-50)",
         border: "1px solid var(--theme-elevation-200)",
@@ -124,7 +124,7 @@ export function CTAContrastStatus({ path }: UIFieldClientProps) {
             ))}
           </ul>
           <p style={{ marginBottom: 0 }}>
-            ℹ Identidade institucional não altera este CTA.
+            ℹ O uso da Identidade institucional depende do conteúdo do bloco.
           </p>
         </>
       ) : null}

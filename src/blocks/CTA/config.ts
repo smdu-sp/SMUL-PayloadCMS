@@ -90,7 +90,7 @@ export const CTABlock: Block = {
         admin: {
           condition: (_data, siblingData) => siblingData?.scheme === "custom",
           components: {
-            Field: "/components/admin/CTAContrastStatus#CTAContrastStatus",
+            Field: "/components/admin/BlockContrastStatus#BlockContrastStatus",
           },
         },
       },

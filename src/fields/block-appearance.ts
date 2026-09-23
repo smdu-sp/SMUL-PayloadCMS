@@ -218,6 +218,16 @@ export function createControlledColorAppearanceFields(): Field[] {
       { name: "brand", label: "Identidade Institucional (Brand)" },
       { name: "action", label: "Acao e Interatividade (Action)" },
       { name: "accent", label: "Detalhes de Apoio (Accent)" },
-    ].map(({ name, label }) => ({ name, label, type: "text" as const, validate: validateOptionalHexColor })),
+    ].map(({ name, label }) => ({
+      name,
+      label,
+      type: "text" as const,
+      validate: validateOptionalHexColor,
+      admin: {
+        components: {
+          beforeInput: ["/components/admin/HexColorPicker#HexColorPicker"],
+        },
+      },
+    })),
   }];
 }
