@@ -34,7 +34,7 @@ export function Status({
   return (
     <div
       className={classNames(
-        "rounded-lg border border-[var(--block-border)] bg-[var(--block-background)] p-6 text-[var(--block-foreground)]",
+        "rounded-lg border border-(--block-border) bg-(--block-background) p-6 text-(--block-foreground)",
         className,
       )}
       data-status={variant}
@@ -43,7 +43,7 @@ export function Status({
         <span
           aria-hidden="true"
           className={classNames(
-            "mt-1 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold text-[var(--color-background)]",
+            "mt-1 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold text-background",
             status.marker,
           )}
         >

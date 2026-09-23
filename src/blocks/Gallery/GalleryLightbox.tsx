@@ -4,10 +4,10 @@ import { useCallback, useEffect, useId, useRef, useState } from "react";
 import type { Media } from "../../payload-types";
 import { MediaColorScope, Text } from "../../components/ui";
 import { classNames } from "../../components/ui/classNames";
-import { normalizeInteractionPreset, type InteractionPreset } from "../../components/ui/interaction";
 import { MediaImage } from "../shared/MediaImage";
 import type {
   GalleryColumns,
+  GalleryInteraction,
   GalleryItem,
   GalleryPreset,
   GalleryThumbnailEffect,
@@ -16,7 +16,7 @@ import type {
 type GalleryLightboxProps = {
   columns: GalleryColumns;
   images: GalleryItem[];
-  interaction?: InteractionPreset;
+  interaction: GalleryInteraction;
   preset: GalleryPreset;
   thumbnailEffect: GalleryThumbnailEffect;
 };
@@ -28,14 +28,15 @@ const columnClasses: Record<GalleryColumns, string> = {
   "8": "grid-cols-2 sm:grid-cols-4 lg:grid-cols-8",
 };
 
-// Para adicionar efeitos, inclua o valor no schema do GalleryBlock,
-// normalize em Component.tsx e registre aqui as classes aplicadas a miniatura.
+// Altere aqui as classes de movimento do efeito de miniatura da Gallery.
+// Ao criar um preset, inclua o mesmo valor no tipo, na normalizacao e no schema do bloco.
 const thumbnailEffectClasses: Record<GalleryThumbnailEffect, string> = {
   grow: "motion-safe:transition-transform motion-safe:duration-700 motion-safe:ease-out group-hover:motion-safe:scale-[1.03]",
   none: "",
 };
 
-const thumbnailInteractionClasses: Record<InteractionPreset, string> = {
+// Altere aqui as classes de hover e feedback visual das interacoes da Gallery.
+const thumbnailInteractionClasses: Record<GalleryInteraction, string> = {
   none: "",
   subtle: "hover:border-[var(--block-foreground)]",
   default: "hover:border-[var(--block-foreground)] hover:opacity-95",
@@ -59,7 +60,7 @@ function mediaLabel(item: GalleryItem, index: number): string {
 export function GalleryLightbox({
   columns,
   images,
-  interaction = "default",
+  interaction,
   thumbnailEffect,
 }: GalleryLightboxProps) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
@@ -67,7 +68,6 @@ export function GalleryLightbox({
   const openerRef = useRef<HTMLElement | null>(null);
   const titleId = useId();
   const activeItem = activeIndex === null ? null : images[activeIndex];
-  const resolvedInteraction = normalizeInteractionPreset(interaction, "default");
   const hasMultiple = images.length > 1;
   const isOpen = activeIndex !== null;
 
@@ -155,7 +155,7 @@ export function GalleryLightbox({
                 aria-label={`Abrir imagem ampliada: ${label}`}
                 className={classNames(
                   "group block w-full overflow-hidden rounded-lg border border-[var(--block-border)] bg-transparent text-left transition-colors focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-focus motion-reduce:transition-none",
-                  thumbnailInteractionClasses[resolvedInteraction],
+                  thumbnailInteractionClasses[interaction],
                 )}
                 onClick={(event) => {
                   openerRef.current = event.currentTarget;

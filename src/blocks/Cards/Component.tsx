@@ -1,7 +1,6 @@
 import type { CardsBlock as CardsBlockProps } from "../../payload-types";
 import { Card, Container, Heading, Section, Text } from "../../components/ui";
 import { classNames } from "../../components/ui/classNames";
-import { normalizeInteractionPreset, type InteractionPreset } from "../../components/ui/interaction";
 import type { ImagePresentation } from "../shared/image-presentation";
 import {
   getFocalPointStyle,
@@ -14,6 +13,7 @@ import { MediaImage } from "../shared/MediaImage";
 type CardsVariant = "default" | "modalities";
 type CardMediaSource = "icon" | "image" | "none";
 type CardMediaPosition = "left" | "right" | "top";
+type CardsInteraction = "none" | "subtle" | "default" | "emphasized";
 
 type CardsItem = CardsBlockProps["items"][number] & {
   iconSource?: "custom" | "standard" | string | null;
@@ -25,7 +25,7 @@ type CardsItem = CardsBlockProps["items"][number] & {
 };
 
 type CardsAppearance = {
-  interaction?: InteractionPreset | string | null;
+  interaction?: CardsInteraction | string | null;
   spacing?: "compact" | "default" | "spacious" | string | null;
   scheme?: "default" | "muted" | "surface" | string | null;
 };
@@ -55,6 +55,29 @@ export function normalizeCardsSpacing(
   if (spacing === "compact" || spacing === "spacious") return spacing;
   return fallbackSpacing;
 }
+
+export function normalizeCardsInteraction(
+  interaction?: string | null,
+): CardsInteraction {
+  if (
+    interaction === "none" ||
+    interaction === "subtle" ||
+    interaction === "emphasized"
+  ) {
+    return interaction;
+  }
+  return "default";
+}
+
+const cardInteractionClasses: Record<CardsInteraction, string> = {
+  none: "",
+  subtle:
+    "transition-[border-color,box-shadow] duration-200 ease-out hover:border-current hover:shadow-sm focus-within:border-current focus-within:shadow-sm motion-reduce:transition-none",
+  default:
+    "transition-[border-color,box-shadow,translate] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 hover:border-current hover:shadow-md focus-within:border-current focus-within:shadow-md motion-reduce:translate-none motion-reduce:transition-none",
+  emphasized:
+    "transition-[border-color,box-shadow,translate] duration-[1s,15s] ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-2 hover:border-current hover:shadow-xl focus-within:border-current focus-within:shadow-xl motion-reduce:translate-none motion-reduce:transition-none",
+};
 
 export function normalizeCardMediaSource(item: CardsItem): CardMediaSource {
   if (item.mediaSource === "image" && item.image) return "image";
@@ -141,7 +164,7 @@ function CardMedia({
         getImagePresentationClassName(presentation, {
           sizeClassNames: side ? cardImageSizeClasses.side : cardImageSizeClasses.top,
         }),
-        "rounded-md border border-[var(--block-border)] bg-[var(--block-background)]",
+        "rounded-md border border-(--block-border) bg-(--block-background)",
       )}
       media={item.image}
       style={getFocalPointStyle(
@@ -170,17 +193,14 @@ export function CardsBlock({
     appearance?.spacing,
     "default",
   );
-  const effectiveInteraction = normalizeInteractionPreset(
-    appearance?.interaction,
-    "default",
-  );
+  const effectiveInteraction = normalizeCardsInteraction(appearance?.interaction);
 
   return (
     <Section spacing={effectiveSpacing} scheme={effectiveTone}>
       <Container size="lg">
         {title ? (
           <Heading level={2} size="lg">
-            <span className="text-balance break-words">{title}</span>
+            <span className="text-balance wrap-break-word">{title}</span>
           </Heading>
         ) : null}
         {description ? (
@@ -198,9 +218,8 @@ export function CardsBlock({
             return (
               <li key={item.id}>
                 <Card
+                  className={cardInteractionClasses[effectiveInteraction]}
                   fullHeight
-                  interaction={effectiveInteraction}
-                  interactive
                   padding={modalities ? "lg" : "md"}
                 >
                   <div
@@ -217,7 +236,7 @@ export function CardsBlock({
                     />
                     <div className="min-w-0 flex-1">
                       <Heading level={3} size="md">
-                        <span className="break-words">{item.title}</span>
+                        <span className="wrap-break-word">{item.title}</span>
                       </Heading>
                       <div className="mt-3">
                         <Text>{item.description}</Text>

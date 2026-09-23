@@ -20,7 +20,7 @@ describe("ui primitives and nested scopes", () => {
   });
   it("delegates surface ownership to the same reusable scope", () => {
     const section = Section({ children: "section", spacing: "lg", scheme: "brand" });
-    const card = Card({ children: "card", fullHeight: true, interactive: true, padding: "lg" });
+    const card = Card({ children: "card", className: "custom-card", fullHeight: true, padding: "lg" });
     assert.equal(section.type, ColorScope);
     assert.equal(section.props.as, "section");
     assert.equal(section.props.scheme, "brand");
@@ -29,15 +29,7 @@ describe("ui primitives and nested scopes", () => {
     assert.match(card.props.className, /p-8/);
     assert.match(card.props.className, /h-full/);
     assert.match(card.props.className, /border-border/);
-    assert.match(card.props.className, /transition-\[border-color,box-shadow,translate\]/);
-    assert.match(card.props.className, /hover:-translate-y-1/);
-    assert.match(card.props.className, /hover:border-current/);
-    assert.match(card.props.className, /hover:shadow-md/);
-    assert.match(card.props.className, /motion-reduce:translate-none/);
-    const emphasizedCard = Card({ children: "card", interactive: true, interaction: "emphasized" });
-    assert.match(emphasizedCard.props.className, /hover:-translate-y-2/);
-    assert.match(emphasizedCard.props.className, /hover:shadow-xl/);
-    assert.notEqual(card.props.className, emphasizedCard.props.className);
+    assert.match(card.props.className, /custom-card/);
     assert.equal(Card({ children: "plain", scheme: "inherit" }).props.scheme, "inherit");
   });
   it("inherits without publishing global resets and creates complete nested surfaces", () => {

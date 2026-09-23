@@ -1,11 +1,11 @@
 import type { Media } from "../../payload-types";
 import { Container, Heading, Section } from "../../components/ui";
-import { normalizeInteractionPreset, type InteractionPreset } from "../../components/ui/interaction";
 import { GalleryLightbox } from "./GalleryLightbox";
 
 export type GalleryColumns = "2" | "3" | "4" | "8";
 export type GalleryPreset = "grid";
 export type GalleryThumbnailEffect = "grow" | "none";
+export type GalleryInteraction = "none" | "subtle" | "default" | "emphasized";
 
 export type GalleryItem = {
   caption?: string | null;
@@ -15,7 +15,7 @@ export type GalleryItem = {
 
 export type GalleryBlockProps = {
   appearance?: {
-    interaction?: InteractionPreset | string | null;
+    interaction?: GalleryInteraction | string | null;
     spacing?: "compact" | "default" | "spacious" | string | null;
   } | null;
   blockType: "gallery";
@@ -33,6 +33,19 @@ export function normalizeGallerySpacing(
   spacing?: string | null,
 ): "compact" | "default" | "spacious" {
   if (spacing === "compact" || spacing === "spacious") return spacing;
+  return "default";
+}
+
+export function normalizeGalleryInteraction(
+  interaction?: string | null,
+): GalleryInteraction {
+  if (
+    interaction === "none" ||
+    interaction === "subtle" ||
+    interaction === "emphasized"
+  ) {
+    return interaction;
+  }
   return "default";
 }
 
@@ -64,7 +77,7 @@ export function GalleryBlock({ appearance, images, layout, title }: GalleryBlock
   const columns = normalizeGalleryColumns(layout?.columns);
   const preset = normalizeGalleryPreset(layout?.preset);
   const thumbnailEffect = normalizeGalleryThumbnailEffect(layout?.thumbnailEffect);
-  const interaction = normalizeInteractionPreset(appearance?.interaction, "default");
+  const interaction = normalizeGalleryInteraction(appearance?.interaction);
   const spacing = normalizeGallerySpacing(appearance?.spacing);
 
   return (

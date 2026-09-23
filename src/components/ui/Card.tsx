@@ -2,37 +2,26 @@ import type { ReactNode } from "react";
 import type { ColorScheme, EditorialColorOverrides } from "../../lib/theme/block-color-theme";
 import { ColorScope } from "./ColorScope";
 import { classNames } from "./classNames";
-import {
-  interactiveSurfaceClasses,
-  normalizeInteractionPreset,
-  type InteractionPreset,
-} from "./interaction";
 
 const cardPaddings = { sm: "p-5", md: "p-6", lg: "p-8" } as const;
 export type CardPadding = keyof typeof cardPaddings;
 type CardProps = {
   children: ReactNode;
+  className?: string;
   scheme?: ColorScheme | "inherit";
   overrides?: EditorialColorOverrides | null;
   fullHeight?: boolean;
-  interactive?: boolean;
-  interaction?: InteractionPreset;
   padding?: CardPadding;
 };
 
 export function Card({
   children,
+  className,
   scheme = "surface",
   overrides,
   fullHeight = false,
-  interactive = false,
-  interaction,
   padding = "md",
 }: CardProps) {
-  const resolvedInteraction = interactive
-    ? normalizeInteractionPreset(interaction, "default")
-    : "none";
-
   return (
     <ColorScope
       scheme={scheme}
@@ -41,7 +30,7 @@ export function Card({
         "flex flex-col overflow-hidden rounded-lg border border-border",
         cardPaddings[padding],
         fullHeight && "h-full",
-        interactiveSurfaceClasses[resolvedInteraction],
+        className,
       )}
     >
       {children}

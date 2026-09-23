@@ -251,7 +251,7 @@ export function CarouselClient({ autoplay, items, navigation, slidesPerView }: C
         }}
       >
         <ul
-          className="-ml-4 flex snap-x snap-mandatory overflow-x-auto scroll-smooth rounded-lg pb-2 motion-reduce:scroll-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="-ml-4 flex snap-x snap-mandatory overflow-x-auto scroll-smooth rounded-lg pb-2 motion-reduce:scroll-auto scrollbar-none [&::-webkit-scrollbar]:hidden"
           onScroll={handleScroll}
           ref={trackRef}
         >
@@ -273,20 +273,20 @@ export function CarouselClient({ autoplay, items, navigation, slidesPerView }: C
                   <Card fullHeight padding="sm" scheme="surface">
                     <article className="flex h-full flex-col">
                       <div className="-m-5 mb-0 overflow-hidden rounded-t-lg bg-muted">
-                        <div className="relative aspect-[16/9] w-full">
+                        <div className="relative aspect-video w-full">
                           <MediaImage className="object-cover" fill media={image} sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw" />
                         </div>
                       </div>
                       <div className="flex flex-1 flex-col pt-5">
                         {item.title ? (
                           <Heading level={3} size="md">
-                            <span className="break-words">{item.title}</span>
+                            <span className="wrap-break-word">{item.title}</span>
                           </Heading>
                         ) : null}
                         {item.description ? (
                           <div className={item.title ? "mt-3" : ""}>
                             <Text variant="muted">
-                              <span className="whitespace-pre-line break-words">{item.description}</span>
+                              <span className="whitespace-pre-line wrap-break-word">{item.description}</span>
                             </Text>
                           </div>
                         ) : null}
