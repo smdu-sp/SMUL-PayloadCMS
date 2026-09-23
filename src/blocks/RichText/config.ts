@@ -1,6 +1,9 @@
 import type { Block } from "payload";
 import {
   createAppearanceGroup,
+  createBlockContrastStatusField,
+  createControlledColorAppearanceFields,
+  createSchemeField,
   createSpacingField,
   createWidthField,
 } from "../../fields/block-appearance";
@@ -50,8 +53,11 @@ export const RichTextBlock: Block = {
       ],
     },
     createAppearanceGroup([
+      createSchemeField(["default", "surface", "muted", "custom"], "default"),
       createWidthField(["narrow", "default", "wide"], "default"),
       createSpacingField(["compact", "default", "spacious"], "default"),
+      ...createControlledColorAppearanceFields(),
+      createBlockContrastStatusField(),
     ]),
   ],
 };

@@ -113,6 +113,17 @@ describe("SPEC-026 content validation", () => {
     assert.equal(contrastStatus.type, "ui");
     assert.equal(contrastStatus.admin?.condition?.({}, { scheme: "custom" }, { user: null } as never), true);
     assert.equal(contrastStatus.admin?.condition?.({}, { scheme: "default" }, { user: null } as never), false);
+
+    const richTextAppearance = fieldByName(RichTextBlock.fields, "appearance");
+    assert.ok("fields" in richTextAppearance);
+    const richTextScheme = fieldByName(richTextAppearance.fields, "scheme");
+    assert.ok("options" in richTextScheme && Array.isArray(richTextScheme.options));
+    assert.deepEqual(
+      richTextScheme.options.map((option) => typeof option === "object" ? option.value : option),
+      ["default", "surface", "muted", "custom"],
+    );
+    assert.equal(fieldByName(richTextAppearance.fields, "colors").type, "group");
+    assert.equal(fieldByName(richTextAppearance.fields, "contrastStatus").type, "ui");
   });
 
   it("rejects partially completed optional and required links", async () => {

@@ -390,6 +390,10 @@ export interface RichTextBlock {
    */
   appearance?: {
     /**
+     * Seleciona uma combinacao completa de fundo, texto, acao e destaque.
+     */
+    scheme?: ('default' | 'surface' | 'muted' | 'custom') | null;
+    /**
      * Define o limite de largura maxima para acomodar leitura ou visao panoramica.
      */
     width?: ('narrow' | 'default' | 'wide') | null;
@@ -397,6 +401,16 @@ export interface RichTextBlock {
      * Controla a distancia vertical do bloco em relacao aos blocos adjacentes.
      */
     spacing?: ('compact' | 'default' | 'spacious') | null;
+    /**
+     * Deixe um campo vazio para herdar o token global. O contraste considera a paleta efetiva. Nao configura elementos individuais.
+     */
+    colors?: {
+      background?: string | null;
+      foreground?: string | null;
+      brand?: string | null;
+      action?: string | null;
+      accent?: string | null;
+    };
   };
   id?: string | null;
   blockName?: string | null;
@@ -1445,8 +1459,18 @@ export interface RichTextBlockSelect<T extends boolean = true> {
   appearance?:
     | T
     | {
+        scheme?: T;
         width?: T;
         spacing?: T;
+        colors?:
+          | T
+          | {
+              background?: T;
+              foreground?: T;
+              brand?: T;
+              action?: T;
+              accent?: T;
+            };
       };
   id?: T;
   blockName?: T;

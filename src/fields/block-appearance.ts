@@ -231,3 +231,16 @@ export function createControlledColorAppearanceFields(): Field[] {
     })),
   }];
 }
+
+export function createBlockContrastStatusField(): Field {
+  return {
+    name: "contrastStatus",
+    type: "ui",
+    admin: {
+      condition: (_data, siblingData) => siblingData?.scheme === "custom",
+      components: {
+        Field: "/components/admin/BlockContrastStatus#BlockContrastStatus",
+      },
+    },
+  };
+}

@@ -3,6 +3,7 @@ import { characterLimitAdmin } from "../../fields/character-limit";
 import { colorSchemes } from "../../lib/theme/block-color-theme";
 import {
   createAppearanceGroup,
+  createBlockContrastStatusField,
   createControlledColorAppearanceFields,
   createEmphasisField,
   createSpacingField,
@@ -84,16 +85,7 @@ export const CTABlock: Block = {
       createSpacingField(["compact", "default", "spacious"], "default"),
       createEmphasisField(["subtle", "default", "strong"], "default"),
       ...createControlledColorAppearanceFields(),
-      {
-        name: "contrastStatus",
-        type: "ui",
-        admin: {
-          condition: (_data, siblingData) => siblingData?.scheme === "custom",
-          components: {
-            Field: "/components/admin/BlockContrastStatus#BlockContrastStatus",
-          },
-        },
-      },
+      createBlockContrastStatusField(),
     ]),
   ],
 };

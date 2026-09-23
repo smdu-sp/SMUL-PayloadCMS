@@ -1,10 +1,16 @@
 import { RichText } from "@payloadcms/richtext-lexical/react";
 import type { RichTextBlock as RichTextBlockProps } from "../../payload-types";
-import { Container, Section } from "../../components/ui";
+import { BlockThemeScope, Container, Section } from "../../components/ui";
+import {
+  normalizeColorScheme,
+  type EditorialColorOverrides,
+} from "../../lib/theme/block-color-theme";
 
 type RichTextVariant = "default" | "narrow";
 
 type RichTextAppearance = {
+  colors?: EditorialColorOverrides | null;
+  scheme?: "custom" | string | null;
   spacing?: "compact" | "default" | "spacious" | string | null;
   width?: "default" | "narrow" | "wide" | string | null;
 };
@@ -58,9 +64,12 @@ export function RichTextBlock({
       : effectiveWidth === "wide"
         ? "xl"
         : "lg";
-
-  return (
-    <Section spacing={effectiveSpacing} scheme="default">
+  const customTheme = appearance?.scheme === "custom";
+  const section = (
+    <Section
+      spacing={effectiveSpacing}
+      scheme={customTheme ? "default" : normalizeColorScheme(appearance?.scheme)}
+    >
       <Container size={containerSize}>
         <RichText
           className={`cms-rich-text leading-relaxed ${effectiveWidth !== "narrow" ? "cms-rich-text--wide" : ""}`}
@@ -69,5 +78,9 @@ export function RichTextBlock({
       </Container>
     </Section>
   );
+
+  return customTheme
+    ? <BlockThemeScope palette={appearance?.colors}>{section}</BlockThemeScope>
+    : section;
 }
 

@@ -23,9 +23,9 @@ O contrato e implementado por `resolveBlockColorTheme()` em
 - `inherit`: usa os papeis do tema semantico global.
 - `preset`: transforma um `tone` aprovado em uma receita completa.
 - `custom`: cria uma paleta semantica local a partir de overrides editoriais.
-  O CTA e o primeiro Block habilitado para esse modo.
+  CTA e RichText estao habilitados para esse modo.
 
-No CTA, selecionar outro preset oculta e desativa a paleta customizada. Os
+Nos Blocks habilitados, selecionar outro preset oculta e desativa a paleta customizada. Os
 valores permanecem armazenados para uma eventual volta ao modo `custom`, mas
 nao alteram a renderizacao enquanto outro preset estiver ativo.
 
@@ -75,7 +75,7 @@ A protecao funciona em duas camadas:
 2. o renderer resolve novamente os tokens e substitui valores inseguros caso
    dados invalidos cheguem por draft, API, importacao ou documento legado.
 
-No CTA, o modo `Tema customizado` tambem exibe uma verificacao em tempo real.
+O modo `Tema customizado` tambem exibe uma verificacao em tempo real.
 Ela compara texto, acao e destaque com o fundo efetivo, identifica tokens
 herdados e, quando houver fallback, mostra a cor solicitada e a cor que sera
 usada na pagina. O campo e apenas de interface e nao altera o documento salvo.
@@ -127,8 +127,8 @@ publicar conteudo ilegivel.
 - Nenhum campo por elemento interno foi criado.
 - Nenhum CSS ou classe Tailwind pode ser informado pelo editor.
 - Os controles atuais recebem HEX; nenhum Color Picker grafico foi criado.
-- A paleta customizada foi habilitada somente no CTA, sem expansao automatica
-  para outros Blocks.
+- A paleta customizada e habilitada gradualmente por Block, com validacao de
+  renderizacao antes de cada expansao.
 
 ## Divida tecnica auditada
 
