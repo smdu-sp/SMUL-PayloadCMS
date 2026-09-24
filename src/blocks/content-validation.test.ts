@@ -275,6 +275,56 @@ describe("SPEC-026 content validation", () => {
         : null,
       { visibleTokens: ["background", "foreground"] },
     );
+
+    const iconGridAppearance = fieldByName(IconGridBlock.fields, "appearance");
+    assert.ok("fields" in iconGridAppearance);
+    const iconGridScheme = fieldByName(iconGridAppearance.fields, "scheme");
+    assert.ok("options" in iconGridScheme && Array.isArray(iconGridScheme.options));
+    assert.deepEqual(
+      iconGridScheme.options.map((option) => typeof option === "object" ? option.value : option),
+      ["default", "surface", "muted", "custom"],
+    );
+    const iconGridColors = fieldByName(iconGridAppearance.fields, "colors");
+    assert.ok("fields" in iconGridColors);
+    assert.deepEqual(
+      iconGridColors.fields.flatMap((field) =>
+        field.type === "text" && !field.admin?.hidden ? [field.name] : [],
+      ),
+      ["background", "foreground", "accent"],
+    );
+    const iconGridContrastStatus = fieldByName(iconGridAppearance.fields, "contrastStatus");
+    assert.equal(iconGridContrastStatus.type, "ui");
+    assert.deepEqual(
+      typeof iconGridContrastStatus.admin?.components?.Field === "object"
+        ? iconGridContrastStatus.admin.components.Field.clientProps
+        : null,
+      { visibleTokens: ["background", "foreground", "accent"] },
+    );
+
+    const cardsAppearance = fieldByName(CardsBlock.fields, "appearance");
+    assert.ok("fields" in cardsAppearance);
+    const cardsScheme = fieldByName(cardsAppearance.fields, "scheme");
+    assert.ok("options" in cardsScheme && Array.isArray(cardsScheme.options));
+    assert.deepEqual(
+      cardsScheme.options.map((option) => typeof option === "object" ? option.value : option),
+      ["default", "surface", "muted", "custom"],
+    );
+    const cardsColors = fieldByName(cardsAppearance.fields, "colors");
+    assert.ok("fields" in cardsColors);
+    assert.deepEqual(
+      cardsColors.fields.flatMap((field) =>
+        field.type === "text" && !field.admin?.hidden ? [field.name] : [],
+      ),
+      ["background", "foreground", "accent"],
+    );
+    const cardsContrastStatus = fieldByName(cardsAppearance.fields, "contrastStatus");
+    assert.equal(cardsContrastStatus.type, "ui");
+    assert.deepEqual(
+      typeof cardsContrastStatus.admin?.components?.Field === "object"
+        ? cardsContrastStatus.admin.components.Field.clientProps
+        : null,
+      { visibleTokens: ["background", "foreground", "accent"] },
+    );
   });
 
   it("rejects partially completed optional and required links", async () => {

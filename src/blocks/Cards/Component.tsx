@@ -1,6 +1,7 @@
 import type { CardsBlock as CardsBlockProps } from "../../payload-types";
-import { Card, Container, Heading, Section, Text } from "../../components/ui";
+import { BlockThemeScope, Card, Container, Heading, Section, Text } from "../../components/ui";
 import { classNames } from "../../components/ui/classNames";
+import type { EditorialColorOverrides } from "../../lib/theme/block-color-theme";
 import type { ImagePresentation } from "../shared/image-presentation";
 import {
   getFocalPointStyle,
@@ -25,12 +26,13 @@ type CardsItem = CardsBlockProps["items"][number] & {
 };
 
 type CardsAppearance = {
+  colors?: EditorialColorOverrides | null;
   interaction?: CardsInteraction | string | null;
   spacing?: "compact" | "default" | "spacious" | string | null;
-  scheme?: "default" | "muted" | "surface" | string | null;
+  scheme?: "custom" | "default" | "muted" | "surface" | string | null;
 };
 
-type CardsBlockWithAppearanceProps = CardsBlockProps & {
+type CardsBlockWithAppearanceProps = Omit<CardsBlockProps, "appearance"> & {
   appearance?: CardsAppearance | null;
 };
 
@@ -185,6 +187,7 @@ export function CardsBlock({
 }: CardsBlockWithAppearanceProps) {
   const normalizedVariant = normalizeCardsVariant(variant);
   const modalities = normalizedVariant === "modalities";
+  const customTheme = appearance?.scheme === "custom";
   const effectiveTone = normalizeCardsTone(
     appearance?.scheme,
     modalities ? "default" : "muted",
@@ -195,8 +198,8 @@ export function CardsBlock({
   );
   const effectiveInteraction = normalizeCardsInteraction(appearance?.interaction);
 
-  return (
-    <Section spacing={effectiveSpacing} scheme={effectiveTone}>
+  const section = (
+    <Section spacing={effectiveSpacing} scheme={customTheme ? "default" : effectiveTone}>
       <Container size="lg">
         {title ? (
           <Heading level={2} size="lg">
@@ -256,4 +259,8 @@ export function CardsBlock({
       </Container>
     </Section>
   );
+
+  return customTheme
+    ? <BlockThemeScope palette={appearance?.colors}>{section}</BlockThemeScope>
+    : section;
 }

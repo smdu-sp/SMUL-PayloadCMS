@@ -2,6 +2,8 @@ import type { Block } from "payload";
 import { characterLimitAdmin } from "../../fields/character-limit";
 import {
   createAppearanceGroup,
+  createBlockContrastStatusField,
+  createControlledColorAppearanceFields,
   createSpacingField,
   createSchemeField,
 } from "../../fields/block-appearance";
@@ -10,6 +12,9 @@ import { closedSelect, requiredText } from "../../fields/editorial-validation";
 import { createIconFields } from "../../fields/icon";
 import { createLinkFields } from "../../fields/link";
 import { createBlockAdmin } from "../shared/admin";
+
+// IconGrid adds accent because standard icons consume that semantic role.
+const iconGridColorTokens = ["background", "foreground", "accent"] as const;
 
 export const IconGridBlock: Block = {
   slug: "iconGrid",
@@ -67,8 +72,10 @@ export const IconGridBlock: Block = {
       ],
     },
     createAppearanceGroup([
-      createSchemeField(["default", "surface", "muted"], "default"),
+      createSchemeField(["default", "surface", "muted", "custom"], "default"),
       createSpacingField(["compact", "default", "spacious"], "default"),
+      ...createControlledColorAppearanceFields(iconGridColorTokens),
+      createBlockContrastStatusField(iconGridColorTokens),
     ]),
     {
       name: "items",

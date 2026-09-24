@@ -167,6 +167,19 @@ controles e indicadores mantem superficies locais seguras; os aliases visuais
 historicos desses elementos devem ser modernizados separadamente antes de
 receberem novos tokens editoriais.
 
+## Consumo atual no IconGrid
+
+O IconGrid exibe `background`, `foreground` e `accent`. Fundo e texto controlam
+a secao editorial; `accent` colore os icones padrao dentro dos Cards. Midias de
+icone personalizadas preservam as cores do proprio arquivo.
+
+## Consumo atual em Cards
+
+Cards exibe `background`, `foreground` e `accent`. Fundo e texto controlam a
+secao editorial; `accent` colore icones padrao dentro dos Cards. Links atuais
+sao textuais, portanto `action` permanece oculto ate existir um consumidor
+visual direto.
+
 ## Limites
 
 - Tokens de ilustracao continuam separados em `--color-illustration-*`.

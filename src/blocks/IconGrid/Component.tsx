@@ -1,13 +1,15 @@
 import type { IconGridBlock as IconGridBlockProps } from "../../payload-types";
-import { Card, Container, Heading, Section, Text } from "../../components/ui";
+import { BlockThemeScope, Card, Container, Heading, Section, Text } from "../../components/ui";
+import type { EditorialColorOverrides } from "../../lib/theme/block-color-theme";
 import { BlockIcon } from "../shared/BlockIcon";
 import { BlockLink } from "../shared/BlockLink";
 
 type IconGridVariant = "compact" | "default";
 
 type IconGridAppearance = {
+  colors?: EditorialColorOverrides | null;
   spacing?: "compact" | "default" | "spacious" | string | null;
-  scheme?: "default" | "muted" | "surface" | string | null;
+  scheme?: "custom" | "default" | "muted" | "surface" | string | null;
 };
 
 type IconGridBlockWithAppearanceProps = IconGridBlockProps & {
@@ -49,14 +51,15 @@ export function IconGridBlock({
 }: IconGridBlockWithAppearanceProps) {
   const normalizedVariant = normalizeIconGridVariant(variant);
   const compact = normalizedVariant === "compact";
+  const customTheme = appearance?.scheme === "custom";
   const effectiveTone = normalizeIconGridTone(appearance?.scheme);
   const effectiveSpacing = normalizeIconGridSpacing(
     appearance?.spacing,
     compact ? "compact" : "default",
   );
 
-  return (
-    <Section spacing={effectiveSpacing} scheme={effectiveTone}>
+  const section = (
+    <Section spacing={effectiveSpacing} scheme={customTheme ? "default" : effectiveTone}>
       <Container size="lg">
         <Heading level={2} size="lg">
           <span className="text-balance break-words">{title}</span>
@@ -102,4 +105,8 @@ export function IconGridBlock({
       </Container>
     </Section>
   );
+
+  return customTheme
+    ? <BlockThemeScope palette={appearance?.colors}>{section}</BlockThemeScope>
+    : section;
 }

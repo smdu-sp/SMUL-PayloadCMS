@@ -793,7 +793,7 @@ export interface CardsBlock {
     /**
      * Seleciona uma combinacao completa de fundo, texto, acao e destaque.
      */
-    scheme?: ('default' | 'surface' | 'muted') | null;
+    scheme?: ('default' | 'surface' | 'muted' | 'custom') | null;
     /**
      * Controla a distancia vertical do bloco em relacao aos blocos adjacentes.
      */
@@ -802,6 +802,16 @@ export interface CardsBlock {
      * Define feedback de hover, foco e movimento por presets controlados. Nao expõe CSS.
      */
     interaction?: ('none' | 'subtle' | 'default' | 'emphasized') | null;
+    /**
+     * Deixe um campo vazio para herdar o token global. O contraste considera a paleta efetiva. Nao configura elementos individuais.
+     */
+    colors?: {
+      background?: string | null;
+      foreground?: string | null;
+      brand?: string | null;
+      action?: string | null;
+      accent?: string | null;
+    };
   };
   /**
    * Adicione de 1 a 12 cards. O layout ajusta a quantidade de colunas conforme a largura da tela.
@@ -991,11 +1001,21 @@ export interface IconGridBlock {
     /**
      * Seleciona uma combinacao completa de fundo, texto, acao e destaque.
      */
-    scheme?: ('default' | 'surface' | 'muted') | null;
+    scheme?: ('default' | 'surface' | 'muted' | 'custom') | null;
     /**
      * Controla a distancia vertical do bloco em relacao aos blocos adjacentes.
      */
     spacing?: ('compact' | 'default' | 'spacious') | null;
+    /**
+     * Deixe um campo vazio para herdar o token global. O contraste considera a paleta efetiva. Nao configura elementos individuais.
+     */
+    colors?: {
+      background?: string | null;
+      foreground?: string | null;
+      brand?: string | null;
+      action?: string | null;
+      accent?: string | null;
+    };
   };
   /**
    * Adicione itens curtos com icone. Reordene conforme a prioridade editorial.
@@ -1762,6 +1782,15 @@ export interface CardsBlockSelect<T extends boolean = true> {
         scheme?: T;
         spacing?: T;
         interaction?: T;
+        colors?:
+          | T
+          | {
+              background?: T;
+              foreground?: T;
+              brand?: T;
+              action?: T;
+              accent?: T;
+            };
       };
   items?:
     | T
@@ -1844,6 +1873,15 @@ export interface IconGridBlockSelect<T extends boolean = true> {
     | {
         scheme?: T;
         spacing?: T;
+        colors?:
+          | T
+          | {
+              background?: T;
+              foreground?: T;
+              brand?: T;
+              action?: T;
+              accent?: T;
+            };
       };
   items?:
     | T

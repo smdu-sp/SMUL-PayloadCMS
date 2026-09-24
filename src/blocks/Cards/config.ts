@@ -2,6 +2,8 @@ import type { Block, UploadFieldSingleValidation } from "payload";
 import { characterLimitAdmin } from "../../fields/character-limit";
 import {
   createAppearanceGroup,
+  createBlockContrastStatusField,
+  createControlledColorAppearanceFields,
   createInteractionField,
   createSpacingField,
   createSchemeField,
@@ -30,6 +32,9 @@ const mediaPositionOptions = [
   { label: "A esquerda", value: "left" },
   { label: "A direita", value: "right" },
 ];
+
+// Cards exposes accent because standard icons consume it inside local surfaces.
+const cardsColorTokens = ["background", "foreground", "accent"] as const;
 
 export const CardsBlock: Block = {
   slug: "cards",
@@ -85,9 +90,11 @@ export const CardsBlock: Block = {
       ],
     },
     createAppearanceGroup([
-      createSchemeField(["default", "surface", "muted"], "default"),
+      createSchemeField(["default", "surface", "muted", "custom"], "default"),
       createSpacingField(["compact", "default", "spacious"], "default"),
       createInteractionField(["none", "subtle", "default", "emphasized"], "default"),
+      ...createControlledColorAppearanceFields(cardsColorTokens),
+      createBlockContrastStatusField(cardsColorTokens),
     ]),
     {
       name: "items",
