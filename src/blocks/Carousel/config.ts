@@ -1,5 +1,11 @@
 import type { Block, UploadFieldSingleValidation } from "payload";
 import { characterLimitAdmin } from "../../fields/character-limit";
+import {
+  createAppearanceGroup,
+  createBlockContrastStatusField,
+  createControlledColorAppearanceFields,
+  createSchemeField,
+} from "../../fields/block-appearance";
 import { closedSelect } from "../../fields/editorial-validation";
 import { createLinkFields } from "../../fields/link";
 import { createBlockAdmin } from "../shared/admin";
@@ -19,6 +25,9 @@ const autoplayOptions = [
   { label: "Desligado", value: "off" },
   { label: "Ligado", value: "on" },
 ];
+
+// Carousel themes its outer section; cards and controls keep safe local surfaces.
+const carouselColorTokens = ["background", "foreground"] as const;
 
 export const CarouselBlock: Block = {
   slug: "carousel",
@@ -164,5 +173,10 @@ export const CarouselBlock: Block = {
         },
       ],
     },
+    createAppearanceGroup([
+      createSchemeField(["default", "surface", "muted", "custom"], "default"),
+      ...createControlledColorAppearanceFields(carouselColorTokens),
+      createBlockContrastStatusField(carouselColorTokens),
+    ]),
   ],
 };

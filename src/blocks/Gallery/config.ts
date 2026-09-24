@@ -2,7 +2,10 @@ import type { Block, UploadFieldManyValidation, UploadFieldSingleValidation } fr
 import { characterLimitAdmin } from "../../fields/character-limit";
 import {
   createAppearanceGroup,
+  createBlockContrastStatusField,
+  createControlledColorAppearanceFields,
   createInteractionField,
+  createSchemeField,
   createSpacingField,
 } from "../../fields/block-appearance";
 import { closedSelect } from "../../fields/editorial-validation";
@@ -40,6 +43,9 @@ const validateBulkImages = ((value) =>
   !value || Array.isArray(value)
     ? true
     : "Selecione uma ou mais imagens da biblioteca.") satisfies UploadFieldManyValidation;
+
+// Gallery themes the page surface; the lightbox keeps its own media-safe scope.
+const galleryColorTokens = ["background", "foreground"] as const;
 
 export const GalleryBlock: Block = {
   slug: "gallery",
@@ -199,8 +205,11 @@ export const GalleryBlock: Block = {
       ],
     },
     createAppearanceGroup([
+      createSchemeField(["default", "surface", "muted", "custom"], "default"),
       createSpacingField(["compact", "default", "spacious"], "default"),
       createInteractionField(["none", "subtle", "default", "emphasized"], "default"),
+      ...createControlledColorAppearanceFields(galleryColorTokens),
+      createBlockContrastStatusField(galleryColorTokens),
     ]),
   ],
 };

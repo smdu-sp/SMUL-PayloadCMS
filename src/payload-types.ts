@@ -509,6 +509,10 @@ export interface GalleryBlock {
    */
   appearance?: {
     /**
+     * Seleciona uma combinacao completa de fundo, texto, acao e destaque.
+     */
+    scheme?: ('default' | 'surface' | 'muted' | 'custom') | null;
+    /**
      * Controla a distancia vertical do bloco em relacao aos blocos adjacentes.
      */
     spacing?: ('compact' | 'default' | 'spacious') | null;
@@ -516,6 +520,16 @@ export interface GalleryBlock {
      * Define feedback de hover, foco e movimento por presets controlados. Nao expõe CSS.
      */
     interaction?: ('none' | 'subtle' | 'default' | 'emphasized') | null;
+    /**
+     * Deixe um campo vazio para herdar o token global. O contraste considera a paleta efetiva. Nao configura elementos individuais.
+     */
+    colors?: {
+      background?: string | null;
+      foreground?: string | null;
+      brand?: string | null;
+      action?: string | null;
+      accent?: string | null;
+    };
   };
   id?: string | null;
   blockName?: string | null;
@@ -582,6 +596,25 @@ export interface CarouselBlock {
      * Desligado e o padrao. Quando ligado, o usuario pode pausar e a rotacao para ao interagir.
      */
     autoplay: 'off' | 'on';
+  };
+  /**
+   * Opcoes semanticas controladas pelo Design System. Nao permite CSS arbitrario.
+   */
+  appearance?: {
+    /**
+     * Seleciona uma combinacao completa de fundo, texto, acao e destaque.
+     */
+    scheme?: ('default' | 'surface' | 'muted' | 'custom') | null;
+    /**
+     * Deixe um campo vazio para herdar o token global. O contraste considera a paleta efetiva. Nao configura elementos individuais.
+     */
+    colors?: {
+      background?: string | null;
+      foreground?: string | null;
+      brand?: string | null;
+      action?: string | null;
+      accent?: string | null;
+    };
   };
   id?: string | null;
   blockName?: string | null;
@@ -1578,8 +1611,18 @@ export interface GalleryBlockSelect<T extends boolean = true> {
   appearance?:
     | T
     | {
+        scheme?: T;
         spacing?: T;
         interaction?: T;
+        colors?:
+          | T
+          | {
+              background?: T;
+              foreground?: T;
+              brand?: T;
+              action?: T;
+              accent?: T;
+            };
       };
   id?: T;
   blockName?: T;
@@ -1617,6 +1660,20 @@ export interface CarouselBlockSelect<T extends boolean = true> {
     | T
     | {
         autoplay?: T;
+      };
+  appearance?:
+    | T
+    | {
+        scheme?: T;
+        colors?:
+          | T
+          | {
+              background?: T;
+              foreground?: T;
+              brand?: T;
+              action?: T;
+              accent?: T;
+            };
       };
   id?: T;
   blockName?: T;

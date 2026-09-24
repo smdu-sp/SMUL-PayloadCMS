@@ -154,6 +154,19 @@ O player incorporado permanece isolado da paleta editorial. Os demais tokens
 continuam no schema, mas ficam ocultos no Payload Admin enquanto nao houver
 consumidor visual direto.
 
+## Consumo atual na Gallery
+
+A Gallery exibe `background` e `foreground` para a secao, titulo, bordas e
+feedback das miniaturas. O lightbox usa um escopo escuro proprio e nao herda a
+paleta editorial, garantindo contraste previsivel sobre as imagens.
+
+## Consumo atual no Carousel
+
+O Carousel exibe `background` e `foreground` para a secao e titulo. Cards,
+controles e indicadores mantem superficies locais seguras; os aliases visuais
+historicos desses elementos devem ser modernizados separadamente antes de
+receberem novos tokens editoriais.
+
 ## Limites
 
 - Tokens de ilustracao continuam separados em `--color-illustration-*`.

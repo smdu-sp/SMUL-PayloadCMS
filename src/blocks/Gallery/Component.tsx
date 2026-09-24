@@ -1,5 +1,9 @@
 import type { Media } from "../../payload-types";
-import { Container, Heading, Section } from "../../components/ui";
+import { BlockThemeScope, Container, Heading, Section } from "../../components/ui";
+import {
+  normalizeColorScheme,
+  type EditorialColorOverrides,
+} from "../../lib/theme/block-color-theme";
 import { GalleryLightbox } from "./GalleryLightbox";
 
 export type GalleryColumns = "2" | "3" | "4" | "8";
@@ -15,7 +19,9 @@ export type GalleryItem = {
 
 export type GalleryBlockProps = {
   appearance?: {
+    colors?: EditorialColorOverrides | null;
     interaction?: GalleryInteraction | string | null;
+    scheme?: "custom" | string | null;
     spacing?: "compact" | "default" | "spacious" | string | null;
   } | null;
   blockType: "gallery";
@@ -79,9 +85,13 @@ export function GalleryBlock({ appearance, images, layout, title }: GalleryBlock
   const thumbnailEffect = normalizeGalleryThumbnailEffect(layout?.thumbnailEffect);
   const interaction = normalizeGalleryInteraction(appearance?.interaction);
   const spacing = normalizeGallerySpacing(appearance?.spacing);
+  const customTheme = appearance?.scheme === "custom";
 
-  return (
-    <Section spacing={spacing} scheme="default">
+  const section = (
+    <Section
+      spacing={spacing}
+      scheme={customTheme ? "default" : normalizeColorScheme(appearance?.scheme)}
+    >
       <Container size="lg">
         {title ? (
           <div className="mb-8">
@@ -100,4 +110,8 @@ export function GalleryBlock({ appearance, images, layout, title }: GalleryBlock
       </Container>
     </Section>
   );
+
+  return customTheme
+    ? <BlockThemeScope palette={appearance?.colors}>{section}</BlockThemeScope>
+    : section;
 }

@@ -1,5 +1,9 @@
 import type { Media, Page } from "../../payload-types";
-import { Container, Heading, Section } from "../../components/ui";
+import { BlockThemeScope, Container, Heading, Section } from "../../components/ui";
+import {
+  normalizeColorScheme,
+  type EditorialColorOverrides,
+} from "../../lib/theme/block-color-theme";
 import { CarouselClient } from "./CarouselClient";
 
 export type CarouselSlidesPerView = "1" | "2" | "3";
@@ -23,6 +27,10 @@ export type CarouselItem = {
 };
 
 export type CarouselBlockProps = {
+  appearance?: {
+    colors?: EditorialColorOverrides | null;
+    scheme?: "custom" | string | null;
+  } | null;
   behavior?: {
     autoplay?: CarouselAutoplay | string | null;
   } | null;
@@ -56,6 +64,7 @@ export function normalizeCarouselAutoplay(
 }
 
 export function CarouselBlock({
+  appearance,
   behavior,
   display,
   items,
@@ -66,8 +75,13 @@ export function CarouselBlock({
 
   if (!usableItems.length) return null;
 
-  return (
-    <Section spacing="default" scheme="default">
+  const customTheme = appearance?.scheme === "custom";
+
+  const section = (
+    <Section
+      spacing="default"
+      scheme={customTheme ? "default" : normalizeColorScheme(appearance?.scheme)}
+    >
       <Container size="lg">
         {title ? (
           <div className="mb-8">
@@ -85,4 +99,8 @@ export function CarouselBlock({
       </Container>
     </Section>
   );
+
+  return customTheme
+    ? <BlockThemeScope palette={appearance?.colors}>{section}</BlockThemeScope>
+    : section;
 }

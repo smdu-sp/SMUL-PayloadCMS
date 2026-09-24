@@ -225,6 +225,56 @@ describe("SPEC-026 content validation", () => {
         : null,
       { visibleTokens: ["background", "foreground"] },
     );
+
+    const galleryAppearance = fieldByName(GalleryBlock.fields, "appearance");
+    assert.ok("fields" in galleryAppearance);
+    const galleryScheme = fieldByName(galleryAppearance.fields, "scheme");
+    assert.ok("options" in galleryScheme && Array.isArray(galleryScheme.options));
+    assert.deepEqual(
+      galleryScheme.options.map((option) => typeof option === "object" ? option.value : option),
+      ["default", "surface", "muted", "custom"],
+    );
+    const galleryColors = fieldByName(galleryAppearance.fields, "colors");
+    assert.ok("fields" in galleryColors);
+    assert.deepEqual(
+      galleryColors.fields.flatMap((field) =>
+        field.type === "text" && !field.admin?.hidden ? [field.name] : [],
+      ),
+      ["background", "foreground"],
+    );
+    const galleryContrastStatus = fieldByName(galleryAppearance.fields, "contrastStatus");
+    assert.equal(galleryContrastStatus.type, "ui");
+    assert.deepEqual(
+      typeof galleryContrastStatus.admin?.components?.Field === "object"
+        ? galleryContrastStatus.admin.components.Field.clientProps
+        : null,
+      { visibleTokens: ["background", "foreground"] },
+    );
+
+    const carouselAppearance = fieldByName(CarouselBlock.fields, "appearance");
+    assert.ok("fields" in carouselAppearance);
+    const carouselScheme = fieldByName(carouselAppearance.fields, "scheme");
+    assert.ok("options" in carouselScheme && Array.isArray(carouselScheme.options));
+    assert.deepEqual(
+      carouselScheme.options.map((option) => typeof option === "object" ? option.value : option),
+      ["default", "surface", "muted", "custom"],
+    );
+    const carouselColors = fieldByName(carouselAppearance.fields, "colors");
+    assert.ok("fields" in carouselColors);
+    assert.deepEqual(
+      carouselColors.fields.flatMap((field) =>
+        field.type === "text" && !field.admin?.hidden ? [field.name] : [],
+      ),
+      ["background", "foreground"],
+    );
+    const carouselContrastStatus = fieldByName(carouselAppearance.fields, "contrastStatus");
+    assert.equal(carouselContrastStatus.type, "ui");
+    assert.deepEqual(
+      typeof carouselContrastStatus.admin?.components?.Field === "object"
+        ? carouselContrastStatus.admin.components.Field.clientProps
+        : null,
+      { visibleTokens: ["background", "foreground"] },
+    );
   });
 
   it("rejects partially completed optional and required links", async () => {
