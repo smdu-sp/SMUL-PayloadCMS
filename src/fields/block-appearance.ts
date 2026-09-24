@@ -5,6 +5,17 @@ import { resolveSemanticTheme, type GlobalSemanticTheme } from "../lib/theme/sem
 import { closedSelect } from "./editorial-validation";
 
 type BlockSchemeOption = ColorScheme | "custom";
+type EditableColorToken = keyof EditorialColorOverrides;
+
+const controlledColorFields = [
+  { name: "background", label: "Fundo principal (Background)" },
+  { name: "foreground", label: "Texto principal (Foreground)" },
+  { name: "brand", label: "Identidade Institucional (Brand)" },
+  { name: "action", label: "Acao e Interatividade (Action)" },
+  { name: "accent", label: "Detalhes de Apoio (Accent)" },
+] as const satisfies readonly { name: EditableColorToken; label: string }[];
+
+const allEditableColorTokens = controlledColorFields.map(({ name }) => name);
 
 export const interactionOptions = [
   { label: "Sem interacao", value: "none" },
@@ -205,25 +216,25 @@ export function createAppearanceGroup(fields: Field[]): GroupField {
   };
 }
 
-export function createControlledColorAppearanceFields(): Field[] {
+export function createControlledColorAppearanceFields(
+  visibleTokens: readonly EditableColorToken[] = allEditableColorTokens,
+): Field[] {
+  const visibleTokenSet = new Set(visibleTokens);
+
   return [{
     name: "colors", type: "group", label: "Paleta customizada",
     admin: {
       condition: (_data, siblingData) => siblingData?.scheme === "custom",
       description: "Deixe um campo vazio para herdar o token global. O contraste considera a paleta efetiva. Nao configura elementos individuais.",
     },
-    fields: [
-      { name: "background", label: "Fundo principal (Background)" },
-      { name: "foreground", label: "Texto principal (Foreground)" },
-      { name: "brand", label: "Identidade Institucional (Brand)" },
-      { name: "action", label: "Acao e Interatividade (Action)" },
-      { name: "accent", label: "Detalhes de Apoio (Accent)" },
-    ].map(({ name, label }) => ({
+    fields: controlledColorFields.map(({ name, label }) => ({
       name,
       label,
       type: "text" as const,
       validate: validateOptionalHexColor,
       admin: {
+        // Preserve every field in the schema while tailoring the editor to each Block.
+        hidden: !visibleTokenSet.has(name),
         components: {
           beforeInput: ["/components/admin/HexColorPicker#HexColorPicker"],
         },
@@ -232,14 +243,19 @@ export function createControlledColorAppearanceFields(): Field[] {
   }];
 }
 
-export function createBlockContrastStatusField(): Field {
+export function createBlockContrastStatusField(
+  visibleTokens: readonly EditableColorToken[] = allEditableColorTokens,
+): Field {
   return {
     name: "contrastStatus",
     type: "ui",
     admin: {
       condition: (_data, siblingData) => siblingData?.scheme === "custom",
       components: {
-        Field: "/components/admin/BlockContrastStatus#BlockContrastStatus",
+        Field: {
+          path: "/components/admin/BlockContrastStatus#BlockContrastStatus",
+          clientProps: { visibleTokens: [...visibleTokens] },
+        },
       },
     },
   };

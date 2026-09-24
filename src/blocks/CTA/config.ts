@@ -14,6 +14,9 @@ import { closedSelect, requiredText } from "../../fields/editorial-validation";
 import { createLinkFields } from "../../fields/link";
 import { createBlockAdmin } from "../shared/admin";
 
+// The current CTA surface consumes only these editable semantic roles.
+const ctaColorTokens = ["background", "foreground", "action"] as const;
+
 export const CTABlock: Block = {
   slug: "cta",
   interfaceName: "CTABlock",
@@ -84,8 +87,8 @@ export const CTABlock: Block = {
       createSchemeField([...colorSchemes, "custom"]),
       createSpacingField(["compact", "default", "spacious"], "default"),
       createEmphasisField(["subtle", "default", "strong"], "default"),
-      ...createControlledColorAppearanceFields(),
-      createBlockContrastStatusField(),
+      ...createControlledColorAppearanceFields(ctaColorTokens),
+      createBlockContrastStatusField(ctaColorTokens),
     ]),
   ],
 };

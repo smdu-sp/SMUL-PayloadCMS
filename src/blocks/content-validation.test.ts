@@ -98,6 +98,10 @@ describe("SPEC-026 content validation", () => {
       colors.fields.map((field) => "name" in field ? field.name : null),
       ["background", "foreground", "brand", "action", "accent"],
     );
+    const visibleCTAColorFields = colors.fields.flatMap((field) =>
+      field.type === "text" && !field.admin?.hidden ? [field.name] : [],
+    );
+    assert.deepEqual(visibleCTAColorFields, ["background", "foreground", "action"]);
     for (const field of colors.fields) {
       if (field.type !== "text") assert.fail("Expected a text color field");
       assert.ok(field.admin?.components);
@@ -111,6 +115,12 @@ describe("SPEC-026 content validation", () => {
 
     const contrastStatus = fieldByName(appearance.fields, "contrastStatus");
     assert.equal(contrastStatus.type, "ui");
+    assert.deepEqual(
+      typeof contrastStatus.admin?.components?.Field === "object"
+        ? contrastStatus.admin.components.Field.clientProps
+        : null,
+      { visibleTokens: ["background", "foreground", "action"] },
+    );
     assert.equal(contrastStatus.admin?.condition?.({}, { scheme: "custom" }, { user: null } as never), true);
     assert.equal(contrastStatus.admin?.condition?.({}, { scheme: "default" }, { user: null } as never), false);
 
@@ -122,8 +132,22 @@ describe("SPEC-026 content validation", () => {
       richTextScheme.options.map((option) => typeof option === "object" ? option.value : option),
       ["default", "surface", "muted", "custom"],
     );
-    assert.equal(fieldByName(richTextAppearance.fields, "colors").type, "group");
-    assert.equal(fieldByName(richTextAppearance.fields, "contrastStatus").type, "ui");
+    const richTextColors = fieldByName(richTextAppearance.fields, "colors");
+    assert.ok("fields" in richTextColors);
+    assert.deepEqual(
+      richTextColors.fields.flatMap((field) =>
+        field.type === "text" && !field.admin?.hidden ? [field.name] : [],
+      ),
+      ["background", "foreground"],
+    );
+    const richTextContrastStatus = fieldByName(richTextAppearance.fields, "contrastStatus");
+    assert.equal(richTextContrastStatus.type, "ui");
+    assert.deepEqual(
+      typeof richTextContrastStatus.admin?.components?.Field === "object"
+        ? richTextContrastStatus.admin.components.Field.clientProps
+        : null,
+      { visibleTokens: ["background", "foreground"] },
+    );
 
     const imageTextAppearance = fieldByName(ImageTextBlock.fields, "appearance");
     assert.ok("fields" in imageTextAppearance);
@@ -133,8 +157,22 @@ describe("SPEC-026 content validation", () => {
       imageTextScheme.options.map((option) => typeof option === "object" ? option.value : option),
       ["default", "surface", "muted", "custom"],
     );
-    assert.equal(fieldByName(imageTextAppearance.fields, "colors").type, "group");
-    assert.equal(fieldByName(imageTextAppearance.fields, "contrastStatus").type, "ui");
+    const imageTextColors = fieldByName(imageTextAppearance.fields, "colors");
+    assert.ok("fields" in imageTextColors);
+    assert.deepEqual(
+      imageTextColors.fields.flatMap((field) =>
+        field.type === "text" && !field.admin?.hidden ? [field.name] : [],
+      ),
+      ["background", "foreground"],
+    );
+    const imageTextContrastStatus = fieldByName(imageTextAppearance.fields, "contrastStatus");
+    assert.equal(imageTextContrastStatus.type, "ui");
+    assert.deepEqual(
+      typeof imageTextContrastStatus.admin?.components?.Field === "object"
+        ? imageTextContrastStatus.admin.components.Field.clientProps
+        : null,
+      { visibleTokens: ["background", "foreground"] },
+    );
   });
 
   it("rejects partially completed optional and required links", async () => {

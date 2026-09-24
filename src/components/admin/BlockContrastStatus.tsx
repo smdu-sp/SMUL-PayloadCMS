@@ -37,6 +37,10 @@ const fieldLabels = {
   accent: "Detalhes de apoio",
 } as const;
 
+type EditableColorToken = keyof EditorialColorOverrides;
+
+const allEditableColorTokens = Object.keys(fieldLabels) as EditableColorToken[];
+
 function asColor(value: unknown): string | null {
   return typeof value === "string" && value.trim() ? value : null;
 }
@@ -65,7 +69,14 @@ function ContrastRow({ check, rawValue }: { check: BlockContrastCheck; rawValue:
   );
 }
 
-export function BlockContrastStatus({ path }: UIFieldClientProps) {
+type BlockContrastStatusProps = UIFieldClientProps & {
+  visibleTokens?: EditableColorToken[];
+};
+
+export function BlockContrastStatus({
+  path,
+  visibleTokens = allEditableColorTokens,
+}: BlockContrastStatusProps) {
   const appearancePath = path.replace(/\.contrastStatus$/, "");
   const background = useField<string | null>({ path: `${appearancePath}.colors.background` }).value;
   const foreground = useField<string | null>({ path: `${appearancePath}.colors.foreground` }).value;
@@ -83,11 +94,15 @@ export function BlockContrastStatus({ path }: UIFieldClientProps) {
   const globalColors = (data as { theme?: { colors?: PaletteInput } } | null)?.theme?.colors;
   const analysis = analyzeCustomBlockPalette(resolveSemanticTheme(globalColors), overrides);
   const rawByToken = { foreground: asColor(foreground), action: asColor(action), accent: asColor(accent) };
+  const visibleTokenSet = new Set(visibleTokens);
+  // Keep feedback aligned with the controls that the current Block exposes.
+  const visibleChecks = analysis.checks.filter((check) => visibleTokenSet.has(check.token));
   const invalidFields = Object.entries(rawColors)
     .filter((entry): entry is [keyof typeof fieldLabels, string] => asColor(entry[1]) !== null)
+    .filter(([key]) => visibleTokenSet.has(key))
     .filter(([, value]) => !normalizeHexColor(value))
     .map(([key]) => fieldLabels[key]);
-  const hasAutomaticReplacement = analysis.checks.some((check) => !check.passes);
+  const hasAutomaticReplacement = visibleChecks.some((check) => !check.passes);
 
   return (
     <section
@@ -119,13 +134,15 @@ export function BlockContrastStatus({ path }: UIFieldClientProps) {
             <p><strong>Tudo certo.</strong> Nenhum ajuste automático será necessário.</p>
           )}
           <ul style={{ marginBottom: 0, paddingLeft: "calc(var(--base) * 1.25)" }}>
-            {analysis.checks.map((check) => (
+            {visibleChecks.map((check) => (
               <ContrastRow key={check.token} check={check} rawValue={rawByToken[check.token]} />
             ))}
           </ul>
-          <p style={{ marginBottom: 0 }}>
-            ℹ O uso da Identidade institucional depende do conteúdo do bloco.
-          </p>
+          {visibleTokenSet.has("brand") ? (
+            <p style={{ marginBottom: 0 }}>
+              ℹ O uso da Identidade institucional depende do conteúdo do bloco.
+            </p>
+          ) : null}
         </>
       ) : null}
     </section>

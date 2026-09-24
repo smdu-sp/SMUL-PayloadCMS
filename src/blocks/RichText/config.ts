@@ -10,6 +10,9 @@ import {
 import { closedSelect, requiredRichText } from "../../fields/editorial-validation";
 import { createBlockAdmin } from "../shared/admin";
 
+// Rich Text paints a surface and derives headings and links from its foreground.
+const richTextColorTokens = ["background", "foreground"] as const;
+
 export const RichTextBlock: Block = {
   slug: "richText",
   interfaceName: "RichTextBlock",
@@ -56,8 +59,8 @@ export const RichTextBlock: Block = {
       createSchemeField(["default", "surface", "muted", "custom"], "default"),
       createWidthField(["narrow", "default", "wide"], "default"),
       createSpacingField(["compact", "default", "spacious"], "default"),
-      ...createControlledColorAppearanceFields(),
-      createBlockContrastStatusField(),
+      ...createControlledColorAppearanceFields(richTextColorTokens),
+      createBlockContrastStatusField(richTextColorTokens),
     ]),
   ],
 };

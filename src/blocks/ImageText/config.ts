@@ -16,6 +16,9 @@ import { createImagePresentationFields } from "../../fields/image-presentation";
 import { createLinkFields } from "../../fields/link";
 import { createBlockAdmin } from "../shared/admin";
 
+// ImageText derives its heading, body and text link from the foreground role.
+const imageTextColorTokens = ["background", "foreground"] as const;
+
 export const ImageTextBlock: Block = {
   slug: "imageText",
   interfaceName: "ImageTextBlock",
@@ -109,8 +112,8 @@ export const ImageTextBlock: Block = {
     createAppearanceGroup([
       createSchemeField(["default", "surface", "muted", "custom"], "default"),
       createSpacingField(["compact", "default", "spacious"], "default"),
-      ...createControlledColorAppearanceFields(),
-      createBlockContrastStatusField(),
+      ...createControlledColorAppearanceFields(imageTextColorTokens),
+      createBlockContrastStatusField(imageTextColorTokens),
     ]),
   ],
 };

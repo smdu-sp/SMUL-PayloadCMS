@@ -121,12 +121,34 @@ publicar conteudo ilegivel.
 | `brand` | Disponivel no tema local, mas sem consumidor visual direto no CTA atual |
 | `accent` | Disponivel no tema local, mas sem consumidor visual direto no CTA atual |
 
+No Payload Admin, o CTA exibe apenas os controles `background`, `foreground` e
+`action`. Os campos `brand` e `accent` permanecem no schema para preservar
+documentos existentes, mas ficam ocultos enquanto nao houver consumidor visual
+direto no Block. O painel de contraste segue a mesma lista de tokens visiveis.
+
+## Consumo atual no Rich Text
+
+O Rich Text exibe somente `background` e `foreground`. Titulos, texto corrido e
+links derivam do `foreground`; `brand`, `action` e `accent` permanecem no schema,
+mas ficam ocultos no Payload Admin enquanto nao tiverem consumidor visual direto.
+O painel de contraste tambem considera apenas os controles visiveis.
+
+## Consumo atual no ImageText
+
+O ImageText tambem exibe somente `background` e `foreground`. Titulo, conteudo e
+CTA textual derivam do `foreground`; `brand`, `action` e `accent` permanecem no
+schema, mas ficam ocultos no Payload Admin. O painel de contraste acompanha essa
+mesma lista reduzida.
+
 ## Limites
 
 - Tokens de ilustracao continuam separados em `--color-illustration-*`.
 - Nenhum campo por elemento interno foi criado.
 - Nenhum CSS ou classe Tailwind pode ser informado pelo editor.
-- Os controles atuais recebem HEX; nenhum Color Picker grafico foi criado.
+- Os campos aceitam entrada HEX manual e oferecem um Color Picker grafico por
+  meio de `src/components/admin/HexColorPicker.tsx`. O picker atualiza o mesmo
+  valor persistido pelo campo de texto e respeita os estados `readOnly` e
+  `disabled` do Payload Admin.
 - A paleta customizada e habilitada gradualmente por Block, com validacao de
   renderizacao antes de cada expansao.
 
