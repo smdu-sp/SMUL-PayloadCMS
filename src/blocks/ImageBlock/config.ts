@@ -1,7 +1,16 @@
 import type { Block, UploadFieldSingleValidation } from "payload";
 import { characterLimitAdmin } from "../../fields/character-limit";
+import {
+  createAppearanceGroup,
+  createBlockContrastStatusField,
+  createControlledColorAppearanceFields,
+  createSchemeField,
+} from "../../fields/block-appearance";
 import { createImagePresentationFields } from "../../fields/image-presentation";
 import { createBlockAdmin } from "../shared/admin";
+
+// ImageBlock customizes only its section surface and optional caption.
+const imageBlockColorTokens = ["background", "foreground"] as const;
 
 export const ImageBlock: Block = {
   slug: "imageBlock",
@@ -60,5 +69,10 @@ export const ImageBlock: Block = {
         },
       }),
     },
+    createAppearanceGroup([
+      createSchemeField(["default", "surface", "muted", "custom"], "default"),
+      ...createControlledColorAppearanceFields(imageBlockColorTokens),
+      createBlockContrastStatusField(imageBlockColorTokens),
+    ]),
   ],
 };

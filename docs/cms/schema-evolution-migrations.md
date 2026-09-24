@@ -28,6 +28,8 @@ As mudancas das SPECS 019 a 027 foram classificadas assim:
 | `Pages.layout` | Novo Block `gallery` | Novo Block | Nao exige migration; dados antigos continuam renderizando. |
 | `Pages.layout` | Novo Block `carousel` | Novo Block | Nao exige migration; dados antigos continuam renderizando. |
 | `cta.appearance` | Paleta opcional expandida de `background`, `foreground` e `accent` para `background`, `foreground`, `brand`, `action` e `accent`; novo valor `custom` no tema | Novos fields opcionais e novo enum | Nao exige migration de conteudo; documentos antigos continuam usando presets, e valores customizados inativos permanecem armazenados. |
+| `imageBlock.appearance` | Novo grupo opcional com presets e paleta customizada restrita a `background` e `foreground` no Admin | Novos fields opcionais e novo enum | Nao exige migration; documentos antigos continuam usando o tema `default`. |
+| `videoBlock.appearance` | Novo grupo opcional com presets e paleta customizada restrita a `background` e `foreground` no Admin | Novos fields opcionais e novo enum | Nao exige migration; documentos antigos continuam usando o tema `default`. |
 | CSS tokens | Novos papeis semanticos `brand`, `action`, `heading`, `link`, `surface`, `muted`, `accent` | Compatibilidade de tema | Nao exige migration; tokens antigos continuam existindo. |
 | Block theme | Novo contrato local e aliases CSS `--block-*` | Refatoracao interna | Nao exige migration; `appearance.tone` e campos existentes sao preservados. |
 | `cards.variant` | Nova variant `modalities` | Novo enum/variant | Nao exige migration; fallback de `Cards` retorna `default`. |

@@ -22,6 +22,7 @@ import { IconGridBlock } from "./IconGrid/config";
 import { ImageBlock } from "./ImageBlock/config";
 import { ImageTextBlock } from "./ImageText/config";
 import { RichTextBlock } from "./RichText/config";
+import { VideoBlock } from "./VideoBlock/config";
 
 const blocks = [
   HeroBlock,
@@ -29,6 +30,7 @@ const blocks = [
   ImageBlock,
   GalleryBlock,
   CarouselBlock,
+  VideoBlock,
   ImageTextBlock,
   CardsBlock,
   CTABlock,
@@ -149,6 +151,31 @@ describe("SPEC-026 content validation", () => {
       { visibleTokens: ["background", "foreground"] },
     );
 
+    const imageBlockAppearance = fieldByName(ImageBlock.fields, "appearance");
+    assert.ok("fields" in imageBlockAppearance);
+    const imageBlockScheme = fieldByName(imageBlockAppearance.fields, "scheme");
+    assert.ok("options" in imageBlockScheme && Array.isArray(imageBlockScheme.options));
+    assert.deepEqual(
+      imageBlockScheme.options.map((option) => typeof option === "object" ? option.value : option),
+      ["default", "surface", "muted", "custom"],
+    );
+    const imageBlockColors = fieldByName(imageBlockAppearance.fields, "colors");
+    assert.ok("fields" in imageBlockColors);
+    assert.deepEqual(
+      imageBlockColors.fields.flatMap((field) =>
+        field.type === "text" && !field.admin?.hidden ? [field.name] : [],
+      ),
+      ["background", "foreground"],
+    );
+    const imageBlockContrastStatus = fieldByName(imageBlockAppearance.fields, "contrastStatus");
+    assert.equal(imageBlockContrastStatus.type, "ui");
+    assert.deepEqual(
+      typeof imageBlockContrastStatus.admin?.components?.Field === "object"
+        ? imageBlockContrastStatus.admin.components.Field.clientProps
+        : null,
+      { visibleTokens: ["background", "foreground"] },
+    );
+
     const imageTextAppearance = fieldByName(ImageTextBlock.fields, "appearance");
     assert.ok("fields" in imageTextAppearance);
     const imageTextScheme = fieldByName(imageTextAppearance.fields, "scheme");
@@ -170,6 +197,31 @@ describe("SPEC-026 content validation", () => {
     assert.deepEqual(
       typeof imageTextContrastStatus.admin?.components?.Field === "object"
         ? imageTextContrastStatus.admin.components.Field.clientProps
+        : null,
+      { visibleTokens: ["background", "foreground"] },
+    );
+
+    const videoBlockAppearance = fieldByName(VideoBlock.fields, "appearance");
+    assert.ok("fields" in videoBlockAppearance);
+    const videoBlockScheme = fieldByName(videoBlockAppearance.fields, "scheme");
+    assert.ok("options" in videoBlockScheme && Array.isArray(videoBlockScheme.options));
+    assert.deepEqual(
+      videoBlockScheme.options.map((option) => typeof option === "object" ? option.value : option),
+      ["default", "surface", "muted", "custom"],
+    );
+    const videoBlockColors = fieldByName(videoBlockAppearance.fields, "colors");
+    assert.ok("fields" in videoBlockColors);
+    assert.deepEqual(
+      videoBlockColors.fields.flatMap((field) =>
+        field.type === "text" && !field.admin?.hidden ? [field.name] : [],
+      ),
+      ["background", "foreground"],
+    );
+    const videoBlockContrastStatus = fieldByName(videoBlockAppearance.fields, "contrastStatus");
+    assert.equal(videoBlockContrastStatus.type, "ui");
+    assert.deepEqual(
+      typeof videoBlockContrastStatus.admin?.components?.Field === "object"
+        ? videoBlockContrastStatus.admin.components.Field.clientProps
         : null,
       { visibleTokens: ["background", "foreground"] },
     );

@@ -140,6 +140,20 @@ CTA textual derivam do `foreground`; `brand`, `action` e `accent` permanecem no
 schema, mas ficam ocultos no Payload Admin. O painel de contraste acompanha essa
 mesma lista reduzida.
 
+## Consumo atual no ImageBlock
+
+O ImageBlock exibe `background` e `foreground`. O primeiro pinta a secao do
+bloco; o segundo estiliza a legenda opcional. Os demais papeis permanecem no
+schema, mas ficam ocultos no Payload Admin por nao terem consumidor visual
+direto. O painel de contraste considera somente o texto sobre o fundo efetivo.
+
+## Consumo atual no VideoBlock
+
+O VideoBlock exibe `background` e `foreground` para a secao, titulo e legenda.
+O player incorporado permanece isolado da paleta editorial. Os demais tokens
+continuam no schema, mas ficam ocultos no Payload Admin enquanto nao houver
+consumidor visual direto.
+
 ## Limites
 
 - Tokens de ilustracao continuam separados em `--color-illustration-*`.

@@ -1,6 +1,10 @@
 import type { Media } from "../../payload-types";
-import { Container, Section, Text } from "../../components/ui";
+import { BlockThemeScope, Container, Section, Text } from "../../components/ui";
 import { classNames } from "../../components/ui/classNames";
+import {
+  normalizeColorScheme,
+  type EditorialColorOverrides,
+} from "../../lib/theme/block-color-theme";
 import type { ImagePresentation } from "../shared/image-presentation";
 import {
   getFocalPointStyle,
@@ -13,6 +17,8 @@ type ImageBlockAlignment = "center" | "left" | "right";
 
 type ImageBlockAppearance = {
   alignment?: ImageBlockAlignment | string | null;
+  colors?: EditorialColorOverrides | null;
+  scheme?: "custom" | string | null;
 };
 
 export type ImageBlockProps = {
@@ -54,9 +60,13 @@ export function ImageBlock({
   const presentationClassName = getImagePresentationClassName(presentation);
   const constrainedCrop = presentation.aspectRatio !== "original";
   const fitClassName = getImagePresentationFitClassName(presentation);
+  const customTheme = appearance?.scheme === "custom";
 
-  return (
-    <Section spacing="default" scheme="default">
+  const section = (
+    <Section
+      spacing="default"
+      scheme={customTheme ? "default" : normalizeColorScheme(appearance?.scheme)}
+    >
       <Container size="lg">
         <figure
           className={classNames(
@@ -93,4 +103,8 @@ export function ImageBlock({
       </Container>
     </Section>
   );
+
+  return customTheme
+    ? <BlockThemeScope palette={appearance?.colors}>{section}</BlockThemeScope>
+    : section;
 }

@@ -446,6 +446,25 @@ export interface ImageBlock {
      */
     fit?: ('cover' | 'contain') | null;
   };
+  /**
+   * Opcoes semanticas controladas pelo Design System. Nao permite CSS arbitrario.
+   */
+  appearance?: {
+    /**
+     * Seleciona uma combinacao completa de fundo, texto, acao e destaque.
+     */
+    scheme?: ('default' | 'surface' | 'muted' | 'custom') | null;
+    /**
+     * Deixe um campo vazio para herdar o token global. O contraste considera a paleta efetiva. Nao configura elementos individuais.
+     */
+    colors?: {
+      background?: string | null;
+      foreground?: string | null;
+      brand?: string | null;
+      action?: string | null;
+      accent?: string | null;
+    };
+  };
   id?: string | null;
   blockName?: string | null;
   blockType: 'imageBlock';
@@ -590,6 +609,25 @@ export interface VideoBlock {
    */
   provider: 'youtube' | 'vimeo';
   aspectRatio: '16:9' | '4:3' | '1:1';
+  /**
+   * Opcoes semanticas controladas pelo Design System. Nao permite CSS arbitrario.
+   */
+  appearance?: {
+    /**
+     * Seleciona uma combinacao completa de fundo, texto, acao e destaque.
+     */
+    scheme?: ('default' | 'surface' | 'muted' | 'custom') | null;
+    /**
+     * Deixe um campo vazio para herdar o token global. O contraste considera a paleta efetiva. Nao configura elementos individuais.
+     */
+    colors?: {
+      background?: string | null;
+      foreground?: string | null;
+      brand?: string | null;
+      action?: string | null;
+      accent?: string | null;
+    };
+  };
   id?: string | null;
   blockName?: string | null;
   blockType: 'videoBlock';
@@ -1499,6 +1537,20 @@ export interface ImageBlockSelect<T extends boolean = true> {
         aspectRatio?: T;
         fit?: T;
       };
+  appearance?:
+    | T
+    | {
+        scheme?: T;
+        colors?:
+          | T
+          | {
+              background?: T;
+              foreground?: T;
+              brand?: T;
+              action?: T;
+              accent?: T;
+            };
+      };
   id?: T;
   blockName?: T;
 }
@@ -1579,6 +1631,20 @@ export interface VideoBlockSelect<T extends boolean = true> {
   caption?: T;
   provider?: T;
   aspectRatio?: T;
+  appearance?:
+    | T
+    | {
+        scheme?: T;
+        colors?:
+          | T
+          | {
+              background?: T;
+              foreground?: T;
+              brand?: T;
+              action?: T;
+              accent?: T;
+            };
+      };
   id?: T;
   blockName?: T;
 }

@@ -1,4 +1,10 @@
 import type { Block, TextFieldValidation } from "payload";
+import {
+  createAppearanceGroup,
+  createBlockContrastStatusField,
+  createControlledColorAppearanceFields,
+  createSchemeField,
+} from "../../fields/block-appearance";
 import { characterLimitAdmin } from "../../fields/character-limit";
 import { closedSelect } from "../../fields/editorial-validation";
 import { createBlockAdmin } from "../shared/admin";
@@ -19,6 +25,9 @@ const validateVideoUrl = ((value) =>
   parseVideoEmbedUrl(value)
     ? true
     : "Informe uma URL valida do YouTube ou Vimeo, sem codigo HTML ou iframe.") satisfies TextFieldValidation;
+
+// VideoBlock themes the surrounding section, never the third-party player.
+const videoBlockColorTokens = ["background", "foreground"] as const;
 
 export const VideoBlock: Block = {
   slug: "videoBlock",
@@ -100,6 +109,11 @@ export const VideoBlock: Block = {
       ),
       options: aspectRatioOptions,
     },
+    createAppearanceGroup([
+      createSchemeField(["default", "surface", "muted", "custom"], "default"),
+      ...createControlledColorAppearanceFields(videoBlockColorTokens),
+      createBlockContrastStatusField(videoBlockColorTokens),
+    ]),
   ],
 };
 

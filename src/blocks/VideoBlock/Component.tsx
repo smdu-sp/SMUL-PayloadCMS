@@ -1,5 +1,9 @@
-import { Container, Heading, Section, Text } from "../../components/ui";
+import { BlockThemeScope, Container, Heading, Section, Text } from "../../components/ui";
 import { classNames } from "../../components/ui/classNames";
+import {
+  normalizeColorScheme,
+  type EditorialColorOverrides,
+} from "../../lib/theme/block-color-theme";
 import type { VideoAspectRatio, VideoProvider } from "./video-embed";
 import {
   getVideoEmbedSrc,
@@ -8,6 +12,10 @@ import {
 } from "./video-embed";
 
 export type VideoBlockProps = {
+  appearance?: {
+    colors?: EditorialColorOverrides | null;
+    scheme?: "custom" | string | null;
+  } | null;
   aspectRatio?: VideoAspectRatio | string | null;
   blockType: "videoBlock";
   caption?: string | null;
@@ -24,6 +32,7 @@ const aspectRatioClasses: Record<VideoAspectRatio, string> = {
 };
 
 export function VideoBlock({
+  appearance,
   aspectRatio,
   caption,
   title,
@@ -34,9 +43,13 @@ export function VideoBlock({
 
   const normalizedAspectRatio = normalizeVideoAspectRatio(aspectRatio);
   const iframeTitle = title?.trim() || "Video incorporado";
+  const customTheme = appearance?.scheme === "custom";
 
-  return (
-    <Section spacing="default" scheme="default">
+  const section = (
+    <Section
+      spacing="default"
+      scheme={customTheme ? "default" : normalizeColorScheme(appearance?.scheme)}
+    >
       <Container size="lg">
         {title ? (
           <div className="mb-5">
@@ -73,4 +86,8 @@ export function VideoBlock({
       </Container>
     </Section>
   );
+
+  return customTheme
+    ? <BlockThemeScope palette={appearance?.colors}>{section}</BlockThemeScope>
+    : section;
 }
