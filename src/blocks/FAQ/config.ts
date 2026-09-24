@@ -2,6 +2,8 @@ import type { Block } from "payload";
 import { characterLimitAdmin } from "../../fields/character-limit";
 import {
   createAppearanceGroup,
+  createBlockContrastStatusField,
+  createControlledColorAppearanceFields,
   createSchemeField,
 } from "../../fields/block-appearance";
 import {
@@ -10,6 +12,9 @@ import {
   requiredText,
 } from "../../fields/editorial-validation";
 import { createBlockAdmin } from "../shared/admin";
+
+// FAQ themes the outer section; accordion rows keep a safe surface recipe.
+const faqColorTokens = ["background", "foreground"] as const;
 
 export const FAQBlock: Block = {
   slug: "faqAccordion",
@@ -67,7 +72,9 @@ export const FAQBlock: Block = {
       ],
     },
     createAppearanceGroup([
-      createSchemeField(["default", "surface", "muted"], "muted"),
+      createSchemeField(["default", "surface", "muted", "custom"], "muted"),
+      ...createControlledColorAppearanceFields(faqColorTokens),
+      createBlockContrastStatusField(faqColorTokens),
     ]),
     {
       name: "items",

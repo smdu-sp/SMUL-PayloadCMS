@@ -1105,7 +1105,17 @@ export interface FAQAccordionBlock {
     /**
      * Seleciona uma combinacao completa de fundo, texto, acao e destaque.
      */
-    scheme?: ('default' | 'surface' | 'muted') | null;
+    scheme?: ('default' | 'surface' | 'muted' | 'custom') | null;
+    /**
+     * Deixe um campo vazio para herdar o token global. O contraste considera a paleta efetiva. Nao configura elementos individuais.
+     */
+    colors?: {
+      background?: string | null;
+      foreground?: string | null;
+      brand?: string | null;
+      action?: string | null;
+      accent?: string | null;
+    };
   };
   /**
    * Cada item vira uma linha expansivel acessivel por teclado.
@@ -1194,6 +1204,25 @@ export interface AlertBoxBlock {
      * Recomendado para links externos, mantendo o portal aberto na aba atual.
      */
     newTab?: boolean | null;
+  };
+  /**
+   * Opcoes semanticas controladas pelo Design System. Nao permite CSS arbitrario.
+   */
+  appearance?: {
+    /**
+     * Seleciona uma combinacao completa de fundo, texto, acao e destaque.
+     */
+    scheme?: ('default' | 'surface' | 'muted' | 'custom') | null;
+    /**
+     * Deixe um campo vazio para herdar o token global. O contraste considera a paleta efetiva. Nao configura elementos individuais.
+     */
+    colors?: {
+      background?: string | null;
+      foreground?: string | null;
+      brand?: string | null;
+      action?: string | null;
+      accent?: string | null;
+    };
   };
   id?: string | null;
   blockName?: string | null;
@@ -1916,6 +1945,15 @@ export interface FAQAccordionBlockSelect<T extends boolean = true> {
     | T
     | {
         scheme?: T;
+        colors?:
+          | T
+          | {
+              background?: T;
+              foreground?: T;
+              brand?: T;
+              action?: T;
+              accent?: T;
+            };
       };
   items?:
     | T
@@ -1943,6 +1981,20 @@ export interface AlertBoxBlockSelect<T extends boolean = true> {
         page?: T;
         url?: T;
         newTab?: T;
+      };
+  appearance?:
+    | T
+    | {
+        scheme?: T;
+        colors?:
+          | T
+          | {
+              background?: T;
+              foreground?: T;
+              brand?: T;
+              action?: T;
+              accent?: T;
+            };
       };
   id?: T;
   blockName?: T;

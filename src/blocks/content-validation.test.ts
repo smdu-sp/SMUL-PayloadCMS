@@ -325,6 +325,57 @@ describe("SPEC-026 content validation", () => {
         : null,
       { visibleTokens: ["background", "foreground", "accent"] },
     );
+
+    const faqAppearance = fieldByName(FAQBlock.fields, "appearance");
+    assert.ok("fields" in faqAppearance);
+    const faqScheme = fieldByName(faqAppearance.fields, "scheme");
+    assert.ok("options" in faqScheme && Array.isArray(faqScheme.options));
+    assert.deepEqual(
+      faqScheme.options.map((option) => typeof option === "object" ? option.value : option),
+      ["default", "surface", "muted", "custom"],
+    );
+    const faqColors = fieldByName(faqAppearance.fields, "colors");
+    assert.ok("fields" in faqColors);
+    assert.deepEqual(
+      faqColors.fields.flatMap((field) =>
+        field.type === "text" && !field.admin?.hidden ? [field.name] : [],
+      ),
+      ["background", "foreground"],
+    );
+    const faqContrastStatus = fieldByName(faqAppearance.fields, "contrastStatus");
+    assert.equal(faqContrastStatus.type, "ui");
+    assert.deepEqual(
+      typeof faqContrastStatus.admin?.components?.Field === "object"
+        ? faqContrastStatus.admin.components.Field.clientProps
+        : null,
+      { visibleTokens: ["background", "foreground"] },
+    );
+
+    const alertBoxAppearance = fieldByName(AlertBoxBlock.fields, "appearance");
+    assert.ok("fields" in alertBoxAppearance);
+    const alertBoxScheme = fieldByName(alertBoxAppearance.fields, "scheme");
+    assert.ok("options" in alertBoxScheme && Array.isArray(alertBoxScheme.options));
+    assert.equal("defaultValue" in alertBoxScheme ? alertBoxScheme.defaultValue : null, "surface");
+    assert.deepEqual(
+      alertBoxScheme.options.map((option) => typeof option === "object" ? option.value : option),
+      ["default", "surface", "muted", "custom"],
+    );
+    const alertBoxColors = fieldByName(alertBoxAppearance.fields, "colors");
+    assert.ok("fields" in alertBoxColors);
+    assert.deepEqual(
+      alertBoxColors.fields.flatMap((field) =>
+        field.type === "text" && !field.admin?.hidden ? [field.name] : [],
+      ),
+      ["background", "foreground"],
+    );
+    const alertBoxContrastStatus = fieldByName(alertBoxAppearance.fields, "contrastStatus");
+    assert.equal(alertBoxContrastStatus.type, "ui");
+    assert.deepEqual(
+      typeof alertBoxContrastStatus.admin?.components?.Field === "object"
+        ? alertBoxContrastStatus.admin.components.Field.clientProps
+        : null,
+      { visibleTokens: ["background", "foreground"] },
+    );
   });
 
   it("rejects partially completed optional and required links", async () => {

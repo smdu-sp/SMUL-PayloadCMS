@@ -1,8 +1,17 @@
 import type { Block } from "payload";
 import { characterLimitAdmin } from "../../fields/character-limit";
+import {
+  createAppearanceGroup,
+  createBlockContrastStatusField,
+  createControlledColorAppearanceFields,
+  createSchemeField,
+} from "../../fields/block-appearance";
 import { closedSelect, requiredRichText } from "../../fields/editorial-validation";
 import { createLinkFields } from "../../fields/link";
 import { createBlockAdmin } from "../shared/admin";
+
+// AlertBox customizes its surface while preserving semantic status markers.
+const alertBoxColorTokens = ["background", "foreground"] as const;
 
 export const AlertBoxBlock: Block = {
   slug: "alertBox",
@@ -69,5 +78,10 @@ export const AlertBoxBlock: Block = {
       },
       fields: createLinkFields(),
     },
+    createAppearanceGroup([
+      createSchemeField(["default", "surface", "muted", "custom"], "surface"),
+      ...createControlledColorAppearanceFields(alertBoxColorTokens),
+      createBlockContrastStatusField(alertBoxColorTokens),
+    ]),
   ],
 };

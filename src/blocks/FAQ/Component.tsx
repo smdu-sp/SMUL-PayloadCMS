@@ -1,13 +1,15 @@
 import { RichText } from "@payloadcms/richtext-lexical/react";
 import type { FAQAccordionBlock as FAQAccordionBlockProps } from "../../payload-types";
-import { ColorScope, Container, Heading, Section, Text } from "../../components/ui";
+import { BlockThemeScope, ColorScope, Container, Heading, Section, Text } from "../../components/ui";
+import type { EditorialColorOverrides } from "../../lib/theme/block-color-theme";
 
 type FAQVariant = "compact" | "default";
 type FAQTone = "default" | "muted" | "surface";
 
-type FAQBlockWithAppearanceProps = FAQAccordionBlockProps & {
+type FAQBlockWithAppearanceProps = Omit<FAQAccordionBlockProps, "appearance"> & {
   appearance?: {
-    scheme?: FAQTone | string | null;
+    colors?: EditorialColorOverrides | null;
+    scheme?: "custom" | FAQTone | string | null;
   } | null;
 };
 
@@ -32,10 +34,14 @@ export function FAQAccordionBlock({
   variant,
 }: FAQBlockWithAppearanceProps) {
   const normalizedVariant = normalizeFAQVariant(variant);
+  const customTheme = appearance?.scheme === "custom";
   const effectiveTone = normalizeFAQTone(appearance?.scheme);
 
-  return (
-    <Section spacing={normalizedVariant === "compact" ? "sm" : "md"} scheme={effectiveTone}>
+  const section = (
+    <Section
+      spacing={normalizedVariant === "compact" ? "sm" : "md"}
+      scheme={customTheme ? "default" : effectiveTone}
+    >
       <Container size="md">
         <Heading level={2} size="lg">
           <span className="text-balance wrap-break-word">{title}</span>
@@ -63,4 +69,8 @@ export function FAQAccordionBlock({
       </Container>
     </Section>
   );
+
+  return customTheme
+    ? <BlockThemeScope palette={appearance?.colors}>{section}</BlockThemeScope>
+    : section;
 }

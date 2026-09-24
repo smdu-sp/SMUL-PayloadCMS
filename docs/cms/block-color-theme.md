@@ -180,6 +180,19 @@ secao editorial; `accent` colore icones padrao dentro dos Cards. Links atuais
 sao textuais, portanto `action` permanece oculto ate existir um consumidor
 visual direto.
 
+## Consumo atual no FAQ
+
+O FAQ exibe `background` e `foreground` para a secao, titulo e resumo. Perguntas,
+respostas e indicador de expansao permanecem em uma superficie `surface` propria,
+com receita de contraste resolvida pelo Design System. `accent` nao e exposto
+porque seu contraste teria de ser avaliado contra esse fundo interno.
+
+## Consumo atual no AlertBox
+
+O AlertBox exibe `background` e `foreground` para a superficie do aviso. Os
+marcadores `info`, `success`, `warning` e `danger` permanecem vinculados aos
+tokens semanticos do sistema e nao podem ser substituidos pela paleta editorial.
+
 ## Limites
 
 - Tokens de ilustracao continuam separados em `--color-illustration-*`.
