@@ -1,8 +1,17 @@
 import type { Block, NumberFieldSingleValidation, UploadFieldSingleValidation } from "payload";
 import { characterLimitAdmin } from "../../fields/character-limit";
+import {
+  createAppearanceGroup,
+  createBlockContrastStatusField,
+  createControlledColorAppearanceFields,
+  createSchemeField,
+} from "../../fields/block-appearance";
 import { closedSelect } from "../../fields/editorial-validation";
 import { createLinkFields } from "../../fields/link";
 import { createBlockAdmin } from "../shared/admin";
+
+// Media content consumes these roles; brand is not read directly by this Block.
+const fullWidthBannerColorTokens = ["background", "foreground", "action", "accent"] as const;
 
 const overlayOptions = [
   { label: "Sem sobreposicao", value: "none" },
@@ -240,5 +249,10 @@ export const FullWidthImageBannerBlock: Block = {
       ),
       options: focalPointOptions,
     },
+    createAppearanceGroup([
+      createSchemeField(["default", "custom"], "default"),
+      ...createControlledColorAppearanceFields(fullWidthBannerColorTokens),
+      createBlockContrastStatusField(fullWidthBannerColorTokens),
+    ]),
   ],
 };

@@ -376,6 +376,97 @@ describe("SPEC-026 content validation", () => {
         : null,
       { visibleTokens: ["background", "foreground"] },
     );
+
+    const actionBannersAppearance = fieldByName(ActionBannersBlock.fields, "appearance");
+    assert.ok("fields" in actionBannersAppearance);
+    const actionBannersScheme = fieldByName(actionBannersAppearance.fields, "scheme");
+    assert.ok("options" in actionBannersScheme && Array.isArray(actionBannersScheme.options));
+    assert.equal(
+      "defaultValue" in actionBannersScheme ? actionBannersScheme.defaultValue : null,
+      "default",
+    );
+    assert.deepEqual(
+      actionBannersScheme.options.map((option) => typeof option === "object" ? option.value : option),
+      ["default", "surface", "muted", "custom"],
+    );
+    const actionBannersColors = fieldByName(actionBannersAppearance.fields, "colors");
+    assert.ok("fields" in actionBannersColors);
+    assert.deepEqual(
+      actionBannersColors.fields.flatMap((field) =>
+        field.type === "text" && !field.admin?.hidden ? [field.name] : [],
+      ),
+      ["background", "foreground"],
+    );
+    const actionBannersContrastStatus = fieldByName(
+      actionBannersAppearance.fields,
+      "contrastStatus",
+    );
+    assert.equal(actionBannersContrastStatus.type, "ui");
+    assert.deepEqual(
+      typeof actionBannersContrastStatus.admin?.components?.Field === "object"
+        ? actionBannersContrastStatus.admin.components.Field.clientProps
+        : null,
+      { visibleTokens: ["background", "foreground"] },
+    );
+
+    const fullWidthBannerAppearance = fieldByName(
+      FullWidthImageBannerBlock.fields,
+      "appearance",
+    );
+    assert.ok("fields" in fullWidthBannerAppearance);
+    const fullWidthBannerScheme = fieldByName(fullWidthBannerAppearance.fields, "scheme");
+    assert.ok("options" in fullWidthBannerScheme && Array.isArray(fullWidthBannerScheme.options));
+    assert.deepEqual(
+      fullWidthBannerScheme.options.map((option) =>
+        typeof option === "object" ? option.value : option,
+      ),
+      ["default", "custom"],
+    );
+    const fullWidthBannerColors = fieldByName(fullWidthBannerAppearance.fields, "colors");
+    assert.ok("fields" in fullWidthBannerColors);
+    assert.deepEqual(
+      fullWidthBannerColors.fields.flatMap((field) =>
+        field.type === "text" && !field.admin?.hidden ? [field.name] : [],
+      ),
+      ["background", "foreground", "action", "accent"],
+    );
+    const fullWidthBannerContrastStatus = fieldByName(
+      fullWidthBannerAppearance.fields,
+      "contrastStatus",
+    );
+    assert.equal(fullWidthBannerContrastStatus.type, "ui");
+    assert.deepEqual(
+      typeof fullWidthBannerContrastStatus.admin?.components?.Field === "object"
+        ? fullWidthBannerContrastStatus.admin.components.Field.clientProps
+        : null,
+      { visibleTokens: ["background", "foreground", "action", "accent"] },
+    );
+
+    const heroAppearance = fieldByName(HeroBlock.fields, "appearance");
+    assert.ok("fields" in heroAppearance);
+    const heroScheme = fieldByName(heroAppearance.fields, "scheme");
+    assert.ok("options" in heroScheme && Array.isArray(heroScheme.options));
+    assert.equal("defaultValue" in heroScheme ? heroScheme.defaultValue : null, "brand");
+    assert.deepEqual(
+      heroScheme.options.map((option) => typeof option === "object" ? option.value : option),
+      ["default", "surface", "muted", "brand", "custom"],
+    );
+    const heroColors = fieldByName(heroAppearance.fields, "colors");
+    assert.ok("fields" in heroColors);
+    assert.deepEqual(
+      heroColors.fields.flatMap((field) =>
+        field.type === "text" && !field.admin?.hidden ? [field.name] : [],
+      ),
+      ["background", "foreground", "action", "accent"],
+    );
+    const heroContrastStatus = fieldByName(heroAppearance.fields, "contrastStatus");
+    assert.equal(heroContrastStatus.type, "ui");
+    assert.deepEqual(
+      typeof heroContrastStatus.admin?.components?.Field === "object"
+        ? heroContrastStatus.admin.components.Field.clientProps
+        : null,
+      { visibleTokens: ["background", "foreground", "action", "accent"] },
+    );
   });
 
   it("rejects partially completed optional and required links", async () => {

@@ -1,9 +1,18 @@
 import type { ActionBannersBlock as ActionBannersBlockProps } from "../../payload-types";
-import { Card, Container, Heading, Section, Text } from "../../components/ui";
+import { BlockThemeScope, Card, Container, Heading, Section, Text } from "../../components/ui";
+import type { EditorialColorOverrides } from "../../lib/theme/block-color-theme";
 import { BlockLink } from "../shared/BlockLink";
 
 type ActionBannersVariant = "grid" | "stacked";
 type ActionBannerAppearance = "accent" | "brand" | "surface";
+type ActionBannersTone = "default" | "muted" | "surface";
+
+type ActionBannersWithAppearanceProps = Omit<ActionBannersBlockProps, "appearance"> & {
+  appearance?: {
+    colors?: EditorialColorOverrides | null;
+    scheme?: "custom" | ActionBannersTone | string | null;
+  } | null;
+};
 
 const bannerStyles = {
   accent: {
@@ -33,15 +42,23 @@ export function normalizeActionBannerAppearance(
   return "surface";
 }
 
+export function normalizeActionBannersTone(tone?: string | null): ActionBannersTone {
+  if (tone === "surface" || tone === "muted") return tone;
+  return "default";
+}
+
 export function ActionBannersBlock({
+  appearance,
   banners,
   title,
   variant,
-}: ActionBannersBlockProps) {
+}: ActionBannersWithAppearanceProps) {
   const normalizedVariant = normalizeActionBannersVariant(variant);
+  const customTheme = appearance?.scheme === "custom";
+  const effectiveTone = normalizeActionBannersTone(appearance?.scheme);
 
-  return (
-    <Section spacing="md" scheme="default">
+  const section = (
+    <Section spacing="md" scheme={customTheme ? "default" : effectiveTone}>
       <Container size="lg">
         {title ? (
           <Heading level={2} size="lg">
@@ -81,4 +98,8 @@ export function ActionBannersBlock({
       </Container>
     </Section>
   );
+
+  return customTheme
+    ? <BlockThemeScope palette={appearance?.colors}>{section}</BlockThemeScope>
+    : section;
 }

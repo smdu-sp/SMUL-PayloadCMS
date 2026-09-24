@@ -8,7 +8,7 @@ Este catalogo registra a base real encontrada no projeto durante a SPEC-018. Ele
 
 | Block atual | Schema | Component | Variants | Uso |
 |---|---|---|---|---|
-| Hero | `src/blocks/Hero/config.ts` | `src/blocks/Hero/Component.tsx` | `default`, `centered`, `split`; fallback legado `image` para `split` | Abertura editorial de pagina com chamada superior, titulo, resumo, imagem opcional e acao principal. |
+| Hero | `src/blocks/Hero/config.ts` | `src/blocks/Hero/Component.tsx` | `default`, `centered`, `split`; fallback legado `image` para `split`; temas preset ou `custom` com `background`, `foreground`, `action` e `accent` | Abertura editorial de pagina com chamada superior, titulo, resumo, imagem opcional e acao principal. |
 | RichText | `src/blocks/RichText/config.ts` | `src/blocks/RichText/Component.tsx` | `default`, `narrow`; fallbacks legados `content` e `wide` | Conteudo editorial livre com Lexical, adequado para introducoes, explicacoes e textos institucionais. |
 | Image Block | `src/blocks/ImageBlock/config.ts` | `src/blocks/ImageBlock/Component.tsx` | Presets de tamanho, proporcao e ajuste; temas preset ou `custom` com `background` e `foreground` | Imagem editorial unica, responsiva, com legenda opcional e sem dimensoes numericas livres. |
 | Gallery | `src/blocks/Gallery/config.ts` | `src/blocks/Gallery/Component.tsx` e `src/blocks/Gallery/GalleryLightbox.tsx` | Colunas `2`, `3`, `4`; preset `grid`; efeito `none` ou `grow`; temas preset ou `custom` com `background` e `foreground` | Galeria de imagens com miniaturas responsivas e lightbox/dialog acessivel com teclado. |
@@ -20,7 +20,8 @@ Este catalogo registra a base real encontrada no projeto durante a SPEC-018. Ele
 | Icon Grid | `src/blocks/IconGrid/config.ts` | `src/blocks/IconGrid/Component.tsx` | `default`, `compact`; temas preset ou `custom` com `background`, `foreground` e `accent` | Grade compacta de itens com icone, texto curto e link opcional, priorizada para paginas de modalidades. |
 | FAQ / Accordion | `src/blocks/FAQ/config.ts` | `src/blocks/FAQ/Component.tsx` | `default`, `compact`; temas preset ou `custom` com `background` e `foreground` | Lista acessivel de perguntas e respostas com rich text, renderizada com `details` e `summary`. |
 | Alert Box | `src/blocks/AlertBox/config.ts` | `src/blocks/AlertBox/Component.tsx` | `info`, `success`, `warning`, `danger`; temas preset ou `custom` com `background` e `foreground` | Aviso editorial com tom controlado pelo Design System, rich text e link opcional. |
-| Action Banners | `src/blocks/ActionBanners/config.ts` | `src/blocks/ActionBanners/Component.tsx` | `grid`, `stacked`; aparencias `primary`, `brand`, `accent` | Conjunto reordenavel de faixas de acao, sem cores livres no CMS. |
+| Action Banners | `src/blocks/ActionBanners/config.ts` | `src/blocks/ActionBanners/Component.tsx` | `grid`, `stacked`; temas da secao preset ou `custom` com `background` e `foreground`; faixas em `surface`, `brand` ou `accent` | Conjunto reordenavel de faixas de acao com paleta livre apenas na secao externa. |
+| Full-width Image Banner | `src/blocks/FullWidthImageBanner/config.ts` | `src/blocks/FullWidthImageBanner/Component.tsx` | Overlay `none`, `light` ou `dark`; tema `custom` com `background`, `foreground`, `action` e `accent` | Banner responsivo de imagem com conteudo e acoes opcionais sobrepostos. |
 
 ## Globals e estruturas globais
 

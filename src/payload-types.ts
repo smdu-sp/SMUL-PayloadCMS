@@ -348,11 +348,21 @@ export interface HeroBlock {
     /**
      * Seleciona uma combinacao completa de fundo, texto, acao e destaque.
      */
-    scheme?: ('default' | 'surface' | 'muted' | 'brand') | null;
+    scheme?: ('default' | 'surface' | 'muted' | 'brand' | 'custom') | null;
     /**
      * Controla se os elementos de texto e botoes ficam alinhados a esquerda ou centralizados.
      */
     alignment?: ('left' | 'center') | null;
+    /**
+     * Deixe um campo vazio para herdar o token global. O contraste considera a paleta efetiva. Nao configura elementos individuais.
+     */
+    colors?: {
+      background?: string | null;
+      foreground?: string | null;
+      brand?: string | null;
+      action?: string | null;
+      accent?: string | null;
+    };
   };
   id?: string | null;
   blockName?: string | null;
@@ -1281,6 +1291,25 @@ export interface ActionBannersBlock {
     };
     id?: string | null;
   }[];
+  /**
+   * Opcoes semanticas controladas pelo Design System. Nao permite CSS arbitrario.
+   */
+  appearance?: {
+    /**
+     * Seleciona uma combinacao completa de fundo, texto, acao e destaque.
+     */
+    scheme?: ('default' | 'surface' | 'muted' | 'custom') | null;
+    /**
+     * Deixe um campo vazio para herdar o token global. O contraste considera a paleta efetiva. Nao configura elementos individuais.
+     */
+    colors?: {
+      background?: string | null;
+      foreground?: string | null;
+      brand?: string | null;
+      action?: string | null;
+      accent?: string | null;
+    };
+  };
   id?: string | null;
   blockName?: string | null;
   blockType: 'actionBanners';
@@ -1349,6 +1378,25 @@ export interface FullWidthImageBannerBlock {
    * Usado quando a altura e fixa para priorizar uma regiao da imagem no corte.
    */
   focalPoint?: ('center' | 'top' | 'bottom' | 'left' | 'right') | null;
+  /**
+   * Opcoes semanticas controladas pelo Design System. Nao permite CSS arbitrario.
+   */
+  appearance?: {
+    /**
+     * Seleciona uma combinacao completa de fundo, texto, acao e destaque.
+     */
+    scheme?: ('default' | 'custom') | null;
+    /**
+     * Deixe um campo vazio para herdar o token global. O contraste considera a paleta efetiva. Nao configura elementos individuais.
+     */
+    colors?: {
+      background?: string | null;
+      foreground?: string | null;
+      brand?: string | null;
+      action?: string | null;
+      accent?: string | null;
+    };
+  };
   id?: string | null;
   blockName?: string | null;
   blockType: 'fullWidthImageBanner';
@@ -1575,6 +1623,15 @@ export interface HeroBlockSelect<T extends boolean = true> {
     | {
         scheme?: T;
         alignment?: T;
+        colors?:
+          | T
+          | {
+              background?: T;
+              foreground?: T;
+              brand?: T;
+              action?: T;
+              accent?: T;
+            };
       };
   id?: T;
   blockName?: T;
@@ -2023,6 +2080,20 @@ export interface ActionBannersBlockSelect<T extends boolean = true> {
             };
         id?: T;
       };
+  appearance?:
+    | T
+    | {
+        scheme?: T;
+        colors?:
+          | T
+          | {
+              background?: T;
+              foreground?: T;
+              brand?: T;
+              action?: T;
+              accent?: T;
+            };
+      };
   id?: T;
   blockName?: T;
 }
@@ -2056,6 +2127,20 @@ export interface FullWidthImageBannerBlockSelect<T extends boolean = true> {
   customImageHeight?: T;
   imageFit?: T;
   focalPoint?: T;
+  appearance?:
+    | T
+    | {
+        scheme?: T;
+        colors?:
+          | T
+          | {
+              background?: T;
+              foreground?: T;
+              brand?: T;
+              action?: T;
+              accent?: T;
+            };
+      };
   id?: T;
   blockName?: T;
 }

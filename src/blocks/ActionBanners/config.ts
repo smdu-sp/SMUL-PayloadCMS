@@ -1,8 +1,17 @@
 import type { Block } from "payload";
 import { characterLimitAdmin } from "../../fields/character-limit";
+import {
+  createAppearanceGroup,
+  createBlockContrastStatusField,
+  createControlledColorAppearanceFields,
+  createSchemeField,
+} from "../../fields/block-appearance";
 import { closedSelect, requiredText } from "../../fields/editorial-validation";
 import { createLinkFields } from "../../fields/link";
 import { createBlockAdmin } from "../shared/admin";
+
+// The outer section is editable; each actionable banner keeps its own safe recipe.
+const actionBannersColorTokens = ["background", "foreground"] as const;
 
 export const ActionBannersBlock: Block = {
   slug: "actionBanners",
@@ -110,5 +119,10 @@ export const ActionBannersBlock: Block = {
         },
       ],
     },
+    createAppearanceGroup([
+      createSchemeField(["default", "surface", "muted", "custom"], "default"),
+      ...createControlledColorAppearanceFields(actionBannersColorTokens),
+      createBlockContrastStatusField(actionBannersColorTokens),
+    ]),
   ],
 };

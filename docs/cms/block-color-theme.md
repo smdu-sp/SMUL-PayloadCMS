@@ -193,6 +193,28 @@ O AlertBox exibe `background` e `foreground` para a superficie do aviso. Os
 marcadores `info`, `success`, `warning` e `danger` permanecem vinculados aos
 tokens semanticos do sistema e nao podem ser substituidos pela paleta editorial.
 
+## Consumo atual no ActionBanners
+
+O ActionBanners exibe `background` e `foreground` para a secao externa e seu
+titulo. Cada faixa mantem a propria receita fechada `surface`, `brand` ou
+`accent`, incluindo o botao, para preservar contraste e hierarquia de acao.
+
+## Consumo atual no FullWidthImageBanner
+
+O FullWidthImageBanner exibe `background`, `foreground`, `action` e `accent`.
+Esses tokens controlam, respectivamente, o overlay, o conteudo textual, os
+botoes e a chamada superior. `brand` permanece oculto porque nao possui um
+consumidor visual direto. Fora do tema `custom`, o overlay claro ou escuro
+continua selecionando a receita segura para midia.
+
+## Consumo atual no Hero
+
+O Hero exibe `background`, `foreground`, `action` e `accent` para controlar a
+superficie ou overlay, o conteudo textual, o CTA e a chamada superior. `brand`
+permanece oculto como campo isolado porque representa um preset completo. No
+Hero com imagem de fundo, o tema `custom` substitui a receita clara ou escura;
+nos demais temas, a receita de midia continua protegendo o contraste.
+
 ## Limites
 
 - Tokens de ilustracao continuam separados em `--color-illustration-*`.

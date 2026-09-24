@@ -3,6 +3,8 @@ import { characterLimitAdmin } from "../../fields/character-limit";
 import {
   createAlignmentField,
   createAppearanceGroup,
+  createBlockContrastStatusField,
+  createControlledColorAppearanceFields,
   createSchemeField,
 } from "../../fields/block-appearance";
 
@@ -10,6 +12,9 @@ import { closedSelect, requiredText } from "../../fields/editorial-validation";
 import { createImagePresentationFields } from "../../fields/image-presentation";
 import { createLinkFields } from "../../fields/link";
 import { createBlockAdmin } from "../shared/admin";
+
+// Hero text, overlay, eyebrow and CTA consume these roles directly.
+const heroColorTokens = ["background", "foreground", "action", "accent"] as const;
 
 const overlayOptions = [
   { label: "Sem sobreposicao", value: "none" },
@@ -183,8 +188,10 @@ export const HeroBlock: Block = {
       ],
     },
     createAppearanceGroup([
-      createSchemeField(["brand", "default", "surface", "muted"], "brand"),
+      createSchemeField(["brand", "default", "surface", "muted", "custom"], "brand"),
       createAlignmentField(["left", "center"], "left"),
+      ...createControlledColorAppearanceFields(heroColorTokens),
+      createBlockContrastStatusField(heroColorTokens),
     ]),
   ],
 };

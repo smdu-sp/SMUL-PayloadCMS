@@ -1,6 +1,7 @@
 import type { Media, Page } from "../../payload-types";
-import { Heading, MediaColorScope, Text } from "../../components/ui";
+import { BlockThemeScope, ColorScope, Heading, MediaColorScope, Text } from "../../components/ui";
 import { classNames } from "../../components/ui/classNames";
+import type { EditorialColorOverrides } from "../../lib/theme/block-color-theme";
 import { BlockLink } from "../shared/BlockLink";
 import { MediaImage } from "../shared/MediaImage";
 import { normalizeFocalPoint, normalizeHeroOverlay } from "../Hero/Component";
@@ -20,6 +21,10 @@ type BannerAction = {
 };
 
 export type FullWidthImageBannerBlockProps = {
+  appearance?: {
+    colors?: EditorialColorOverrides | null;
+    scheme?: "custom" | "default" | string | null;
+  } | null;
   blockType: "fullWidthImageBanner";
   content?: {
     actions?: BannerAction[] | null;
@@ -114,6 +119,7 @@ const overlayClasses = {
 } as const;
 
 export function FullWidthImageBannerBlock({
+  appearance,
   content,
   contentPosition,
   customImageHeight,
@@ -147,9 +153,9 @@ export function FullWidthImageBannerBlock({
   const hasCustomHeight = normalizedHeight === "custom";
   const resolvedHeight = hasCustomHeight ? normalizedCustomHeight : null;
   const shouldUseFixedHeight = !hasAutoHeight && (!hasCustomHeight || Boolean(resolvedHeight));
+  const customTheme = appearance?.scheme === "custom";
 
-  return (
-    <MediaColorScope mode={normalizedOverlay === "light" ? "light" : "dark"} paint={false}>
+  const banner = (
     <section
       className={classNames(
         "relative overflow-hidden bg-muted",
@@ -240,6 +246,19 @@ export function FullWidthImageBannerBlock({
         </div>
       ) : null}
     </section>
+  );
+
+  if (customTheme) {
+    return (
+      <BlockThemeScope palette={appearance?.colors}>
+        <ColorScope scheme="default" paint={false}>{banner}</ColorScope>
+      </BlockThemeScope>
+    );
+  }
+
+  return (
+    <MediaColorScope mode={normalizedOverlay === "light" ? "light" : "dark"} paint={false}>
+      {banner}
     </MediaColorScope>
   );
 }

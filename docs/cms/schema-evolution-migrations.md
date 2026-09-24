@@ -36,6 +36,9 @@ As mudancas das SPECS 019 a 027 foram classificadas assim:
 | `cards.appearance` | Grupo existente expandido com `custom` e paleta restrita a `background`, `foreground` e `accent` no Admin | Novos fields opcionais e novo enum | Nao exige migration; scheme, spacing e interaction existentes permanecem compativeis. |
 | `faqAccordion.appearance` | Grupo existente expandido com `custom` e paleta restrita a `background` e `foreground` no Admin | Novos fields opcionais e novo enum | Nao exige migration; scheme existente permanece compativel e o default continua `muted`. |
 | `alertBox.appearance` | Novo grupo opcional com presets e paleta customizada restrita a `background` e `foreground` no Admin | Novos fields opcionais e novo enum | Nao exige migration; documentos antigos preservam a superficie `surface` como fallback. |
+| `actionBanners.appearance` | Novo grupo opcional com presets e paleta customizada restrita a `background` e `foreground` na secao externa | Novos fields opcionais e novo enum | Nao exige migration; documentos antigos preservam o tema `default` como fallback. |
+| `fullWidthImageBanner.appearance` | Novo grupo opcional com paleta customizada restrita a `background`, `foreground`, `action` e `accent` | Novos fields opcionais e novo enum | Nao exige migration; documentos antigos continuam usando a receita clara ou escura definida pelo overlay. |
+| `hero.appearance` | Grupo existente expandido com `custom` e paleta restrita a `background`, `foreground`, `action` e `accent` | Novos fields opcionais e novo enum | Nao exige migration; scheme e alignment existentes permanecem compativeis e o default continua `brand`. |
 | CSS tokens | Novos papeis semanticos `brand`, `action`, `heading`, `link`, `surface`, `muted`, `accent` | Compatibilidade de tema | Nao exige migration; tokens antigos continuam existindo. |
 | Block theme | Novo contrato local e aliases CSS `--block-*` | Refatoracao interna | Nao exige migration; `appearance.tone` e campos existentes sao preservados. |
 | `cards.variant` | Nova variant `modalities` | Novo enum/variant | Nao exige migration; fallback de `Cards` retorna `default`. |
@@ -43,7 +46,7 @@ As mudancas das SPECS 019 a 027 foram classificadas assim:
 | `cta.variant` | `primary` legado mapeado para `brand`; desconhecidos para `default` | Compatibilidade de enum | Nao exige migration; fallback preservado no componente. |
 | `imageText` | `imagePosition` legado aceito como fallback de `variant` | Campo legado absorvido | Nao exige migration neste ciclo. |
 | `richText` | `width` legado aceito como fallback de `variant` | Campo legado absorvido | Nao exige migration neste ciclo. |
-| `actionBanners.appearance` | Aparencias fechadas no Design System | Novo enum/variant | Nao exige migration; aparencia desconhecida vira `primary`. |
+| `actionBanners.banners[].appearance` | Aparencias fechadas no Design System | Novo enum/variant | Nao exige migration; aparencia desconhecida vira `surface`. |
 | `Header`, `Footer`, `SiteSettings` | Links globais mantidos em formatos existentes | Preservacao de schema | Nao exige migration; resolver central aceita formatos legados. |
 | `Media.usage` | Novo field obrigatorio com default `content` | Novo field obrigatorio | Nao exige migration manual porque ha default seguro; revisar banco antes de producao. |
 | `Users.role` | Novo field com default `admin` | Novo field com default | Nao exige migration manual local; usuarios sem role seguem tratados como admin legado. |
