@@ -52,6 +52,42 @@ const ICON_GUIDES: Record<
     useWhen: "Links para portais externos oficiais da Prefeitura e governos.",
     examples: "Portal de Licenciamento (SLC), GeoSampa, Diário Oficial da Cidade.",
   },
+  home: {
+    useWhen: "Acesso à página inicial ou ao painel principal de uma área.",
+    examples: "Menu principal do painel administrativo.",
+  },
+  users: {
+    useWhen: "Gestão de pessoas, equipes, perfis e permissões de acesso.",
+    examples: "Usuários do painel administrativo.",
+  },
+  image: {
+    useWhen: "Imagens, fotografias, ilustrações e biblioteca de mídia.",
+    examples: "Biblioteca de mídias do portal.",
+  },
+  "panel-top": {
+    useWhen: "Cabeçalhos, barras superiores e conteúdo no topo da página.",
+    examples: "Configuração do cabeçalho institucional.",
+  },
+  "panel-bottom": {
+    useWhen: "Rodapés, barras inferiores e conteúdo no fim da página.",
+    examples: "Configuração do rodapé institucional.",
+  },
+  settings: {
+    useWhen: "Preferências, parâmetros e configurações gerais do sistema.",
+    examples: "Configurações do site.",
+  },
+  history: {
+    useWhen: "Histórico de alterações, atividades e registros de auditoria.",
+    examples: "Logs de auditoria editorial.",
+  },
+  shapes: {
+    useWhen: "Coleções de elementos gráficos e catálogos visuais.",
+    examples: "Catálogo de ícones do design system.",
+  },
+  "log-out": {
+    useWhen: "Encerramento de sessão ou saída de uma área autenticada.",
+    examples: "Sair da conta no painel administrativo.",
+  },
 };
 
 const SIZES: { label: string; size: "sm" | "md" | "lg" | "xl" | "2xl" | "3xl"; px: string }[] = [

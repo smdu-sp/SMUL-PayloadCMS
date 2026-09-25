@@ -9,6 +9,15 @@ export const STANDARD_ICONS = [
   "check",
   "arrow",
   "external-link",
+  "home",
+  "users",
+  "image",
+  "panel-top",
+  "panel-bottom",
+  "settings",
+  "history",
+  "shapes",
+  "log-out",
 ] as const;
 
 export type StandardIconName = (typeof STANDARD_ICONS)[number];
@@ -24,6 +33,15 @@ export const STANDARD_ICON_LABELS: Record<StandardIconName, string> = {
   check: "Confirmação / Check",
   arrow: "Seta",
   "external-link": "Link externo",
+  home: "Início",
+  users: "Usuários",
+  image: "Imagem / Mídia",
+  "panel-top": "Cabeçalho",
+  "panel-bottom": "Rodapé",
+  settings: "Configurações",
+  history: "Histórico / Auditoria",
+  shapes: "Ícones / Elementos visuais",
+  "log-out": "Sair",
 };
 
 export const STANDARD_ICON_OPTIONS = STANDARD_ICONS.map((name) => ({

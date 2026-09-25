@@ -1,54 +1,89 @@
 // src/components/admin/CustomNav.tsx
-'use client'
+"use client";
 
-import React from 'react'
-import Link from 'next/link'
+import Link from "next/link";
+import type { ReactNode } from "react";
+
+import type { StandardIconName } from "../../domain/icons";
+import { Icon } from "../ui/Icon";
+
+type NavItem = {
+  href: string;
+  icon: StandardIconName;
+  label: string;
+};
+
+const collectionItems: NavItem[] = [
+  { href: "/admin/collections/users", icon: "users", label: "Usuários" },
+  { href: "/admin/collections/media", icon: "image", label: "Mídias" },
+  { href: "/admin/collections/pages", icon: "document", label: "Páginas" },
+];
+
+const globalItems: NavItem[] = [
+  { href: "/admin/globals/header", icon: "panel-top", label: "Cabeçalho" },
+  { href: "/admin/globals/footer", icon: "panel-bottom", label: "Rodapé" },
+  {
+    href: "/admin/globals/site-settings",
+    icon: "settings",
+    label: "Configurações do site",
+  },
+];
+
+const governanceItems: NavItem[] = [
+  {
+    href: "/admin/collections/audit-logs",
+    icon: "history",
+    label: "Logs de auditoria",
+  },
+  { href: "/admin/ajuda", icon: "info", label: "Ajuda" },
+  { href: "/admin/icones", icon: "shapes", label: "Ícones" },
+];
+
+function NavLink({ href, icon, label }: NavItem) {
+  return (
+    <Link className="nav-link" href={href}>
+      <Icon className="nav-link__icon" name={icon} size="sm" tone="current" />
+      <span>{label}</span>
+    </Link>
+  );
+}
+
+function NavSection({ children, label }: { children: ReactNode; label: string }) {
+  return (
+    <div className="nav-section">
+      <span className="nav-label">{label}</span>
+      {children}
+    </div>
+  );
+}
 
 export const CustomNav: React.FC = () => {
   return (
     <aside className="modern-nav">
-      {/* MENU PRINCIPAL (Igual aos outros campos) */}
-      <div style={{ marginBottom: '16px' }}>
-        <Link href="/admin" className="nav-link">
-          Menu Principal
-        </Link>
+      <div className="nav-home">
+        <NavLink href="/admin" icon="home" label="Menu Principal" />
       </div>
 
-      {/* COLLECTIONS */}
-      <div className="nav-section">
-        <span className="nav-label">Collections</span>
-        <Link href="/admin/collections/users" className="nav-link">Usuários</Link>
-        <Link href="/admin/collections/media" className="nav-link">Mídias</Link>
-        <Link href="/admin/collections/pages" className="nav-link">Páginas</Link>
-      </div>
+      <NavSection label="Collections">
+        {collectionItems.map((item) => <NavLink key={item.href} {...item} />)}
+      </NavSection>
 
-      {/* GLOBALS */}
-      <div className="nav-section">
-        <span className="nav-label">Globals</span>
-        <Link href="/admin/globals/header" className="nav-link">Cabeçalho</Link>
-        <Link href="/admin/globals/footer" className="nav-link">Rodapé</Link>
-        <Link href="/admin/globals/site-settings" className="nav-link">Configurações do site</Link>
-      </div>
+      <NavSection label="Globals">
+        {globalItems.map((item) => <NavLink key={item.href} {...item} />)}
+      </NavSection>
 
-      {/* GOVERNANÇA */}
-      <div className="nav-section">
-        <span className="nav-label">Governança</span>
-        <Link href="/admin/collections/audit-logs" className="nav-link">Logs de auditoria</Link>
-        
-        <div style={{ marginTop: '8px' }}>
-          <Link href="/admin/ajuda" className="nav-link">Ajuda</Link>
-          <Link href="/admin/icones" className="nav-link">Ícones</Link>
-        </div>
-      </div>
+      <NavSection label="Governança">
+        {governanceItems.map((item) => <NavLink key={item.href} {...item} />)}
+      </NavSection>
 
-      {/* SAIR DA CONTA */}
       <div className="nav-footer">
         <Link href="/admin/logout" className="nav-link link-danger">
-          Sair da conta
+          <Icon className="nav-link__icon" name="log-out" size="sm" tone="current" />
+          <span>Sair da conta</span>
         </Link>
       </div>
     </aside>
-  )
-}
+  );
+};
 
-export default CustomNav
+export default CustomNav;

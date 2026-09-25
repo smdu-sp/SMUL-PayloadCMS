@@ -873,6 +873,15 @@ export interface CardsBlock {
           | 'check'
           | 'arrow'
           | 'external-link'
+          | 'home'
+          | 'users'
+          | 'image'
+          | 'panel-top'
+          | 'panel-bottom'
+          | 'settings'
+          | 'history'
+          | 'shapes'
+          | 'log-out'
         )
       | null;
     /**
@@ -1050,6 +1059,15 @@ export interface IconGridBlock {
           | 'check'
           | 'arrow'
           | 'external-link'
+          | 'home'
+          | 'users'
+          | 'image'
+          | 'panel-top'
+          | 'panel-bottom'
+          | 'settings'
+          | 'history'
+          | 'shapes'
+          | 'log-out'
         )
       | null;
     /**

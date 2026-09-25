@@ -74,6 +74,10 @@
     margin-bottom: 24px;
   }
 
+  .nav-home {
+    margin-bottom: 16px;
+  }
+
   .nav-label {
     display: block;
     font-size: 0.72rem;
@@ -87,8 +91,10 @@
 
   /* Links de Collections e Globals */
   .nav-link {
-    display: block;
+    align-items: center;
     color: var(--theme-text);
+    display: flex;
+    gap: 10px;
     text-decoration: none;
     font-size: 0.95rem;
     padding: 8px 12px;
@@ -101,6 +107,10 @@
       color: var(--admin-nav-item-active-color);
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
+  }
+
+  .nav-link__icon {
+    flex: 0 0 16px;
   }
 
   .nav-footer {

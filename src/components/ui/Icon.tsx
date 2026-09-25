@@ -149,6 +149,93 @@ function ExternalLinkGlyph() {
   );
 }
 
+function HomeGlyph() {
+  return (
+    <>
+      <path d="m3 11 9-8 9 8" />
+      <path d="M5 10v10h14V10" />
+      <path d="M9 20v-6h6v6" />
+    </>
+  );
+}
+
+function UsersGlyph() {
+  return (
+    <>
+      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+      <circle cx="9" cy="7" r="4" />
+      <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+    </>
+  );
+}
+
+function ImageGlyph() {
+  return (
+    <>
+      <rect height="18" rx="2" width="20" x="2" y="3" />
+      <circle cx="8.5" cy="8.5" r="1.5" />
+      <path d="m21 15-5-5L5 21" />
+    </>
+  );
+}
+
+function PanelTopGlyph() {
+  return (
+    <>
+      <rect height="18" rx="2" width="20" x="2" y="3" />
+      <path d="M2 9h20" />
+    </>
+  );
+}
+
+function PanelBottomGlyph() {
+  return (
+    <>
+      <rect height="18" rx="2" width="20" x="2" y="3" />
+      <path d="M2 15h20" />
+    </>
+  );
+}
+
+function SettingsGlyph() {
+  return (
+    <>
+      <circle cx="12" cy="12" r="3" />
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6h.08A1.65 1.65 0 0 0 10 3.09V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.12.6.65 1.03 1.26 1.03H21a2 2 0 1 1 0 4h-.09A1.65 1.65 0 0 0 19.4 15Z" />
+    </>
+  );
+}
+
+function HistoryGlyph() {
+  return (
+    <>
+      <path d="M3 12a9 9 0 1 0 3-6.7L3 8" />
+      <path d="M3 3v5h5" />
+      <path d="M12 7v5l3 2" />
+    </>
+  );
+}
+
+function ShapesGlyph() {
+  return (
+    <>
+      <circle cx="8" cy="8" r="5" />
+      <rect height="9" rx="1" width="9" x="11" y="11" />
+    </>
+  );
+}
+
+function LogOutGlyph() {
+  return (
+    <>
+      <path d="M10 17l5-5-5-5" />
+      <path d="M15 12H3" />
+      <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+    </>
+  );
+}
+
 const glyphs: Record<StandardIconName, () => React.JSX.Element> = {
   arrow: ArrowGlyph,
   building: BuildingGlyph,
@@ -156,9 +243,18 @@ const glyphs: Record<StandardIconName, () => React.JSX.Element> = {
   document: DocumentGlyph,
   email: EmailGlyph,
   "external-link": ExternalLinkGlyph,
+  history: HistoryGlyph,
+  home: HomeGlyph,
+  image: ImageGlyph,
   info: InfoGlyph,
   location: LocationGlyph,
+  "log-out": LogOutGlyph,
+  "panel-bottom": PanelBottomGlyph,
+  "panel-top": PanelTopGlyph,
   phone: PhoneGlyph,
+  settings: SettingsGlyph,
+  shapes: ShapesGlyph,
+  users: UsersGlyph,
   warning: WarningGlyph,
 };
 

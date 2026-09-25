@@ -23,6 +23,15 @@ describe("domain icons catalog", () => {
       "check",
       "arrow",
       "external-link",
+      "home",
+      "users",
+      "image",
+      "panel-top",
+      "panel-bottom",
+      "settings",
+      "history",
+      "shapes",
+      "log-out",
     ]);
   });
 
