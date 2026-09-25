@@ -24,7 +24,7 @@ export const resolveLinkHref = (link: NavigationLink): string | null => {
   if (link.page && typeof link.page === "object") {
     const page = link.page as PageWithLifecycle;
 
-    if (page.lifecycleStatus === "inactive") {
+    if (page.lifecycleStatus === "inactive" || page._status === "draft") {
       return null;
     }
 

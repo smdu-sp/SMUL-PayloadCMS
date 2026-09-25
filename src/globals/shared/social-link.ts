@@ -1,4 +1,5 @@
 import type { Field, TextFieldValidation } from "payload";
+import { validateOfficialHttpsUrl } from "../../domain/official-url.ts";
 
 export const createSocialLinkFields = (): Field[] => [
   {
@@ -20,17 +21,6 @@ export const createSocialLinkFields = (): Field[] => [
       description:
         "Endereco completo do perfil oficial, incluindo https://.",
     },
-    validate: ((value) => {
-      if (!value) return "Informe a URL oficial.";
-
-      try {
-        const url = new URL(value);
-        return url.protocol === "https:"
-          ? true
-          : "Use uma URL oficial iniciada por https://.";
-      } catch {
-        return "Informe uma URL valida.";
-      }
-    }) satisfies TextFieldValidation,
+    validate: validateOfficialHttpsUrl satisfies TextFieldValidation,
   },
 ];

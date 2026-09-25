@@ -1,5 +1,6 @@
 import type { GlobalConfig } from "payload";
 import { adminOrEditor } from "../access/roles.ts";
+import { revalidateSiteShellGlobal } from "../lib/payload/revalidate-site-shell.ts";
 
 export const Header: GlobalConfig = {
   slug: "header",
@@ -11,6 +12,9 @@ export const Header: GlobalConfig = {
   admin: {
     description:
       "Configure a navegacao principal exibida no topo do portal.",
+  },
+  hooks: {
+    afterChange: [revalidateSiteShellGlobal],
   },
   fields: [
     {
@@ -48,6 +52,10 @@ export const Header: GlobalConfig = {
           relationTo: "pages",
           label: "Pagina",
           required: true,
+          filterOptions: {
+            _status: { equals: "published" },
+            lifecycleStatus: { equals: "active" },
+          },
           admin: {
             description:
               "Pagina de destino dentro do portal. Mudancas de slug nao quebram este relacionamento.",

@@ -83,4 +83,3 @@ export function RichTextBlock({
     ? <BlockThemeScope palette={appearance?.colors}>{section}</BlockThemeScope>
     : section;
 }
-

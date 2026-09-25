@@ -18,6 +18,11 @@ const inactivePage = {
   lifecycleStatus: "inactive",
 } as Page & { lifecycleStatus: "inactive" };
 
+const draftPage = {
+  ...page,
+  _status: "draft",
+} as Page;
+
 describe("navigation link resolver", () => {
   it("resolves internal links from Page relationships", () => {
     assert.equal(
@@ -47,6 +52,17 @@ describe("navigation link resolver", () => {
         label: "Entenda a lei",
         type: "internal",
         page: inactivePage,
+      }),
+      null,
+    );
+  });
+
+  it("does not resolve internal links to draft pages", () => {
+    assert.equal(
+      resolveLinkHref({
+        label: "Entenda a lei",
+        type: "internal",
+        page: draftPage,
       }),
       null,
     );

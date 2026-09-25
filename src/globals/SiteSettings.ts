@@ -89,6 +89,9 @@ export const SiteSettings: GlobalConfig = {
               label: "Fundo principal (Background)",
               validate: validateOptionalHexColor,
               admin: {
+                components: {
+                  beforeInput: ["/components/admin/HexColorPicker#HexColorPicker"],
+                },
                 description: "Cor de fundo estrutural das páginas e blocos padrão. Deixe vazio para restaurar o padrão institucional.",
               },
             },
@@ -98,6 +101,9 @@ export const SiteSettings: GlobalConfig = {
               label: "Texto principal (Foreground)",
               validate: validateOptionalHexColor,
               admin: {
+                components: {
+                  beforeInput: ["/components/admin/HexColorPicker#HexColorPicker"],
+                },
                 description: "Cor utilizada para os textos de leitura básica. Precisa ter alto contraste com a cor de fundo. Deixe vazio para restaurar o padrão institucional.",
               },
             },
@@ -107,6 +113,9 @@ export const SiteSettings: GlobalConfig = {
               label: "Identidade Institucional (Brand)",
               validate: validateOptionalHexColor,
               admin: {
+                components: {
+                  beforeInput: ["/components/admin/HexColorPicker#HexColorPicker"],
+                },
                 description: "Cor institucional forte, aplicada para preencher o fundo de painéis de destaque e áreas de grande peso da marca. Deixe vazio para restaurar o padrão institucional.",
               },
             },
@@ -116,6 +125,9 @@ export const SiteSettings: GlobalConfig = {
               label: "Ação e Interatividade (Action)",
               validate: validateOptionalHexColor,
               admin: {
+                components: {
+                  beforeInput: ["/components/admin/HexColorPicker#HexColorPicker"],
+                },
                 description: "Cor focada na conversão e usabilidade, aplicada exclusivamente em botões principais (CTAs), links e áreas clicáveis do portal. Deixe vazio para restaurar o padrão institucional.",
               },
             },
@@ -125,6 +137,9 @@ export const SiteSettings: GlobalConfig = {
               label: "Detalhes de Apoio (Accent)",
               validate: validateOptionalHexColor,
               admin: {
+                components: {
+                  beforeInput: ["/components/admin/HexColorPicker#HexColorPicker"],
+                },
                 description: "Cor gráfica secundária, utilizada para enfeites da interface, destaques menores, badges estruturais e ícones. Deixe vazio para restaurar o padrão institucional.",
               },
             },

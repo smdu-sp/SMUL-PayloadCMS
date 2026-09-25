@@ -275,6 +275,17 @@ describe("CMS editing UX", () => {
     assert.equal(usage.label, "Uso principal");
     assert.deepEqual(brandingFieldNames, ["colors", "background", "foreground", "brand", "action", "accent", "resetThemeColors"]);
     assert.deepEqual(visibleBrandingFieldNames, ["colors", "background", "foreground", "brand", "action", "accent"]);
+    assert.ok("fields" in branding && Array.isArray(branding.fields));
+    const colors = fieldByName(branding.fields as Field[], "colors");
+    assert.ok("fields" in colors && Array.isArray(colors.fields));
+    for (const colorName of ["background", "foreground", "brand", "action", "accent"]) {
+      const color = fieldByName(colors.fields as Field[], colorName);
+      if (color.type !== "text") assert.fail(`Expected ${colorName} to be a text field`);
+      assert.deepEqual(
+        color.admin?.components?.beforeInput,
+        ["/components/admin/HexColorPicker#HexColorPicker"],
+      );
+    }
     assert.match(adminDescription(alt) ?? "", /leitores de tela/);
     assert.match(adminDescription(usage) ?? "", /SVG/);
   });

@@ -1,5 +1,7 @@
 import type { GlobalConfig } from "payload";
 import { adminOrEditor } from "../access/roles.ts";
+import { validateOfficialHttpsUrl } from "../domain/official-url.ts";
+import { revalidateSiteShellGlobal } from "../lib/payload/revalidate-site-shell.ts";
 import { createSocialLinkFields } from "./shared/social-link.ts";
 
 export const Footer: GlobalConfig = {
@@ -12,6 +14,9 @@ export const Footer: GlobalConfig = {
   admin: {
     description:
       "Configure informacoes institucionais e links exibidos no rodape do portal.",
+  },
+  hooks: {
+    afterChange: [revalidateSiteShellGlobal],
   },
   fields: [
     {
@@ -85,6 +90,7 @@ export const Footer: GlobalConfig = {
           type: "text",
           label: "URL",
           required: true,
+          validate: validateOfficialHttpsUrl,
           admin: {
             description:
               "Endereco completo do servico ou pagina oficial, incluindo https://.",
