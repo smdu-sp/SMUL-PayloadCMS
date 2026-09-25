@@ -1,22 +1,24 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useDocumentInfo, useField } from "@payloadcms/ui";
+import { useField } from "@payloadcms/ui";
 import ReactCrop, { type Crop } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 
-type Props = { data?: { id?: string | number; url?: string; mimeType?: string; alt?: string } };
+type MediaData = { id?: string | number; url?: string; mimeType?: string; alt?: string };
+type MediaValue = string | number | MediaData | null | undefined;
+type Props = { data?: MediaData; path?: string };
 type CanvasToast = {
   message: string;
   derivedId?: string | number;
   tone: "success" | "error";
 };
 
-export function ImageEditingCanvas({ data }: Props) {
-  const { id, data: documentData } = useDocumentInfo();
-  const media = data ?? (documentData as Props["data"] | undefined);
+export function ImageEditingCanvas({ data, path }: Props) {
+  const mediaField = useField<MediaValue>({ path: path ?? "media" });
   const aspectRatioField = useField<string | undefined>({ path: "imagePresentation.aspectRatio" });
   const aspectRatio = aspectRatioField.value ?? "original";
+  const [media, setMedia] = useState<MediaData | undefined>(data);
   const [rotate, setRotate] = useState<0 | 90 | 180 | 270>(0);
   const [width, setWidth] = useState<number | undefined>();
   const [height, setHeight] = useState<number | undefined>();
@@ -26,7 +28,7 @@ export function ImageEditingCanvas({ data }: Props) {
   const [draggingFocalPoint, setDraggingFocalPoint] = useState(false);
   const [busy, setBusy] = useState(false);
   const [toast, setToast] = useState<CanvasToast | null>(null);
-  const [previewUrl, setPreviewUrl] = useState(media?.url);
+  const [previewUrl, setPreviewUrl] = useState<string | undefined>(data?.url);
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -38,6 +40,40 @@ export function ImageEditingCanvas({ data }: Props) {
     const timeout = window.setTimeout(() => setToast(null), 7000);
     return () => window.clearTimeout(timeout);
   }, [toast]);
+
+  useEffect(() => {
+    const fieldValue = mediaField.value;
+    const selectedMedia = typeof fieldValue === "object" && fieldValue !== null ? fieldValue : undefined;
+    const selectedId = typeof fieldValue === "string" || typeof fieldValue === "number"
+      ? fieldValue
+      : selectedMedia?.id;
+
+    if (!selectedId) {
+      setMedia(undefined);
+      setPreviewUrl(undefined);
+      return;
+    }
+
+    if (selectedMedia?.url) {
+      setMedia(selectedMedia);
+      return;
+    }
+
+    const controller = new AbortController();
+    setMedia(undefined);
+    setPreviewUrl(undefined);
+    fetch(`/api/media/${encodeURIComponent(String(selectedId))}?depth=0`, { signal: controller.signal })
+      .then(async (response) => {
+        if (!response.ok) return undefined;
+        return (await response.json()) as MediaData;
+      })
+      .then((resolvedMedia) => {
+        if (resolvedMedia) setMedia(resolvedMedia);
+      })
+      .catch(() => undefined);
+
+    return () => controller.abort();
+  }, [mediaField.value]);
 
   const getCropPixelDimensions = (nextCrop: Crop = crop) => ({
     width: Math.max(1, Math.round((Number(nextCrop.width ?? 0) / 100) * previewDimensions.width)),
@@ -149,7 +185,7 @@ export function ImageEditingCanvas({ data }: Props) {
 
   async function saveCurrentAsset() {
     setToast(null);
-    if (!id || !crop.width || !crop.height) {
+    if (!media?.id || !crop.width || !crop.height) {
       setToast({ message: "Selecione uma área válida para editar a imagem.", tone: "error" });
       return;
     }
@@ -158,7 +194,7 @@ export function ImageEditingCanvas({ data }: Props) {
     const response = await fetch("/api/media/edit-canvas", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ originalMediaId: String(id), rotate, resize: { width, height }, aspectRatio: aspectRatio === "original" ? undefined : aspectRatio, crop, focalPoint, altText: nextAltText }),
+      body: JSON.stringify({ originalMediaId: String(media.id), rotate, resize: { width, height }, aspectRatio: aspectRatio === "original" ? undefined : aspectRatio, crop, focalPoint, altText: nextAltText }),
     });
     const result = (await response.json()) as { message?: string; doc?: { id?: string | number } };
     setToast(response.ok && result.doc?.id
