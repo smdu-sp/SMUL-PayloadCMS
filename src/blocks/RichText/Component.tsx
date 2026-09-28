@@ -1,10 +1,14 @@
-import { RichText } from "@payloadcms/richtext-lexical/react";
+import {
+  RichText,
+  type JSXConvertersFunction,
+} from "@payloadcms/richtext-lexical/react";
 import type { RichTextBlock as RichTextBlockProps } from "../../payload-types";
 import { BlockThemeScope, Container, Section } from "../../components/ui";
 import {
   normalizeColorScheme,
   type EditorialColorOverrides,
 } from "../../lib/theme/block-color-theme";
+import { getRichTextFontSize } from "./font-size";
 
 type RichTextVariant = "default" | "narrow";
 
@@ -19,6 +23,23 @@ type RichTextBlockWithLegacyProps = RichTextBlockProps & {
   appearance?: RichTextAppearance | null;
   width?: "content" | "wide" | string | null;
 };
+
+const richTextConverters: JSXConvertersFunction = ({ defaultConverters }) => ({
+  ...defaultConverters,
+  text: (args) => {
+    const defaultText =
+      typeof defaultConverters.text === "function"
+        ? defaultConverters.text(args)
+        : args.node.text;
+    const fontSize = getRichTextFontSize(
+      (args.node as { $?: { fontSize?: unknown } }).$?.fontSize,
+    );
+
+    return fontSize
+      ? <span style={{ fontSize }}>{defaultText}</span>
+      : defaultText;
+  },
+});
 
 export function normalizeRichTextVariant(
   variant: RichTextBlockProps["variant"] | "content" | "wide" | string | null | undefined,
@@ -73,6 +94,7 @@ export function RichTextBlock({
       <Container size={containerSize}>
         <RichText
           className={`cms-rich-text leading-relaxed ${effectiveWidth !== "narrow" ? "cms-rich-text--wide" : ""}`}
+          converters={richTextConverters}
           data={content}
         />
       </Container>

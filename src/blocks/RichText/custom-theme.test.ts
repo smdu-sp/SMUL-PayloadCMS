@@ -23,6 +23,19 @@ const content = {
   },
 };
 
+const contentWithFontSize = {
+  root: {
+    ...content.root,
+    children: [{
+      ...content.root.children[0],
+      children: [{
+        ...content.root.children[0].children[0],
+        $: { fontSize: "large" },
+      }],
+    }],
+  },
+};
+
 describe("RichText custom theme", () => {
   it("applies the local palette to the complete section", () => {
     const markup = renderToStaticMarkup(createElement(RichTextBlock, {
@@ -61,5 +74,15 @@ describe("RichText custom theme", () => {
     assert.doesNotMatch(markup, /--block-background:#ff0000/);
     assert.doesNotMatch(markup, /--block-foreground:#00ff00/);
     assert.match(markup, /data-color-scheme="surface"/);
+  });
+
+  it("renders the selected text font size", () => {
+    const markup = renderToStaticMarkup(createElement(RichTextBlock, {
+      blockType: "richText",
+      content: contentWithFontSize,
+      variant: "default",
+    }));
+
+    assert.match(markup, /font-size:1\.375rem/);
   });
 });
