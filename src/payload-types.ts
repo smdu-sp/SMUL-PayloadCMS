@@ -374,7 +374,7 @@ export interface HeroBlock {
  */
 export interface RichTextBlock {
   /**
-   * Area para texto, listas, links e subtitulos. A aparencia final segue a tipografia editorial do portal.
+   * Area para texto, listas, tabelas, links e subtitulos com barra de ferramentas WYSIWYG. A aparencia final segue a tipografia editorial do portal.
    */
   content: {
     root: {

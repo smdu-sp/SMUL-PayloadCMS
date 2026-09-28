@@ -164,6 +164,24 @@ npm.cmd run build
 npm.cmd run seed:editorial
 ```
 
+### Sincronização do Import Map (Admin UI)
+
+No Payload CMS 3.x com Next.js App Router, componentes de interface do Admin (custom views, botões personalizados, color pickers e plugins client do RichText como tabelas e barra de ferramentas fixa) precisam estar mapeados em `src/app/(payload)/admin/importMap.js`.
+
+Se um novo componente, botão ou plugin do editor não aparecer no Admin ou ocorrerem inconsistências no painel:
+
+```powershell
+# 1. Regenerar o importMap com ambiente de desenvolvimento
+$env:NODE_ENV = 'development'
+npx payload generate:importmap
+Remove-Item Env:NODE_ENV
+
+# 2. Reiniciar o servidor de desenvolvimento
+npm.cmd run dev
+```
+
+No navegador, execute um recarregamento forçado (**Hard Refresh**: `Ctrl + F5` ou `Ctrl + Shift + R`) para baixar os bundles atualizados.
+
 No ambiente Windows, `npm` via PowerShell pode ser bloqueado por Execution Policy. Use `npm.cmd`.
 
 Tambem ha uma falha ambiental conhecida do `tsx`/Node em `os.userInfo()` neste ambiente. Quando o script normal de testes falhar antes das assertions, a suite pode ser validada com:
