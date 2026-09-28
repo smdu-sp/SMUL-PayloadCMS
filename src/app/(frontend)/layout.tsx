@@ -13,6 +13,7 @@ import {
   resolveTypography,
 } from "../../lib/theme/google-fonts";
 import { ThemeProvider } from "../../components/ui/ColorScope";
+import { AccessibilityThemeProvider } from "../../components/theme/AccessibilityThemeProvider";
 import { SiteFooter } from "../../components/layout/SiteFooter";
 import { SiteHeader } from "../../components/layout/SiteHeader";
 import "./globals.css";
@@ -59,11 +60,13 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         </>
       ) : null}
       <body className="min-h-full flex flex-col">
-        <ThemeProvider theme={theme}>
-          <SiteHeader header={siteShell.header} siteName={siteSettings?.siteName} />
-          {children}
-          <SiteFooter footer={siteShell.footer} />
-        </ThemeProvider>
+        <AccessibilityThemeProvider>
+          <ThemeProvider theme={theme}>
+            <SiteHeader header={siteShell.header} siteName={siteSettings?.siteName} />
+            {children}
+            <SiteFooter footer={siteShell.footer} />
+          </ThemeProvider>
+        </AccessibilityThemeProvider>
       </body>
     </html>
   );

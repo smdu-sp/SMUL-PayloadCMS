@@ -10,6 +10,7 @@ import React from "react";
 import { importMap } from "./admin/importMap.js";
 import "./custom.scss";
 import { AdminTheme } from "../../components/admin/AdminTheme";
+import { AccessibilityThemeProvider } from "../../components/theme/AccessibilityThemeProvider";
 
 export const metadata = {
   title: "Meu Imovel Regular Admin",
@@ -37,8 +38,10 @@ const Layout = ({ children }: Args) => (
     importMap={importMap}
     serverFunction={serverFunction}
   >
-    <AdminTheme />
-    {children}
+    <AccessibilityThemeProvider>
+      <AdminTheme />
+      {children}
+    </AccessibilityThemeProvider>
   </RootLayout>
 );
 
