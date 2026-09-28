@@ -36,6 +36,19 @@ const contentWithFontSize = {
   },
 };
 
+const contentWithFontFamily = {
+  root: {
+    ...content.root,
+    children: [{
+      ...content.root.children[0],
+      children: [{
+        ...content.root.children[0].children[0],
+        $: { fontFamily: "merriweather" },
+      }],
+    }],
+  },
+};
+
 describe("RichText custom theme", () => {
   it("applies the local palette to the complete section", () => {
     const markup = renderToStaticMarkup(createElement(RichTextBlock, {
@@ -84,5 +97,17 @@ describe("RichText custom theme", () => {
     }));
 
     assert.match(markup, /font-size:1\.375rem/);
+  });
+
+  it("renders and loads the selected controlled font family", () => {
+    const markup = renderToStaticMarkup(createElement(RichTextBlock, {
+      blockType: "richText",
+      content: contentWithFontFamily,
+      variant: "default",
+    }));
+
+    assert.match(markup, /family=Merriweather/);
+    assert.match(markup, /font-family:&quot;Merriweather&quot;, Georgia, serif/);
+    assert.doesNotMatch(markup, /family=Roboto/);
   });
 });

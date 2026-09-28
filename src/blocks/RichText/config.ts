@@ -5,7 +5,6 @@ import {
   FixedToolbarFeature,
   HeadingFeature,
   LinkFeature,
-  TextStateFeature,
   UploadFeature,
   lexicalEditor,
 } from "@payloadcms/richtext-lexical";
@@ -19,7 +18,7 @@ import {
 } from "../../fields/block-appearance";
 import { closedSelect, requiredRichText } from "../../fields/editorial-validation";
 import { createBlockAdmin } from "../shared/admin";
-import { richTextFontSizes } from "./font-size";
+import { RichTextTypographyFeature } from "./typography-feature.server";
 
 // Rich Text paints a surface and derives headings and links from its foreground.
 const richTextColorTokens = ["background", "foreground"] as const;
@@ -49,11 +48,7 @@ export const RichTextBlock: Block = {
           HeadingFeature({
             enabledHeadingSizes: ["h1", "h2", "h3", "h4", "h5", "h6"],
           }),
-          TextStateFeature({
-            state: {
-              fontSize: richTextFontSizes,
-            },
-          }),
+          RichTextTypographyFeature(),
           LinkFeature({
             enabledCollections: ["pages"],
           }),

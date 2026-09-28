@@ -8,6 +8,10 @@ import {
   normalizeColorScheme,
   type EditorialColorOverrides,
 } from "../../lib/theme/block-color-theme";
+import {
+  getRichTextFontFamily,
+  getUsedRichTextFontStylesheets,
+} from "./font-family";
 import { getRichTextFontSize } from "./font-size";
 
 type RichTextVariant = "default" | "narrow";
@@ -31,12 +35,14 @@ const richTextConverters: JSXConvertersFunction = ({ defaultConverters }) => ({
       typeof defaultConverters.text === "function"
         ? defaultConverters.text(args)
         : args.node.text;
-    const fontSize = getRichTextFontSize(
-      (args.node as { $?: { fontSize?: unknown } }).$?.fontSize,
-    );
+    const state = (args.node as {
+      $?: { fontFamily?: unknown; fontSize?: unknown };
+    }).$;
+    const fontFamily = getRichTextFontFamily(state?.fontFamily);
+    const fontSize = getRichTextFontSize(state?.fontSize);
 
-    return fontSize
-      ? <span style={{ fontSize }}>{defaultText}</span>
+    return fontFamily || fontSize
+      ? <span style={{ fontFamily, fontSize }}>{defaultText}</span>
       : defaultText;
   },
 });
@@ -70,6 +76,7 @@ export function RichTextBlock({
   variant,
   width,
 }: RichTextBlockWithLegacyProps) {
+  const fontStylesheets = getUsedRichTextFontStylesheets(content);
   const normalizedVariant = normalizeRichTextVariant(variant ?? width);
   const effectiveWidth = normalizeRichTextWidth(
     appearance?.width,
@@ -101,7 +108,16 @@ export function RichTextBlock({
     </Section>
   );
 
-  return customTheme
+  const themedSection = customTheme
     ? <BlockThemeScope palette={appearance?.colors}>{section}</BlockThemeScope>
     : section;
+
+  return (
+    <>
+      {fontStylesheets.map((href) => (
+        <link href={href} key={href} precedence="rich-text-fonts" rel="stylesheet" />
+      ))}
+      {themedSection}
+    </>
+  );
 }
