@@ -2315,7 +2315,7 @@ export interface Footer {
   createdAt?: string | null;
 }
 /**
- * Configure informacoes gerais, links oficiais, SEO padrao e cores institucionais controladas pelo Design System.
+ * Configure informacoes gerais, links oficiais, SEO padrao, cores e tipografia institucionais controladas pelo Design System.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "site-settings".
@@ -2371,6 +2371,19 @@ export interface SiteSetting {
        * Cor gráfica secundária, utilizada para enfeites da interface, destaques menores, badges estruturais e ícones. Deixe vazio para restaurar o padrão institucional.
        */
       accent?: string | null;
+    };
+    /**
+     * Fontes globais carregadas pela API CSS v2 do Google Fonts. Deixe vazio para usar a tipografia institucional padrao.
+     */
+    typography?: {
+      /**
+       * Cole o link de uma unica familia do Google Fonts. Inclua os pesos usados no portal, preferencialmente 400, 600 e 700.
+       */
+      bodyUrl?: string | null;
+      /**
+       * Opcional. Se vazio, os titulos herdam a fonte de textos. Cole um link com uma unica familia.
+       */
+      headingUrl?: string | null;
     };
   };
   /**
@@ -2465,6 +2478,12 @@ export interface SiteSettingsSelect<T extends boolean = true> {
               brand?: T;
               action?: T;
               accent?: T;
+            };
+        typography?:
+          | T
+          | {
+              bodyUrl?: T;
+              headingUrl?: T;
             };
       };
   defaultSEO?:

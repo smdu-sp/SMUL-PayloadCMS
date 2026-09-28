@@ -3,6 +3,7 @@ import type { GlobalConfig } from "payload";
 import { adminOnly } from "../access/roles.ts";
 import { createSeoFields } from "../fields/seo.ts";
 import { validateOptionalHexColor } from "../lib/theme/colors.ts";
+import { validateGoogleFontUrl } from "../lib/theme/google-fonts.ts";
 
 export const SiteSettings: GlobalConfig = {
   slug: "site-settings",
@@ -13,7 +14,7 @@ export const SiteSettings: GlobalConfig = {
   label: "Configurações do site",
   admin: {
     description:
-      "Configure informacoes gerais, links oficiais, SEO padrao e cores institucionais controladas pelo Design System.",
+      "Configure informacoes gerais, links oficiais, SEO padrao, cores e tipografia institucionais controladas pelo Design System.",
   },
   fields: [
     {
@@ -141,6 +142,41 @@ export const SiteSettings: GlobalConfig = {
                   beforeInput: ["/components/admin/HexColorPicker#HexColorPicker"],
                 },
                 description: "Cor gráfica secundária, utilizada para enfeites da interface, destaques menores, badges estruturais e ícones. Deixe vazio para restaurar o padrão institucional.",
+              },
+            },
+          ],
+        },
+        {
+          name: "typography",
+          type: "group",
+          label: "Tipografia",
+          admin: {
+            description:
+              "Fontes globais carregadas pela API CSS v2 do Google Fonts. Deixe vazio para usar a tipografia institucional padrao.",
+          },
+          fields: [
+            {
+              name: "bodyUrl",
+              type: "text",
+              label: "Fonte de textos",
+              validate: validateGoogleFontUrl,
+              admin: {
+                description:
+                  "Cole o link de uma unica familia do Google Fonts. Inclua os pesos usados no portal, preferencialmente 400, 600 e 700.",
+                placeholder:
+                  "https://fonts.googleapis.com/css2?family=Roboto:wght@400;600;700&display=swap",
+              },
+            },
+            {
+              name: "headingUrl",
+              type: "text",
+              label: "Fonte de titulos",
+              validate: validateGoogleFontUrl,
+              admin: {
+                description:
+                  "Opcional. Se vazio, os titulos herdam a fonte de textos. Cole um link com uma unica familia.",
+                placeholder:
+                  "https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&display=swap",
               },
             },
           ],

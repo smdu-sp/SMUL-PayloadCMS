@@ -273,8 +273,29 @@ describe("CMS editing UX", () => {
 
     assert.equal(branding.label, "Tema");
     assert.equal(usage.label, "Uso principal");
-    assert.deepEqual(brandingFieldNames, ["colors", "background", "foreground", "brand", "action", "accent", "resetThemeColors"]);
-    assert.deepEqual(visibleBrandingFieldNames, ["colors", "background", "foreground", "brand", "action", "accent"]);
+    assert.deepEqual(brandingFieldNames, [
+      "colors",
+      "background",
+      "foreground",
+      "brand",
+      "action",
+      "accent",
+      "typography",
+      "bodyUrl",
+      "headingUrl",
+      "resetThemeColors",
+    ]);
+    assert.deepEqual(visibleBrandingFieldNames, [
+      "colors",
+      "background",
+      "foreground",
+      "brand",
+      "action",
+      "accent",
+      "typography",
+      "bodyUrl",
+      "headingUrl",
+    ]);
     assert.ok("fields" in branding && Array.isArray(branding.fields));
     const colors = fieldByName(branding.fields as Field[], "colors");
     assert.ok("fields" in colors && Array.isArray(colors.fields));
@@ -285,6 +306,13 @@ describe("CMS editing UX", () => {
         color.admin?.components?.beforeInput,
         ["/components/admin/HexColorPicker#HexColorPicker"],
       );
+    }
+    const typography = fieldByName(branding.fields as Field[], "typography");
+    assert.ok("fields" in typography && Array.isArray(typography.fields));
+    for (const fontUrlName of ["bodyUrl", "headingUrl"]) {
+      const fontUrl = fieldByName(typography.fields as Field[], fontUrlName);
+      assert.equal(fontUrl.type, "text");
+      assert.equal("validate" in fontUrl && typeof fontUrl.validate, "function");
     }
     assert.match(adminDescription(alt) ?? "", /leitores de tela/);
     assert.match(adminDescription(usage) ?? "", /SVG/);

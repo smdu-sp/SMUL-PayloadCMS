@@ -7,6 +7,11 @@ import { getSiteShell } from "../../lib/payload/get-site-shell";
 import { generateSiteMetadata } from "../../lib/seo/metadata";
 import { mapThemeToCssVariables } from "../../lib/theme/map-theme-to-css-variables";
 import { resolveSemanticTheme } from "../../lib/theme/semantic-theme";
+import {
+  getTypographyStylesheets,
+  mapTypographyToCssVariables,
+  resolveTypography,
+} from "../../lib/theme/google-fonts";
 import { ThemeProvider } from "../../components/ui/ColorScope";
 import { SiteFooter } from "../../components/layout/SiteFooter";
 import { SiteHeader } from "../../components/layout/SiteHeader";
@@ -31,7 +36,12 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
     getSiteShell(),
   ]);
   const theme = resolveSemanticTheme(siteSettings?.theme?.colors);
-  const themeVariables = mapThemeToCssVariables(theme) as CSSProperties;
+  const typography = resolveTypography(siteSettings?.theme?.typography);
+  const fontStylesheets = getTypographyStylesheets(typography);
+  const themeVariables = {
+    ...mapThemeToCssVariables(theme),
+    ...mapTypographyToCssVariables(typography),
+  } as CSSProperties;
 
   return (
     <html
@@ -39,6 +49,15 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
       className={`h-full antialiased ${lato.variable}`}
       style={themeVariables}
     >
+      {fontStylesheets.length > 0 ? (
+        <>
+          <link href="https://fonts.googleapis.com" rel="preconnect" />
+          <link crossOrigin="anonymous" href="https://fonts.gstatic.com" rel="preconnect" />
+          {fontStylesheets.map((href) => (
+            <link href={href} key={href} precedence="google-fonts" rel="stylesheet" />
+          ))}
+        </>
+      ) : null}
       <body className="min-h-full flex flex-col">
         <ThemeProvider theme={theme}>
           <SiteHeader header={siteShell.header} siteName={siteSettings?.siteName} />

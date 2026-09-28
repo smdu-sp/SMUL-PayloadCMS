@@ -48,6 +48,7 @@ As mudancas das SPECS 019 a 027 foram classificadas assim:
 | `richText` | `width` legado aceito como fallback de `variant` | Campo legado absorvido | Nao exige migration neste ciclo. |
 | `actionBanners.banners[].appearance` | Aparencias fechadas no Design System | Novo enum/variant | Nao exige migration; aparencia desconhecida vira `surface`. |
 | `Header`, `Footer`, `SiteSettings` | Links globais mantidos em formatos existentes | Preservacao de schema | Nao exige migration; resolver central aceita formatos legados. |
+| `SiteSettings.theme.typography` | Novos links opcionais para fontes globais de texto e titulos | Novos fields opcionais | Nao exige migration; configuracoes existentes continuam usando Lato e os fallbacks institucionais. |
 | `Media.usage` | Novo field obrigatorio com default `content` | Novo field obrigatorio | Nao exige migration manual porque ha default seguro; revisar banco antes de producao. |
 | `Users.role` | Novo field com default `admin` | Novo field com default | Nao exige migration manual local; usuarios sem role seguem tratados como admin legado. |
 | `Pages.lifecycleStatus` | Novo field obrigatorio com default `active` | Novo field obrigatorio com default | Nao exige migration destrutiva; bases existentes devem ser auditadas antes de producao. |
