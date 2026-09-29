@@ -43,7 +43,10 @@ export interface ImageTransformMetrics {
 export interface ProcessedImageTransform {
   buffer: Buffer;
   metrics: ImageTransformMetrics;
+  focalPoint: FocalPointCoordinates;
 }
+
+export const MAX_IMAGE_DIMENSION = 4096;
 
 const isFiniteNumber = (value: unknown): value is number =>
   typeof value === "number" && Number.isFinite(value);
@@ -60,7 +63,7 @@ export function normalizeAltText(value: string): string {
 export function validateCanvasTransformPayload(
   payload: unknown,
 ): CanvasTransformPayload {
-  if (!payload || typeof payload !== "object") {
+  if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
     throw new Error("Payload do Canvas invalido.");
   }
 
@@ -79,6 +82,8 @@ export function validateCanvasTransformPayload(
   const altText = typeof value.altText === "string" ? value.altText.trim() : "";
   if (
     typeof value.originalMediaId !== "string" ||
+    !value.originalMediaId.trim() ||
+    value.originalMediaId.length > 100 ||
     !crop ||
     !resize ||
     !focalPoint ||
@@ -89,15 +94,33 @@ export function validateCanvasTransformPayload(
     !["px", "%"].includes(String(crop.unit)) ||
     !isFiniteNumber(cropX) || !isFiniteNumber(cropY) || !isFiniteNumber(cropWidth) || !isFiniteNumber(cropHeight) ||
     cropX < 0 || cropY < 0 || cropWidth <= 0 || cropHeight <= 0 ||
-    (resizeWidth !== undefined && (!isFiniteNumber(resizeWidth) || resizeWidth <= 0)) ||
-    (resizeHeight !== undefined && (!isFiniteNumber(resizeHeight) || resizeHeight <= 0)) ||
+    (crop.unit === "%" && (cropX >= 100 || cropY >= 100 || cropWidth > 100 || cropHeight > 100)) ||
+    (resizeWidth !== undefined && (!isFiniteNumber(resizeWidth) || resizeWidth <= 0 || resizeWidth > MAX_IMAGE_DIMENSION)) ||
+    (resizeHeight !== undefined && (!isFiniteNumber(resizeHeight) || resizeHeight <= 0 || resizeHeight > MAX_IMAGE_DIMENSION)) ||
     !isFiniteNumber(focalX) || !isFiniteNumber(focalY) ||
     focalX < 0 || focalX > 100 || focalY < 0 || focalY > 100
   ) {
     throw new Error("Payload do Canvas invalido.");
   }
 
-  return { ...value, altText } as unknown as CanvasTransformPayload;
+  return {
+    originalMediaId: value.originalMediaId.trim(),
+    crop: {
+      x: cropX as number,
+      y: cropY as number,
+      width: cropWidth as number,
+      height: cropHeight as number,
+      unit: crop.unit as CropArea["unit"],
+    },
+    resize: {
+      ...(resizeWidth === undefined ? {} : { width: resizeWidth as number }),
+      ...(resizeHeight === undefined ? {} : { height: resizeHeight as number }),
+    },
+    rotate: value.rotate as RotationAngle,
+    focalPoint: { x: focalX as number, y: focalY as number },
+    ...(typeof value.aspectRatio === "string" ? { aspectRatio: value.aspectRatio.slice(0, 32) } : {}),
+    altText: altText.slice(0, 500),
+  };
 }
 
 export function cropToPixels(
@@ -106,15 +129,20 @@ export function cropToPixels(
   height: number,
 ): { left: number; top: number; width: number; height: number } {
   const toPixels = (value: number, total: number) =>
-    crop.unit === "%" ? Math.round((value / 100) * total) : Math.round(value);
+    crop.unit === "%" ? Math.floor((value / 100) * total) : Math.floor(value);
   const x = toPixels(crop.x, width);
   const y = toPixels(crop.y, height);
-  const cropWidth = toPixels(crop.width, width);
-  const cropHeight = toPixels(crop.height, height);
-  if (x < 0 || y < 0 || cropWidth < 1 || cropHeight < 1 || x + cropWidth > width || y + cropHeight > height) {
+  const requestedWidth = toPixels(crop.width, width);
+  const requestedHeight = toPixels(crop.height, height);
+  if (x < 0 || y < 0 || x >= width || y >= height || requestedWidth < 1 || requestedHeight < 1) {
     throw new Error("Area de corte fora dos limites da imagem.");
   }
-  return { left: x, top: y, width: cropWidth, height: cropHeight };
+  return {
+    left: x,
+    top: y,
+    width: Math.min(requestedWidth, width - x),
+    height: Math.min(requestedHeight, height - y),
+  };
 }
 
 export async function processImageTransform(
@@ -122,19 +150,30 @@ export async function processImageTransform(
   payload: CanvasTransformPayload,
 ): Promise<ProcessedImageTransform> {
   const validatedPayload = validateCanvasTransformPayload(payload);
-  const sourceImage = sharp(inputBuffer, { failOn: "error" });
+  const sourceImage = sharp(inputBuffer, {
+    failOn: "error",
+    limitInputPixels: MAX_IMAGE_DIMENSION * MAX_IMAGE_DIMENSION,
+  });
   const sourceMetadata = await sourceImage.metadata();
   if (!sourceMetadata.width || !sourceMetadata.height) {
     throw new Error("Nao foi possivel obter as dimensoes da imagem.");
+  }
+  if (sourceMetadata.width > MAX_IMAGE_DIMENSION || sourceMetadata.height > MAX_IMAGE_DIMENSION) {
+    throw new Error(`A imagem original nao pode exceder ${MAX_IMAGE_DIMENSION}px por lado.`);
   }
   const swapsDimensions = validatedPayload.rotate === 90 || validatedPayload.rotate === 270;
   const rotatedWidth = swapsDimensions ? sourceMetadata.height : sourceMetadata.width;
   const rotatedHeight = swapsDimensions ? sourceMetadata.width : sourceMetadata.height;
   const rotatedImage = sourceImage.rotate(validatedPayload.rotate);
 
-  let image = rotatedImage.extract(
-    cropToPixels(validatedPayload.crop, rotatedWidth, rotatedHeight),
-  );
+  const pixelCrop = cropToPixels(validatedPayload.crop, rotatedWidth, rotatedHeight);
+  const focalPixelX = (validatedPayload.focalPoint.x / 100) * rotatedWidth;
+  const focalPixelY = (validatedPayload.focalPoint.y / 100) * rotatedHeight;
+  const focalPoint = {
+    x: Math.max(0, Math.min(100, ((focalPixelX - pixelCrop.left) / pixelCrop.width) * 100)),
+    y: Math.max(0, Math.min(100, ((focalPixelY - pixelCrop.top) / pixelCrop.height) * 100)),
+  };
+  let image = rotatedImage.extract(pixelCrop);
   if (validatedPayload.resize.width || validatedPayload.resize.height) {
     image = image.resize({
       width: validatedPayload.resize.width,
@@ -142,9 +181,10 @@ export async function processImageTransform(
     });
   }
 
-  const result = await image.toBuffer({ resolveWithObject: true });
+  const result = await image.webp({ quality: 85 }).toBuffer({ resolveWithObject: true });
   return {
     buffer: result.data,
+    focalPoint,
     metrics: {
       width: result.info.width,
       height: result.info.height,

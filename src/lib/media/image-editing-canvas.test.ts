@@ -19,6 +19,15 @@ describe("image editing canvas", () => {
     });
   });
 
+  it("clamps rounded crop bounds to the image dimensions", () => {
+    assert.deepEqual(cropToPixels({ x: 99, y: 99, width: 10, height: 10, unit: "%" }, 100, 100), {
+      left: 99,
+      top: 99,
+      width: 1,
+      height: 1,
+    });
+  });
+
   it("creates a transformed buffer without mutating the original buffer", async () => {
     const original = await sharp({ create: { width: 100, height: 50, channels: 3, background: "red" } }).png().toBuffer();
     const originalSnapshot = Buffer.from(original);
@@ -33,6 +42,8 @@ describe("image editing canvas", () => {
     assert.deepEqual(original, originalSnapshot);
     assert.equal(result.metrics.width, 20);
     assert.equal(result.metrics.height, 10);
+    assert.equal(result.metrics.format, "webp");
+    assert.deepEqual(result.focalPoint, { x: 100, y: 50 });
     assert.notDeepEqual(result.buffer, original);
   });
 
@@ -54,6 +65,13 @@ describe("image editing canvas", () => {
     assert.equal(canUseImageEditingCanvas(null), false);
     assert.equal(canUseImageEditingCanvas({ role: "editor" }), false);
     assert.throws(() => validateCanvasTransformPayload({ rotate: 45 }));
+    assert.throws(() => validateCanvasTransformPayload({
+      originalMediaId: "1",
+      crop: { x: 0, y: 0, width: 100, height: 100, unit: "%" },
+      resize: { width: 4097 },
+      rotate: 0,
+      focalPoint: { x: 50, y: 50 },
+    }));
     assert.doesNotThrow(() => validateCanvasTransformPayload({
       originalMediaId: "1",
       crop: { x: 0, y: 0, width: 100, height: 100, unit: "%" },

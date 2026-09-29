@@ -5,7 +5,7 @@ import { useField } from "@payloadcms/ui";
 import ReactCrop, { type Crop } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 
-type MediaData = { id?: string | number; url?: string; mimeType?: string; alt?: string };
+type MediaData = { id?: string | number; url?: string; mimeType?: string; alt?: string; focalX?: number | null; focalY?: number | null };
 type MediaValue = string | number | MediaData | null | undefined;
 type Props = { data?: MediaData; path?: string };
 type CanvasToast = {
@@ -24,7 +24,7 @@ export function ImageEditingCanvas({ data, path }: Props) {
   const [height, setHeight] = useState<number | undefined>();
   const [previewDimensions, setPreviewDimensions] = useState({ width: 0, height: 0 });
   const [crop, setCrop] = useState<Crop>({ unit: "%", x: 0, y: 0, width: 100, height: 100 });
-  const [focalPoint, setFocalPoint] = useState({ x: 50, y: 50 });
+  const [focalPoint, setFocalPoint] = useState({ x: data?.focalX ?? 50, y: data?.focalY ?? 50 });
   const [draggingFocalPoint, setDraggingFocalPoint] = useState(false);
   const [busy, setBusy] = useState(false);
   const [toast, setToast] = useState<CanvasToast | null>(null);
@@ -56,8 +56,11 @@ export function ImageEditingCanvas({ data, path }: Props) {
 
     if (selectedMedia?.url) {
       setMedia(selectedMedia);
+      setFocalPoint({ x: selectedMedia.focalX ?? 50, y: selectedMedia.focalY ?? 50 });
       return;
     }
+
+    if (media?.id && String(media.id) === String(selectedId)) return;
 
     const controller = new AbortController();
     setMedia(undefined);
@@ -68,12 +71,15 @@ export function ImageEditingCanvas({ data, path }: Props) {
         return (await response.json()) as MediaData;
       })
       .then((resolvedMedia) => {
-        if (resolvedMedia) setMedia(resolvedMedia);
+        if (resolvedMedia) {
+          setMedia(resolvedMedia);
+          setFocalPoint({ x: resolvedMedia.focalX ?? 50, y: resolvedMedia.focalY ?? 50 });
+        }
       })
       .catch(() => undefined);
 
     return () => controller.abort();
-  }, [mediaField.value]);
+  }, [mediaField.value, media?.id]);
 
   const getCropPixelDimensions = (nextCrop: Crop = crop) => ({
     width: Math.max(1, Math.round((Number(nextCrop.width ?? 0) / 100) * previewDimensions.width)),
@@ -152,11 +158,6 @@ export function ImageEditingCanvas({ data, path }: Props) {
   }, [previewDimensions.width, previewDimensions.height]);
 
   useEffect(() => {
-    setCrop({ unit: "%", x: 0, y: 0, width: 100, height: 100 });
-    setFocalPoint({ x: 50, y: 50 });
-  }, [aspectRatio]);
-
-  useEffect(() => {
     if (!media?.url) return;
 
     const image = new Image();
@@ -167,10 +168,8 @@ export function ImageEditingCanvas({ data, path }: Props) {
       canvas.width = swapDimensions ? image.naturalHeight : image.naturalWidth;
       canvas.height = swapDimensions ? image.naturalWidth : image.naturalHeight;
       setPreviewDimensions({ width: canvas.width, height: canvas.height });
-      setCrop({ unit: "%", x: 0, y: 0, width: 100, height: 100 });
-      setWidth(canvas.width);
-      setHeight(canvas.height);
-      setFocalPoint({ x: 50, y: 50 });
+      setWidth(Math.max(1, Math.round((Number(crop.width ?? 100) / 100) * canvas.width)));
+      setHeight(Math.max(1, Math.round((Number(crop.height ?? 100) / 100) * canvas.height)));
       const context = canvas.getContext("2d");
       if (!context) return;
       context.translate(canvas.width / 2, canvas.height / 2);
@@ -191,16 +190,26 @@ export function ImageEditingCanvas({ data, path }: Props) {
     }
     setBusy(true);
     const nextAltText = (media?.alt ?? "").trim();
-    const response = await fetch("/api/media/edit-canvas", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ originalMediaId: String(media.id), rotate, resize: { width, height }, aspectRatio: aspectRatio === "original" ? undefined : aspectRatio, crop, focalPoint, altText: nextAltText }),
-    });
-    const result = (await response.json()) as { message?: string; doc?: { id?: string | number } };
-    setToast(response.ok && result.doc?.id
-      ? { message: "Imagem atualizada com sucesso.", derivedId: result.doc.id, tone: "success" }
-      : { message: result.message ?? "Falha ao atualizar a imagem.", tone: "error" });
-    setBusy(false);
+    try {
+      const response = await fetch("/api/media/edit-canvas", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ originalMediaId: String(media.id), rotate, resize: { width, height }, aspectRatio: aspectRatio === "original" ? undefined : aspectRatio, crop, focalPoint, altText: nextAltText }),
+      });
+      const result = (await response.json().catch(() => ({}))) as { message?: string; doc?: MediaData };
+      if (!response.ok || !result.doc?.id) {
+        setToast({ message: result.message ?? "Falha ao gerar a imagem derivada.", tone: "error" });
+        return;
+      }
+      mediaField.setValue(result.doc.id);
+      setMedia(result.doc);
+      if (result.doc.url) setPreviewUrl(result.doc.url);
+      setToast({ message: "Imagem derivada criada e vinculada a esta página.", derivedId: result.doc.id, tone: "success" });
+    } catch (error) {
+      setToast({ message: error instanceof Error ? error.message : "Falha ao gerar a imagem derivada.", tone: "error" });
+    } finally {
+      setBusy(false);
+    }
   }
 
   return <section className="image-editing-canvas">

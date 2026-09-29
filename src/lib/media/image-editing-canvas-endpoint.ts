@@ -1,4 +1,6 @@
 import fs from "node:fs/promises";
+import path from "node:path";
+import { randomUUID } from "node:crypto";
 import { addDataAndFileToRequest, type Endpoint } from "payload";
 import { imageEditingCanvasAdminOnly } from "../../access/roles.ts";
 import {
@@ -32,16 +34,20 @@ export const imageEditingCanvasEndpoint: Endpoint = {
       const sourcePath = resolveMediaPath(original.filename);
       await fs.access(sourcePath);
       const inputBuffer = await fs.readFile(sourcePath);
-      const { buffer, metrics } = await processImageTransform(inputBuffer, transform);
-      const fileName = original.filename;
-      const updated = await req.payload.update({
+      const { buffer, metrics, focalPoint } = await processImageTransform(inputBuffer, transform);
+      const originalName = path.parse(path.basename(original.filename)).name;
+      const fileName = `${originalName}_crop_${Date.now()}_${randomUUID().slice(0, 8)}.webp`;
+      const derived = await req.payload.create({
         collection: "media",
-        id: original.id,
         data: {
           alt: normalizedAltText || original.alt || "",
           caption: original.caption,
           usage: original.usage,
-          focalPoint: transform.focalPoint,
+          isDerived: true,
+          parentMedia: original.id,
+          focalPoint,
+          focalX: focalPoint.x,
+          focalY: focalPoint.y,
           editingMetadata: {
             crop: transform.crop,
             resize: transform.resize,
@@ -61,15 +67,15 @@ export const imageEditingCanvasEndpoint: Endpoint = {
           actorEmail: req.user?.email,
           changedFields: [{ field: "editingMetadata" }, { field: "alt" }],
           collection: "media",
-          documentId: String(updated.id),
-          documentTitle: String(updated.alt || fileName),
+          documentId: String(derived.id),
+          documentTitle: String(derived.alt || fileName),
           timestamp: new Date().toISOString(),
           version: `source:${String(original.id)}`,
         },
         overrideAccess: true,
         req,
       });
-      return Response.json({ doc: updated }, { status: 200 });
+      return Response.json({ doc: derived }, { status: 201 });
     } catch (error) {
       return Response.json({ message: error instanceof Error ? error.message : "Nao foi possivel gerar a derivada." }, { status: 400 });
     }
