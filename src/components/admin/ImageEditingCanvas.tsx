@@ -105,6 +105,15 @@ export function ImageEditingCanvas({ data, path }: Props) {
     });
   };
 
+  const centerFocalPointOnCrop = () => {
+    const toPercent = (value: number, total: number) =>
+      crop.unit === "%" ? value : (value / total) * 100;
+    setFocalPoint({
+      x: Math.round(Math.max(0, Math.min(100, toPercent(Number(crop.x ?? 0), previewDimensions.width) + toPercent(Number(crop.width ?? 0), previewDimensions.width) / 2))),
+      y: Math.round(Math.max(0, Math.min(100, toPercent(Number(crop.y ?? 0), previewDimensions.height) + toPercent(Number(crop.height ?? 0), previewDimensions.height) / 2))),
+    });
+  };
+
   const setCropForDimensions = (nextWidth: number, nextHeight: number) => {
     if (!previewDimensions.width || !previewDimensions.height) return;
     const cropWidth = Math.min(100, (nextWidth / previewDimensions.width) * 100);
@@ -225,6 +234,7 @@ export function ImageEditingCanvas({ data, path }: Props) {
     <div className="image-editing-canvas__toolbar">
       <label>Largura<input type="number" min={1} max={previewDimensions.width || undefined} value={width ?? ""} onChange={(event) => syncHeightFromWidth(event.target.value ? Number(event.target.value) : undefined)} /></label>
       <label>Altura<input type="number" min={1} max={previewDimensions.height || undefined} value={height ?? ""} onChange={(event) => syncWidthFromHeight(event.target.value ? Number(event.target.value) : undefined)} /></label>
+      <button className="image-editing-canvas__center-focus" type="button" onClick={centerFocalPointOnCrop} disabled={!previewDimensions.width || !previewDimensions.height}>Centralizar ponto focal no corte</button>
       <div className="image-editing-canvas__rotation"><button type="button" onClick={() => setRotate((rotate + 270) % 360 as 0 | 90 | 180 | 270)} aria-label="Girar para a esquerda">↶</button><button type="button" onClick={() => setRotate((rotate + 90) % 360 as 0 | 90 | 180 | 270)} aria-label="Girar para a direita">↷</button></div>
       <button className="image-editing-canvas__save" type="button" onClick={saveCurrentAsset} disabled={busy}>{busy ? "Salvando..." : "Salvar imagem editada"}</button>
     </div>
