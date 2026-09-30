@@ -7,6 +7,7 @@ import { fileURLToPath } from "url";
 import { AuditLogs } from "./collections/AuditLogs.ts";
 import { Media } from "./collections/Media.ts";
 import { Pages } from "./collections/Pages.ts";
+import { Themes } from "./collections/Themes.ts";
 import { Users } from "./collections/Users.ts";
 import { Footer } from "./globals/Footer.ts";
 import { Header } from "./globals/Header.ts";
@@ -79,7 +80,7 @@ export default buildConfig({
       ),
     },
   },
-  collections: [Users, Media, Pages, AuditLogs],
+  collections: [Users, Media, Pages, Themes, AuditLogs],
   globals: [Header, Footer, SiteSettings],
   db: sqliteAdapter({
     client: {

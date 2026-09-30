@@ -70,6 +70,7 @@ export interface Config {
     users: User;
     media: Media;
     pages: Page;
+    themes: Theme;
     'audit-logs': AuditLog;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
@@ -81,6 +82,7 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
+    themes: ThemesSelect<false> | ThemesSelect<true>;
     'audit-logs': AuditLogsSelect<false> | AuditLogsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -1420,6 +1422,59 @@ export interface FullWidthImageBannerBlock {
   blockType: 'fullWidthImageBanner';
 }
 /**
+ * Crie paletas e tipografias controladas pelo Design System. O tema aplicado ao portal e escolhido nas Configuracoes do site.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "themes".
+ */
+export interface Theme {
+  id: number;
+  /**
+   * Nome editorial usado para identificar o tema nas configuracoes e, futuramente, nos Blocks.
+   */
+  name: string;
+  /**
+   * Cinco papeis globais controlados. Campos vazios herdam os defaults institucionais e os pares de contraste sao resolvidos pelo Design System.
+   */
+  colors?: {
+    /**
+     * Cor de fundo estrutural das paginas e blocos padrao. Deixe vazio para herdar o padrao institucional.
+     */
+    background?: string | null;
+    /**
+     * Cor utilizada para os textos de leitura basica. Precisa ter alto contraste com a cor de fundo.
+     */
+    foreground?: string | null;
+    /**
+     * Cor institucional forte aplicada a paineis de destaque e areas de maior peso da marca.
+     */
+    brand?: string | null;
+    /**
+     * Cor aplicada a botoes principais, links e demais areas clicaveis do portal.
+     */
+    action?: string | null;
+    /**
+     * Cor usada em destaques menores, badges estruturais, icones e detalhes graficos.
+     */
+    accent?: string | null;
+  };
+  /**
+   * Fontes carregadas pela API CSS v2 do Google Fonts. Campos vazios usam a tipografia institucional padrao.
+   */
+  typography?: {
+    /**
+     * Cole o link de uma unica familia do Google Fonts, incluindo os pesos usados no portal.
+     */
+    bodyUrl?: string | null;
+    /**
+     * Opcional. Se vazio, os titulos herdam a fonte de textos.
+     */
+    headingUrl?: string | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * Consulte eventos editoriais registrados automaticamente. Logs nao devem ser editados ou criados manualmente.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1479,6 +1534,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'pages';
         value: number | Page;
+      } | null)
+    | ({
+        relationTo: 'themes';
+        value: number | Theme;
       } | null)
     | ({
         relationTo: 'audit-logs';
@@ -2164,6 +2223,30 @@ export interface FullWidthImageBannerBlockSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "themes_select".
+ */
+export interface ThemesSelect<T extends boolean = true> {
+  name?: T;
+  colors?:
+    | T
+    | {
+        background?: T;
+        foreground?: T;
+        brand?: T;
+        action?: T;
+        accent?: T;
+      };
+  typography?:
+    | T
+    | {
+        bodyUrl?: T;
+        headingUrl?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "audit-logs_select".
  */
 export interface AuditLogsSelect<T extends boolean = true> {
@@ -2315,7 +2398,7 @@ export interface Footer {
   createdAt?: string | null;
 }
 /**
- * Configure informacoes gerais, links oficiais, SEO padrao, cores e tipografia institucionais controladas pelo Design System.
+ * Configure informacoes gerais, links oficiais, SEO padrao e o tema institucional controlado pelo Design System.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "site-settings".
@@ -2346,42 +2429,49 @@ export interface SiteSetting {
         id?: string | null;
       }[]
     | null;
+  /**
+   * Tema aplicado globalmente ao portal. Se vazio, o tema base configurado abaixo continua sendo usado.
+   */
+  activeTheme?: (number | null) | Theme;
+  /**
+   * Configuracao preservada para compatibilidade e usada quando nenhum tema alternativo esta ativo.
+   */
   theme?: {
     /**
-     * Cinco papeis globais. Deixe vazio para usar os defaults institucionais. Os pares de contraste sao resolvidos pelo Design System.
+     * Cinco papeis globais controlados. Campos vazios herdam os defaults institucionais e os pares de contraste sao resolvidos pelo Design System.
      */
     colors?: {
       /**
-       * Cor de fundo estrutural das páginas e blocos padrão. Deixe vazio para restaurar o padrão institucional.
+       * Cor de fundo estrutural das paginas e blocos padrao. Deixe vazio para herdar o padrao institucional.
        */
       background?: string | null;
       /**
-       * Cor utilizada para os textos de leitura básica. Precisa ter alto contraste com a cor de fundo. Deixe vazio para restaurar o padrão institucional.
+       * Cor utilizada para os textos de leitura basica. Precisa ter alto contraste com a cor de fundo.
        */
       foreground?: string | null;
       /**
-       * Cor institucional forte, aplicada para preencher o fundo de painéis de destaque e áreas de grande peso da marca. Deixe vazio para restaurar o padrão institucional.
+       * Cor institucional forte aplicada a paineis de destaque e areas de maior peso da marca.
        */
       brand?: string | null;
       /**
-       * Cor focada na conversão e usabilidade, aplicada exclusivamente em botões principais (CTAs), links e áreas clicáveis do portal. Deixe vazio para restaurar o padrão institucional.
+       * Cor aplicada a botoes principais, links e demais areas clicaveis do portal.
        */
       action?: string | null;
       /**
-       * Cor gráfica secundária, utilizada para enfeites da interface, destaques menores, badges estruturais e ícones. Deixe vazio para restaurar o padrão institucional.
+       * Cor usada em destaques menores, badges estruturais, icones e detalhes graficos.
        */
       accent?: string | null;
     };
     /**
-     * Fontes globais carregadas pela API CSS v2 do Google Fonts. Deixe vazio para usar a tipografia institucional padrao.
+     * Fontes carregadas pela API CSS v2 do Google Fonts. Campos vazios usam a tipografia institucional padrao.
      */
     typography?: {
       /**
-       * Cole o link de uma unica familia do Google Fonts. Inclua os pesos usados no portal, preferencialmente 400, 600 e 700.
+       * Cole o link de uma unica familia do Google Fonts, incluindo os pesos usados no portal.
        */
       bodyUrl?: string | null;
       /**
-       * Opcional. Se vazio, os titulos herdam a fonte de textos. Cole um link com uma unica familia.
+       * Opcional. Se vazio, os titulos herdam a fonte de textos.
        */
       headingUrl?: string | null;
     };
@@ -2467,6 +2557,7 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         url?: T;
         id?: T;
       };
+  activeTheme?: T;
   theme?:
     | T
     | {

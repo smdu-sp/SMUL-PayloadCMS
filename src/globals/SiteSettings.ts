@@ -1,9 +1,9 @@
-import { validateBasePalette, type PaletteInput } from "../lib/theme/semantic-theme";
 import type { GlobalConfig } from "payload";
+
 import { adminOnly } from "../access/roles.ts";
 import { createSeoFields } from "../fields/seo.ts";
-import { validateOptionalHexColor } from "../lib/theme/colors.ts";
-import { validateGoogleFontUrl } from "../lib/theme/google-fonts.ts";
+import { createThemeFields } from "../fields/theme.ts";
+import { revalidateSiteShellGlobal } from "../lib/payload/revalidate-site-shell.ts";
 
 export const SiteSettings: GlobalConfig = {
   slug: "site-settings",
@@ -14,7 +14,10 @@ export const SiteSettings: GlobalConfig = {
   label: "Configurações do site",
   admin: {
     description:
-      "Configure informacoes gerais, links oficiais, SEO padrao, cores e tipografia institucionais controladas pelo Design System.",
+      "Configure informacoes gerais, links oficiais, SEO padrao e o tema institucional controlado pelo Design System.",
+  },
+  hooks: {
+    afterChange: [revalidateSiteShellGlobal],
   },
   fields: [
     {
@@ -73,120 +76,24 @@ export const SiteSettings: GlobalConfig = {
       ],
     },
     {
+      name: "activeTheme",
+      type: "relationship",
+      relationTo: "themes",
+      label: "Tema ativo",
+      admin: {
+        description:
+          "Tema aplicado globalmente ao portal. Se vazio, o tema base configurado abaixo continua sendo usado.",
+      },
+    },
+    {
       name: "theme",
       type: "group",
-      label: "Tema",
-      fields: [
-        {
-          name: "colors",
-          type: "group",
-          label: "Cores do tema",
-          validate: (value) => validateBasePalette(value as PaletteInput),
-          admin: { description: "Cinco papeis globais. Deixe vazio para usar os defaults institucionais. Os pares de contraste sao resolvidos pelo Design System." },
-          fields: [
-            {
-              name: "background",
-              type: "text",
-              label: "Fundo principal (Background)",
-              validate: validateOptionalHexColor,
-              admin: {
-                components: {
-                  beforeInput: ["/components/admin/HexColorPicker#HexColorPicker"],
-                },
-                description: "Cor de fundo estrutural das páginas e blocos padrão. Deixe vazio para restaurar o padrão institucional.",
-              },
-            },
-            {
-              name: "foreground",
-              type: "text",
-              label: "Texto principal (Foreground)",
-              validate: validateOptionalHexColor,
-              admin: {
-                components: {
-                  beforeInput: ["/components/admin/HexColorPicker#HexColorPicker"],
-                },
-                description: "Cor utilizada para os textos de leitura básica. Precisa ter alto contraste com a cor de fundo. Deixe vazio para restaurar o padrão institucional.",
-              },
-            },
-            {
-              name: "brand",
-              type: "text",
-              label: "Identidade Institucional (Brand)",
-              validate: validateOptionalHexColor,
-              admin: {
-                components: {
-                  beforeInput: ["/components/admin/HexColorPicker#HexColorPicker"],
-                },
-                description: "Cor institucional forte, aplicada para preencher o fundo de painéis de destaque e áreas de grande peso da marca. Deixe vazio para restaurar o padrão institucional.",
-              },
-            },
-            {
-              name: "action",
-              type: "text",
-              label: "Ação e Interatividade (Action)",
-              validate: validateOptionalHexColor,
-              admin: {
-                components: {
-                  beforeInput: ["/components/admin/HexColorPicker#HexColorPicker"],
-                },
-                description: "Cor focada na conversão e usabilidade, aplicada exclusivamente em botões principais (CTAs), links e áreas clicáveis do portal. Deixe vazio para restaurar o padrão institucional.",
-              },
-            },
-            {
-              name: "accent",
-              type: "text",
-              label: "Detalhes de Apoio (Accent)",
-              validate: validateOptionalHexColor,
-              admin: {
-                components: {
-                  beforeInput: ["/components/admin/HexColorPicker#HexColorPicker"],
-                },
-                description: "Cor gráfica secundária, utilizada para enfeites da interface, destaques menores, badges estruturais e ícones. Deixe vazio para restaurar o padrão institucional.",
-              },
-            },
-          ],
-        },
-        {
-          name: "typography",
-          type: "group",
-          label: "Tipografia",
-          admin: {
-            description:
-              "Fontes globais carregadas pela API CSS v2 do Google Fonts. Deixe vazio para usar a tipografia institucional padrao.",
-          },
-          fields: [
-            {
-              name: "bodyUrl",
-              type: "text",
-              label: "Fonte de textos",
-              validate: validateGoogleFontUrl,
-              admin: {
-                description:
-                  "Cole o link de uma unica familia do Google Fonts. Inclua os pesos usados no portal, preferencialmente 400, 600 e 700.",
-                placeholder:
-                  "https://fonts.googleapis.com/css2?family=Roboto:wght@400;600;700&display=swap",
-              },
-            },
-            {
-              name: "headingUrl",
-              type: "text",
-              label: "Fonte de titulos",
-              validate: validateGoogleFontUrl,
-              admin: {
-                description:
-                  "Opcional. Se vazio, os titulos herdam a fonte de textos. Cole um link com uma unica familia.",
-                placeholder:
-                  "https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&display=swap",
-              },
-            },
-          ],
-        },
-        {
-          name: "resetThemeColors",
-          type: "ui",
-          admin: { components: { Field: "/components/admin/ThemeColorReset#ThemeColorReset" } },
-        },
-      ],
+      label: "Tema base",
+      admin: {
+        description:
+          "Configuracao preservada para compatibilidade e usada quando nenhum tema alternativo esta ativo.",
+      },
+      fields: createThemeFields(),
     },
     {
       name: "defaultSEO",
@@ -200,4 +107,3 @@ export const SiteSettings: GlobalConfig = {
     },
   ],
 };
-

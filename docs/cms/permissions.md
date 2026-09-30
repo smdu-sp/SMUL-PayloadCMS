@@ -39,6 +39,7 @@ O controle deve valer no Payload Admin, nas APIs do Payload e na Local API quand
 | Header | sim | sim | `read` publico e `update` por `adminOrEditor`. |
 | Footer | sim | sim | `read` publico e `update` por `adminOrEditor`. |
 | Theme / SiteSettings | sim | nao | `read` publico e `update` por `adminOnly`. |
+| Temas alternativos | sim | nao | Collection `themes` permite leitura publica e restringe create/update/delete a `adminOnly`. |
 | Users | sim | nao | Collection `users` usa `adminOnly` para create/read/update/delete. |
 | Users.role | sim | nao | Campo `role` usa `adminFieldOnly` em create/update. |
 | Logs | sim | nao | Collection `audit-logs` usa `auditLogsAdminOnly` para leitura e bloqueia create/update/delete manual. |

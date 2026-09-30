@@ -6,6 +6,7 @@ import { getSiteSettings } from "../../lib/payload/get-page";
 import { getSiteShell } from "../../lib/payload/get-site-shell";
 import { generateSiteMetadata } from "../../lib/seo/metadata";
 import { mapThemeToCssVariables } from "../../lib/theme/map-theme-to-css-variables";
+import { resolveActiveThemeConfiguration } from "../../lib/theme/resolve-active-theme";
 import { resolveSemanticTheme } from "../../lib/theme/semantic-theme";
 import {
   getTypographyStylesheets,
@@ -14,6 +15,7 @@ import {
 } from "../../lib/theme/google-fonts";
 import { ThemeProvider } from "../../components/ui/ColorScope";
 import { AccessibilityThemeProvider } from "../../components/theme/AccessibilityThemeProvider";
+import { ACCESSIBILITY_THEME_INIT_SCRIPT } from "../../lib/theme/accessible-palettes";
 import { SiteFooter } from "../../components/layout/SiteFooter";
 import { SiteHeader } from "../../components/layout/SiteHeader";
 import "./globals.css";
@@ -36,8 +38,9 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
     getSiteSettings(),
     getSiteShell(),
   ]);
-  const theme = resolveSemanticTheme(siteSettings?.theme?.colors);
-  const typography = resolveTypography(siteSettings?.theme?.typography);
+  const activeTheme = resolveActiveThemeConfiguration(siteSettings);
+  const theme = resolveSemanticTheme(activeTheme.colors);
+  const typography = resolveTypography(activeTheme.typography);
   const fontStylesheets = getTypographyStylesheets(typography);
   const themeVariables = {
     ...mapThemeToCssVariables(theme),
@@ -49,16 +52,20 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
       lang="pt-BR"
       className={`h-full antialiased ${lato.variable}`}
       style={themeVariables}
+      suppressHydrationWarning
     >
-      {fontStylesheets.length > 0 ? (
-        <>
-          <link href="https://fonts.googleapis.com" rel="preconnect" />
-          <link crossOrigin="anonymous" href="https://fonts.gstatic.com" rel="preconnect" />
-          {fontStylesheets.map((href) => (
-            <link href={href} key={href} precedence="google-fonts" rel="stylesheet" />
-          ))}
-        </>
-      ) : null}
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: ACCESSIBILITY_THEME_INIT_SCRIPT }} />
+        {fontStylesheets.length > 0 ? (
+          <>
+            <link href="https://fonts.googleapis.com" rel="preconnect" />
+            <link crossOrigin="anonymous" href="https://fonts.gstatic.com" rel="preconnect" />
+            {fontStylesheets.map((href) => (
+              <link href={href} key={href} precedence="google-fonts" rel="stylesheet" />
+            ))}
+          </>
+        ) : null}
+      </head>
       <body className="min-h-full flex flex-col">
         <AccessibilityThemeProvider>
           <ThemeProvider theme={theme}>

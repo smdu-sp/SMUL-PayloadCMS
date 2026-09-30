@@ -4,12 +4,14 @@ import { Button, useField, useForm } from "@payloadcms/ui";
 import type { UIFieldClientProps } from "payload";
 import { useState } from "react";
 
-export function ThemeColorReset({ readOnly }: UIFieldClientProps) {
-  const background = useField<string | null>({ path: "theme.colors.background" });
-  const foreground = useField<string | null>({ path: "theme.colors.foreground" });
-  const brand = useField<string | null>({ path: "theme.colors.brand" });
-  const action = useField<string | null>({ path: "theme.colors.action" });
-  const accent = useField<string | null>({ path: "theme.colors.accent" });
+export function ThemeColorReset({ path, readOnly }: UIFieldClientProps) {
+  const themePath = path.replace(/\.?resetThemeColors$/, "");
+  const colorsPath = themePath ? `${themePath}.colors` : "colors";
+  const background = useField<string | null>({ path: `${colorsPath}.background` });
+  const foreground = useField<string | null>({ path: `${colorsPath}.foreground` });
+  const brand = useField<string | null>({ path: `${colorsPath}.brand` });
+  const action = useField<string | null>({ path: `${colorsPath}.action` });
+  const accent = useField<string | null>({ path: `${colorsPath}.accent` });
   const { disabled } = useForm();
   const [reset, setReset] = useState(false);
 

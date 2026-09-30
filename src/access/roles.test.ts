@@ -27,6 +27,7 @@ import {
 import { AuditLogs } from "../collections/AuditLogs";
 import { Media } from "../collections/Media";
 import { Pages } from "../collections/Pages";
+import { Themes } from "../collections/Themes";
 import { Users } from "../collections/Users";
 import { Footer } from "../globals/Footer";
 import { Header } from "../globals/Header";
@@ -125,6 +126,12 @@ describe("CMS roles and permissions", () => {
     assert.equal(Media.access?.create?.(accessArgs(editor)), true);
     assert.equal(Media.access?.update?.(accessArgs(editor)), true);
     assert.equal(Media.access?.delete?.(accessArgs(editor)), false);
+
+    assert.equal(Themes.access?.read?.(accessArgs(null)), true);
+    assert.equal(Themes.access?.create?.(accessArgs(editor)), false);
+    assert.equal(Themes.access?.update?.(accessArgs(editor)), false);
+    assert.equal(Themes.access?.delete?.(accessArgs(editor)), false);
+    assert.equal(Themes.access?.create?.(accessArgs(admin)), true);
 
     assert.equal(Users.access?.read?.(accessArgs(editor)), false);
     assert.equal(Users.access?.create?.(accessArgs(editor)), false);

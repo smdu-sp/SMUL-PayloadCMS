@@ -17,6 +17,11 @@ const collectionItems: NavItem[] = [
   { href: "/admin/collections/users", icon: "users", label: "Usuários" },
   { href: "/admin/collections/media", icon: "image", label: "Mídias" },
   { href: "/admin/collections/pages", icon: "document", label: "Páginas" },
+  {
+    href: "/admin/collections/themes",
+    icon: "shapes",
+    label: "Temas alternativos",
+  },
 ];
 
 const globalItems: NavItem[] = [

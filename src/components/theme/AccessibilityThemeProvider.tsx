@@ -4,7 +4,7 @@ import {
   createContext,
   useCallback,
   useContext,
-  useEffect,
+  useLayoutEffect,
   useRef,
   useSyncExternalStore,
   type ReactNode,
@@ -28,10 +28,6 @@ const AccessibilityThemeContext = createContext<AccessibilityThemeContextValue>(
   mode: "default",
   setMode: () => undefined,
 });
-
-const initializePreferenceScript = `try{const mode=localStorage.getItem(${JSON.stringify(
-  ACCESSIBILITY_THEME_STORAGE_KEY,
-)});if(mode==="highContrast"||mode==="colorBlind"){document.documentElement.dataset.accessibilityTheme=mode}}catch{}`;
 
 const preferenceListeners = new Set<() => void>();
 let sessionMode: AccessibilityThemeMode = "default";
@@ -97,7 +93,7 @@ export function AccessibilityThemeProvider({ children }: { children: ReactNode }
     getDefaultMode,
   );
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     applyMode(mode);
   }, [mode]);
 
@@ -132,7 +128,6 @@ export function AccessibilityThemeProvider({ children }: { children: ReactNode }
   return (
     <AccessibilityThemeContext.Provider value={{ mode, setMode }}>
       <style dangerouslySetInnerHTML={{ __html: ACCESSIBILITY_THEME_CSS }} />
-      <script dangerouslySetInnerHTML={{ __html: initializePreferenceScript }} />
       {children}
       <details className={styles.control} ref={controlRef}>
         <summary className={styles.trigger}>

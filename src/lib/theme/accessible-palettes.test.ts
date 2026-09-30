@@ -4,6 +4,8 @@ import { resolveBlockColorTheme } from "./block-color-theme";
 import { getContrastRatio } from "./colors";
 import {
   ACCESSIBILITY_THEME_CSS,
+  ACCESSIBILITY_THEME_INIT_SCRIPT,
+  ACCESSIBILITY_THEME_STORAGE_KEY,
   ACCESSIBLE_PALETTES,
   ACCESSIBLE_SEMANTIC_THEMES,
   normalizeAccessibilityThemeMode,
@@ -51,5 +53,12 @@ describe("accessible color palettes", () => {
     assert.match(ACCESSIBILITY_THEME_CSS, /--color-background:#000000 !important/);
     assert.match(ACCESSIBILITY_THEME_CSS, /--admin-sidebar-bg:#000000 !important/);
     assert.match(ACCESSIBILITY_THEME_CSS, /data-color-scheme="brand"/);
+  });
+
+  it("bootstraps only approved persisted modes before hydration", () => {
+    assert.match(ACCESSIBILITY_THEME_INIT_SCRIPT, new RegExp(ACCESSIBILITY_THEME_STORAGE_KEY));
+    assert.match(ACCESSIBILITY_THEME_INIT_SCRIPT, /highContrast/);
+    assert.match(ACCESSIBILITY_THEME_INIT_SCRIPT, /colorBlind/);
+    assert.doesNotMatch(ACCESSIBILITY_THEME_INIT_SCRIPT, /innerHTML|document\.write/);
   });
 });

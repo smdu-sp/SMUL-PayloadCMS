@@ -12,3 +12,7 @@ export function revalidateSiteShell(): void {
 export const revalidateSiteShellGlobal: GlobalAfterChangeHook = () => {
   revalidateSiteShell();
 };
+
+export const revalidateSiteShellCollection = () => {
+  revalidateSiteShell();
+};

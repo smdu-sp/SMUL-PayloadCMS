@@ -9,7 +9,7 @@ Esta nota registra as decisoes da SPEC-020 para manter conteudos globais fora de
 | Header | `src/globals/Header.ts` | Logo institucional opcional e menu principal configuravel por relacionamento com Pages. |
 | Footer | `src/globals/Footer.ts` | Telefone, e-mail, endereco fisico, atendimento presencial, redes sociais oficiais e links institucionais. |
 | SiteSettings | `src/globals/SiteSettings.ts` | Nome do site, prazo institucional, links oficiais, branding controlado e SEO padrao. |
-| Theme | `src/lib/theme/get-theme.ts` e `src/lib/theme/map-theme-to-css-variables.ts` | Converte branding configuravel em variaveis CSS permitidas pelo Design System. |
+| Theme | `src/collections/Themes.ts`, `src/lib/theme/resolve-active-theme.ts`, `src/lib/theme/get-theme.ts` e `src/lib/theme/map-theme-to-css-variables.ts` | Seleciona o tema nomeado ativo, preserva o fallback de SiteSettings e converte os papeis permitidos em variaveis CSS. |
 
 ## Campos reutilizaveis
 

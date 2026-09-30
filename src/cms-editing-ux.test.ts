@@ -12,6 +12,7 @@ import {
   adminHelpSections,
 } from "./admin/help-content";
 import { Pages } from "./collections/Pages";
+import { Themes } from "./collections/Themes";
 import { Media } from "./collections/Media";
 import { Users } from "./collections/Users";
 import { createLinkFields } from "./fields/link";
@@ -262,6 +263,7 @@ describe("CMS editing UX", () => {
     assert.ok(SiteSettings.admin?.description);
 
     const branding = fieldByName(SiteSettings.fields, "theme");
+    const activeTheme = fieldByName(SiteSettings.fields, "activeTheme");
     const alt = fieldByName(Media.fields, "alt");
     const usage = fieldByName(Media.fields, "usage");
     const brandingFieldNames = "fields" in branding && Array.isArray(branding.fields)
@@ -271,7 +273,10 @@ describe("CMS editing UX", () => {
       ? visibleNestedFieldNames(branding.fields as Field[])
       : [];
 
-    assert.equal(branding.label, "Tema");
+    assert.equal(branding.label, "Tema base");
+    assert.equal(activeTheme.type, "relationship");
+    assert.equal("relationTo" in activeTheme ? activeTheme.relationTo : null, "themes");
+    assert.equal(Themes.admin?.useAsTitle, "name");
     assert.equal(usage.label, "Uso principal");
     assert.deepEqual(brandingFieldNames, [
       "colors",

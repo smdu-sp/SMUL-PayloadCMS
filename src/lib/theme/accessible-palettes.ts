@@ -13,6 +13,10 @@ import {
 export const ACCESSIBILITY_THEME_STORAGE_KEY =
   "meu-imovel-regular-accessibility-theme";
 
+export const ACCESSIBILITY_THEME_INIT_SCRIPT = `try{const mode=localStorage.getItem(${JSON.stringify(
+  ACCESSIBILITY_THEME_STORAGE_KEY,
+)});if(mode==="highContrast"||mode==="colorBlind"){document.documentElement.dataset.accessibilityTheme=mode}}catch{}`;
+
 export const accessibilityThemeModes = [
   "default",
   "highContrast",

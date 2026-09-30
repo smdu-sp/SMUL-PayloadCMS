@@ -59,3 +59,32 @@ Baseado na paleta de Okabe-Ito, que é perfeitamente distinguível para usuário
 | **Brand** | `#0072B2` | Azul amigável para daltônicos (Marca e estrutura) | 
 | **Action** | `#D55E00` | Vermelhão/Laranja escuro (Ação primária, substitui o vermelho) | 
 | **Accent** | `#E69F00` | Laranja amarelado (Destaques, avisos e tags) | 
+
+## Inicializacao da preferencia no Next.js
+
+A preferencia persistida em `localStorage` e aplicada no frontend por um script
+inline no `head` nativo do root layout, conforme a recomendacao do Next.js 16
+para evitar flash de tema antes da hidratacao. O script aceita somente
+`highContrast` e `colorBlind` e atualiza o atributo
+`data-accessibility-theme`.
+
+O `RootLayout` fornecido pelo Payload nao expoe um slot para o `head`: os filhos
+recebidos por ele sao renderizados dentro do `body`. Por isso, o Admin nao
+injeta um script de inicializacao. Nele, a preferencia e aplicada pelo provider
+durante a hidratacao, evitando que um `next/script` fora do documento principal
+gere erro de ordenacao no Next.js.
+
+`AccessibilityThemeProvider` permanece um Client Component, mas nao renderiza
+tags `script`. Ele sincroniza a preferencia com o estado React e reaplica o
+atributo em `useLayoutEffect`, inclusive durante o remount do Strict Mode em
+desenvolvimento. Essa separacao evita tanto o erro do React 19 para scripts
+inseridos por componentes client-side quanto o erro de ordenacao do Next.js no
+layout do Payload.
+
+### Validacao executada em 2026-09-30
+
+- `node --import ./src/seeds/patch-os-userinfo.mjs --import tsx --test src/lib/theme/accessible-palettes.test.ts`: 5 testes passaram.
+- `npm.cmd run typecheck`: passou.
+- `npm.cmd run lint`: passou sem erros; permaneceram dois warnings preexistentes em `src/components/admin/Logo.tsx`.
+- `npm.cmd run build`: passou.
+- Verificacao manual do console no navegador permanece pendente.

@@ -10,6 +10,10 @@ import {
 } from "../../lib/theme/block-color-theme";
 import { normalizeHexColor } from "../../lib/theme/colors";
 import { resolveSemanticTheme, type PaletteInput } from "../../lib/theme/semantic-theme";
+import {
+  resolveActiveThemeConfiguration,
+  type ThemeSettingsInput,
+} from "../../lib/theme/resolve-active-theme";
 
 const tokenCopy = {
   foreground: {
@@ -84,14 +88,16 @@ export function BlockContrastStatus({
   const action = useField<string | null>({ path: `${appearancePath}.colors.action` }).value;
   const accent = useField<string | null>({ path: `${appearancePath}.colors.accent` }).value;
   const [{ data, isError, isLoading }] = usePayloadAPI("/api/globals/site-settings", {
-    initialParams: { depth: 0 },
+    initialParams: { depth: 1 },
   });
 
   const rawColors = { background, foreground, brand, action, accent };
   const overrides = Object.fromEntries(
     Object.entries(rawColors).map(([key, value]) => [key, asColor(value)]),
   ) as EditorialColorOverrides;
-  const globalColors = (data as { theme?: { colors?: PaletteInput } } | null)?.theme?.colors;
+  const globalColors = resolveActiveThemeConfiguration(
+    data as ThemeSettingsInput | null,
+  ).colors as PaletteInput | null | undefined;
   const analysis = analyzeCustomBlockPalette(resolveSemanticTheme(globalColors), overrides);
   const rawByToken = { foreground: asColor(foreground), action: asColor(action), accent: asColor(accent) };
   const visibleTokenSet = new Set(visibleTokens);

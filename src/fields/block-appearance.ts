@@ -2,6 +2,7 @@ import type { Field, GroupField } from "payload";
 import { validateOptionalHexColor } from "../lib/theme/colors";
 import { colorSchemes, normalizeColorScheme, validateColorOverrides, type ColorScheme, type EditorialColorOverrides } from "../lib/theme/block-color-theme";
 import { resolveSemanticTheme, type GlobalSemanticTheme } from "../lib/theme/semantic-theme";
+import { resolveActiveThemeConfiguration } from "../lib/theme/resolve-active-theme";
 import { closedSelect } from "./editorial-validation";
 
 type BlockSchemeOption = ColorScheme | "custom";
@@ -208,8 +209,9 @@ export function createAppearanceGroup(fields: Field[]): GroupField {
         !Object.values(appearance.colors).some(Boolean)
       ) return true;
       // Validate against the same global values used by the renderer, not fixed preset hexes.
-      const settings = await req.payload.findGlobal({ slug: "site-settings", depth: 0, req });
-      return validateControlledBlockColors(appearance, resolveSemanticTheme(settings.theme?.colors));
+      const settings = await req.payload.findGlobal({ slug: "site-settings", depth: 1, req });
+      const activeTheme = resolveActiveThemeConfiguration(settings);
+      return validateControlledBlockColors(appearance, resolveSemanticTheme(activeTheme.colors));
     },
     admin: { description: "Opcoes semanticas controladas pelo Design System. Nao permite CSS arbitrario." },
     fields,
