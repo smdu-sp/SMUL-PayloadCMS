@@ -21,6 +21,7 @@ describe("public site shell", () => {
   it("renders semantic header navigation and ignores unavailable pages", () => {
     const header = {
       id: 1,
+      navigationMode: "normal",
       navigation: [
         { id: "active", label: "Orientações", page },
         { id: "draft", label: "Rascunho", page: { ...page, _status: "draft" } },
@@ -35,6 +36,42 @@ describe("public site shell", () => {
     assert.match(markup, /href="\/orientacoes"/);
     assert.doesNotMatch(markup, /Rascunho/);
     assert.match(markup, /Meu Imóvel Regular — página inicial/);
+  });
+
+  it("renders direct links, categorized submenus and the optional search form", () => {
+    const header = {
+      id: 1,
+      enableSearch: true,
+      navigationMode: "submenus",
+      menuItems: [
+        { id: "direct", type: "page", label: "Orientações", page },
+        {
+          id: "services",
+          type: "category",
+          label: "Serviços",
+          links: [
+            { id: "active", label: "Regularização", page },
+            {
+              id: "draft",
+              label: "Rascunho",
+              page: { ...page, _status: "draft" },
+            },
+          ],
+        },
+      ],
+    } as Header;
+    const markup = renderToStaticMarkup(
+      createElement(SiteHeader, { header, siteName: "Meu Imóvel Regular" }),
+    );
+
+    assert.match(markup, /aria-expanded="false"/);
+    assert.match(markup, /aria-controls="header-submenu-1"/);
+    assert.match(markup, /hidden=""/);
+    assert.match(markup, /Regularização/);
+    assert.doesNotMatch(markup, /Rascunho/);
+    assert.match(markup, /role="search"/);
+    assert.match(markup, /action="\/busca"/);
+    assert.match(markup, /name="q"/);
   });
 
   it("renders accessible contact and validated footer links", () => {

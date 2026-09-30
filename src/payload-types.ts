@@ -2320,6 +2320,14 @@ export interface Header {
    */
   logo?: (number | null) | Media;
   /**
+   * Normal preserva a navegação atual. Com submenus permite combinar páginas diretas e categorias.
+   */
+  navigationMode: 'normal' | 'submenus';
+  /**
+   * Adiciona um campo de busca por páginas publicadas e ativas do portal.
+   */
+  enableSearch?: boolean | null;
+  /**
    * Lista de paginas principais exibidas no cabecalho. Mantenha poucos itens para facilitar a leitura.
    */
   navigation?:
@@ -2332,6 +2340,36 @@ export interface Header {
          * Pagina de destino dentro do portal. Mudancas de slug nao quebram este relacionamento.
          */
         page: number | Page;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Adicione até seis páginas diretas ou categorias. Categorias podem conter até oito links internos.
+   */
+  menuItems?:
+    | {
+        type: 'page' | 'category';
+        /**
+         * Texto curto usado no link direto ou como título da categoria.
+         */
+        label: string;
+        /**
+         * Destino interno do item direto.
+         */
+        page?: (number | null) | Page;
+        /**
+         * Links internos exibidos no submenu. Categorias vazias não aparecem no portal.
+         */
+        links?:
+          | {
+              label: string;
+              /**
+               * Página publicada e ativa. Mudanças de slug não quebram o relacionamento.
+               */
+              page: number | Page;
+              id?: string | null;
+            }[]
+          | null;
         id?: string | null;
       }[]
     | null;
@@ -2528,11 +2566,28 @@ export interface SiteSetting {
  */
 export interface HeaderSelect<T extends boolean = true> {
   logo?: T;
+  navigationMode?: T;
+  enableSearch?: T;
   navigation?:
     | T
     | {
         label?: T;
         page?: T;
+        id?: T;
+      };
+  menuItems?:
+    | T
+    | {
+        type?: T;
+        label?: T;
+        page?: T;
+        links?:
+          | T
+          | {
+              label?: T;
+              page?: T;
+              id?: T;
+            };
         id?: T;
       };
   updatedAt?: T;

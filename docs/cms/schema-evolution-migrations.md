@@ -48,6 +48,9 @@ As mudancas das SPECS 019 a 027 foram classificadas assim:
 | `richText` | `width` legado aceito como fallback de `variant` | Campo legado absorvido | Nao exige migration neste ciclo. |
 | `actionBanners.banners[].appearance` | Aparencias fechadas no Design System | Novo enum/variant | Nao exige migration; aparencia desconhecida vira `surface`. |
 | `Header`, `Footer`, `SiteSettings` | Links globais mantidos em formatos existentes | Preservacao de schema | Nao exige migration; resolver central aceita formatos legados. |
+| `Header.navigationMode` | Novo enum `normal` ou `submenus` com default `normal` | Novo enum com default | Nao exige migration de conteudo; documentos existentes e valores desconhecidos usam o menu normal. |
+| `Header.menuItems` | Novo array opcional de paginas diretas ou categorias com links internos | Novo field opcional | Nao exige migration; `Header.navigation` permanece intacto como fallback. |
+| `Header.enableSearch` | Novo checkbox opcional com default `false` | Novo field opcional | Nao exige migration; a busca nao aparece ate ser habilitada pelo editor. |
 | `Footer.socialLinks[].icon` | Novo select opcional de icone social controlado | Novo field opcional | Nao exige migration de conteudo; itens existentes permanecem sem icone ate configuracao editorial. |
 | `Footer.appearance` | Novo grupo opcional com presets e paleta customizada restrita a `background` e `foreground` | Novos fields opcionais e novo enum | Nao exige migration de conteudo; documentos antigos continuam usando o preset `muted`. |
 | `SiteSettings.theme.typography` | Novos links opcionais para fontes globais de texto e titulos | Novos fields opcionais | Nao exige migration; configuracoes existentes continuam usando Lato e os fallbacks institucionais. |

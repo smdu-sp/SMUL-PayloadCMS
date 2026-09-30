@@ -254,8 +254,15 @@ describe("SPEC-029 CMS foundation validation", () => {
     const headerFieldNames = Header.fields.map((field) => "name" in field ? field.name : "");
     const footerFieldNames = Footer.fields.map((field) => "name" in field ? field.name : "");
 
-    assert.deepEqual(headerFieldNames, ["logo", "navigation"]);
+    assert.deepEqual(headerFieldNames, [
+      "logo",
+      "navigationMode",
+      "enableSearch",
+      "navigation",
+      "menuItems",
+    ]);
     assert.deepEqual(footerFieldNames, [
+      "appearance",
       "phone",
       "email",
       "address",

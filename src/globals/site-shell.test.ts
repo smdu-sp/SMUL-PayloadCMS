@@ -24,6 +24,40 @@ describe("Header and Footer Globals", () => {
     });
   });
 
+  it("supports a backwards-compatible submenu mode with controlled depth", () => {
+    const mode = fieldByName(Header.fields, "navigationMode");
+    const search = fieldByName(Header.fields, "enableSearch");
+    const navigation = fieldByName(Header.fields, "navigation");
+    const menuItems = fieldByName(Header.fields, "menuItems");
+
+    assert.equal(mode.type, "select");
+    assert.equal("defaultValue" in mode ? mode.defaultValue : undefined, "normal");
+    assert.equal(search.type, "checkbox");
+    assert.equal("defaultValue" in search ? search.defaultValue : undefined, false);
+    assert.equal(navigation.admin?.condition?.({ navigationMode: "normal" }, {}, {} as never), true);
+    assert.equal(navigation.admin?.condition?.({ navigationMode: "submenus" }, {}, {} as never), false);
+    assert.equal(menuItems.type, "array");
+    if (menuItems.type !== "array") assert.fail("Expected submenu items array");
+    assert.equal(menuItems.maxRows, 6);
+
+    const directPage = fieldByName(menuItems.fields, "page");
+    const links = fieldByName(menuItems.fields, "links");
+    assert.equal(directPage.type, "relationship");
+    assert.equal(links.type, "array");
+    if (directPage.type !== "relationship" || links.type !== "array") {
+      assert.fail("Expected direct Page and category links");
+    }
+    assert.deepEqual(directPage.filterOptions, {
+      _status: { equals: "published" },
+      lifecycleStatus: { equals: "active" },
+    });
+    assert.equal(links.maxRows, 8);
+    const childPage = fieldByName(links.fields, "page");
+    assert.equal(childPage.type, "relationship");
+    if (childPage.type !== "relationship") assert.fail("Expected child Page relationship");
+    assert.deepEqual(childPage.filterOptions, directPage.filterOptions);
+  });
+
   it("requires secure institutional URLs and revalidates both Globals", async () => {
     const institutionalLinks = fieldByName(Footer.fields, "institutionalLinks");
     assert.ok("fields" in institutionalLinks && Array.isArray(institutionalLinks.fields));
