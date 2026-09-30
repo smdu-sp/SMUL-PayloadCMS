@@ -217,14 +217,18 @@ nos demais temas, a receita de midia continua protegendo o contraste.
 
 ## Consumo no rodape
 
-O rodape usa o preset `muted` como uma receita completa, em vez de combinar o
-fundo `muted` com o `foreground` global. O renderer resolve localmente
-`background`, `foreground`, `heading` e `border` pelo mesmo guardrail dos
-Blocks. Assim, se o texto global coincidir com o fundo suave, o rodape adota o
-`mutedForeground` seguro ou o fallback neutro de maior contraste.
+O rodape usa `muted` como preset padrao e permite ao editor selecionar as mesmas
+receitas fechadas dos Blocks: `default`, `surface`, `muted`, `brand`, `accent` e
+`inverse`. O modo `custom` expoe somente `background` e `foreground`, os papeis
+consumidos diretamente por essa superficie.
 
-Essa protecao e apenas de renderizacao. O global `footer` nao ganhou campos de
-cor e nenhum documento persistido precisa de migration.
+O renderer resolve localmente `background`, `foreground`, `heading` e `border`
+pelo mesmo guardrail dos Blocks. Titulos e bordas sao derivados, e combinacoes
+customizadas sem contraste recebem um fallback neutro legivel. O painel do
+Payload apresenta a verificacao antes da publicacao.
+
+`Footer.appearance` e opcional. Documentos existentes continuam usando `muted`
+e nao precisam de migration de conteudo.
 
 ## Limites
 

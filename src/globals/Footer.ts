@@ -1,8 +1,17 @@
 import type { GlobalConfig } from "payload";
 import { adminOrEditor } from "../access/roles.ts";
 import { validateOfficialHttpsUrl } from "../domain/official-url.ts";
+import {
+  createAppearanceGroup,
+  createBlockContrastStatusField,
+  createControlledColorAppearanceFields,
+  createSchemeField,
+} from "../fields/block-appearance.ts";
+import { colorSchemes } from "../lib/theme/block-color-theme.ts";
 import { revalidateSiteShellGlobal } from "../lib/payload/revalidate-site-shell.ts";
 import { createSocialLinkFields } from "./shared/social-link.ts";
+
+const footerColorTokens = ["background", "foreground"] as const;
 
 export const Footer: GlobalConfig = {
   slug: "footer",
@@ -19,6 +28,11 @@ export const Footer: GlobalConfig = {
     afterChange: [revalidateSiteShellGlobal],
   },
   fields: [
+    createAppearanceGroup([
+      createSchemeField([...colorSchemes, "custom"], "muted"),
+      ...createControlledColorAppearanceFields(footerColorTokens),
+      createBlockContrastStatusField(footerColorTokens),
+    ]),
     {
       name: "phone",
       type: "text",

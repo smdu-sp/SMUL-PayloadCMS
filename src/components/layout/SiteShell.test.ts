@@ -61,7 +61,7 @@ describe("public site shell", () => {
     assert.match(markup, /https:\/\/example.gov.br\/servico/);
     assert.equal((markup.match(/<svg/g) ?? []).length, 1);
     assert.match(markup, /<svg[^>]*aria-hidden="true"/);
-    assert.match(markup, /h-5 w-5/);
+    assert.match(markup, /h-8 w-8/);
     assert.match(markup, /Outra rede/);
     assert.doesNotMatch(markup, /Link inseguro/);
   });
@@ -87,6 +87,25 @@ describe("public site shell", () => {
     assert.match(markup, /--block-background:#f1f5f9/);
     assert.match(markup, /--block-foreground:#475569/);
     assert.doesNotMatch(markup, /bg-muted text-foreground/);
+  });
+
+  it("applies a custom footer palette and replaces an unreadable foreground", () => {
+    const footer = {
+      id: 1,
+      appearance: {
+        scheme: "custom",
+        colors: {
+          background: "#ffffff",
+          foreground: "#ffffff",
+        },
+      },
+      phone: "(11) 1234-5678",
+    } as Footer;
+    const markup = renderToStaticMarkup(createElement(SiteFooter, { footer }));
+
+    assert.match(markup, /data-color-scheme="default"/);
+    assert.match(markup, /--block-background:#ffffff/);
+    assert.match(markup, /--block-foreground:#000000/);
   });
 
   it("omits an empty footer without breaking the layout", () => {

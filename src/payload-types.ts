@@ -2347,6 +2347,25 @@ export interface Header {
 export interface Footer {
   id: number;
   /**
+   * Opcoes semanticas controladas pelo Design System. Nao permite CSS arbitrario.
+   */
+  appearance?: {
+    /**
+     * Seleciona uma combinacao completa de fundo, texto, acao e destaque.
+     */
+    scheme?: ('default' | 'surface' | 'muted' | 'brand' | 'accent' | 'inverse' | 'custom') | null;
+    /**
+     * Deixe um campo vazio para herdar o token global. O contraste considera a paleta efetiva. Nao configura elementos individuais.
+     */
+    colors?: {
+      background?: string | null;
+      foreground?: string | null;
+      brand?: string | null;
+      action?: string | null;
+      accent?: string | null;
+    };
+  };
+  /**
    * Opcional. Informe somente se houver canal oficial vigente para atendimento.
    */
   phone?: string | null;
@@ -2525,6 +2544,20 @@ export interface HeaderSelect<T extends boolean = true> {
  * via the `definition` "footer_select".
  */
 export interface FooterSelect<T extends boolean = true> {
+  appearance?:
+    | T
+    | {
+        scheme?: T;
+        colors?:
+          | T
+          | {
+              background?: T;
+              foreground?: T;
+              brand?: T;
+              action?: T;
+              accent?: T;
+            };
+      };
   phone?: T;
   email?: T;
   address?: T;

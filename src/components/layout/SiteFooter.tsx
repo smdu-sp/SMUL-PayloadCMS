@@ -1,7 +1,8 @@
 import type { Footer } from "../../payload-types";
 import { isSocialIcon } from "../../domain/icons";
 import { resolveOfficialHttpsUrl } from "../../domain/official-url";
-import { ColorScope, Container, Icon } from "../ui";
+import { normalizeColorScheme } from "../../lib/theme/block-color-theme";
+import { BlockThemeScope, ColorScope, Container, Icon } from "../ui";
 
 function telephoneHref(phone: string): string {
   return `tel:${phone.replace(/(?!^\+)[^\d]/g, "")}`;
@@ -24,11 +25,12 @@ export function SiteFooter({ footer }: { footer?: Footer | null }) {
 
   if (!hasContact && !socialLinks.length && !institutionalLinks.length) return null;
 
-  return (
+  const customTheme = footer?.appearance?.scheme === "custom";
+  const content = (
     <ColorScope
       as="footer"
       className="mt-auto border-t border-(--block-border)"
-      scheme="muted"
+      scheme={customTheme ? "default" : normalizeColorScheme(footer?.appearance?.scheme, "muted")}
     >
       <Container size="xl">
         <div className="grid gap-8 py-10 md:grid-cols-3">
@@ -89,4 +91,8 @@ export function SiteFooter({ footer }: { footer?: Footer | null }) {
       </Container>
     </ColorScope>
   );
+
+  return customTheme
+    ? <BlockThemeScope palette={footer?.appearance?.colors}>{content}</BlockThemeScope>
+    : content;
 }

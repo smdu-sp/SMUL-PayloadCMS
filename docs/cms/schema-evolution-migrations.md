@@ -49,6 +49,7 @@ As mudancas das SPECS 019 a 027 foram classificadas assim:
 | `actionBanners.banners[].appearance` | Aparencias fechadas no Design System | Novo enum/variant | Nao exige migration; aparencia desconhecida vira `surface`. |
 | `Header`, `Footer`, `SiteSettings` | Links globais mantidos em formatos existentes | Preservacao de schema | Nao exige migration; resolver central aceita formatos legados. |
 | `Footer.socialLinks[].icon` | Novo select opcional de icone social controlado | Novo field opcional | Nao exige migration de conteudo; itens existentes permanecem sem icone ate configuracao editorial. |
+| `Footer.appearance` | Novo grupo opcional com presets e paleta customizada restrita a `background` e `foreground` | Novos fields opcionais e novo enum | Nao exige migration de conteudo; documentos antigos continuam usando o preset `muted`. |
 | `SiteSettings.theme.typography` | Novos links opcionais para fontes globais de texto e titulos | Novos fields opcionais | Nao exige migration; configuracoes existentes continuam usando Lato e os fallbacks institucionais. |
 | `themes` | Nova Collection de temas nomeados com cores e tipografia controladas | Nova Collection | Exige migration incremental de banco; nao exige backfill de conteudo. Ver `docs/cms/alternative-themes.md`. |
 | `SiteSettings.activeTheme` | Relacionamento opcional com `themes` | Novo relacionamento opcional | Exige migration incremental de banco; `null` preserva `SiteSettings.theme` como fallback e nao exige conversao de documentos existentes. |

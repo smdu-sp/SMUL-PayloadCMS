@@ -340,12 +340,14 @@ describe("CMS editing UX", () => {
   });
 
   it("keeps reusable Footer content configurable in Globals", () => {
+    const appearance = fieldByName(Footer.fields, "appearance");
     const phone = fieldByName(Footer.fields, "phone");
     const email = fieldByName(Footer.fields, "email");
     const address = fieldByName(Footer.fields, "address");
     const socialLinks = fieldByName(Footer.fields, "socialLinks");
     const institutionalLinks = fieldByName(Footer.fields, "institutionalLinks");
 
+    assert.equal(appearance.label, "Aparencia e estilo");
     assert.equal(phone.label, "Telefone");
     assert.equal(email.label, "E-mail");
     assert.equal(address.label, "Endereco fisico");
@@ -353,6 +355,46 @@ describe("CMS editing UX", () => {
     assert.equal(institutionalLinks.label, "Links institucionais");
     assert.match(adminDescription(address) ?? "", /canais oficiais/);
     assert.match(adminDescription(socialLinks) ?? "", /institucionais ativos/);
+  });
+
+  it("offers guarded presets and custom colors for the Footer", () => {
+    const appearance = fieldByName(Footer.fields, "appearance");
+    assert.equal(appearance.type, "group");
+    assert.ok("fields" in appearance && Array.isArray(appearance.fields));
+
+    const appearanceFields = appearance.fields as Field[];
+    const scheme = fieldByName(appearanceFields, "scheme");
+    const colors = fieldByName(appearanceFields, "colors");
+    const contrastStatus = fieldByName(appearanceFields, "contrastStatus");
+    const schemeOptions = "options" in scheme && Array.isArray(scheme.options)
+      ? scheme.options.map((option) => typeof option === "object" && "value" in option
+        ? option.value
+        : option)
+      : [];
+
+    assert.deepEqual(schemeOptions, [
+      "default",
+      "surface",
+      "muted",
+      "brand",
+      "accent",
+      "inverse",
+      "custom",
+    ]);
+    assert.ok("fields" in colors && Array.isArray(colors.fields));
+    assert.deepEqual(
+      (colors.fields as Field[])
+        .filter((field) => !(field as FieldLike).admin?.hidden)
+        .map((field) => "name" in field ? field.name : null),
+      ["background", "foreground"],
+    );
+    assert.equal(contrastStatus.type, "ui");
+    assert.deepEqual(
+      typeof contrastStatus.admin?.components?.Field === "object"
+        ? contrastStatus.admin.components.Field.clientProps
+        : undefined,
+      { visibleTokens: ["background", "foreground"] },
+    );
   });
 
   it("keeps Global links compatible with existing Payload tables", () => {
