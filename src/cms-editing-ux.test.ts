@@ -17,6 +17,7 @@ import { Media } from "./collections/Media";
 import { Users } from "./collections/Users";
 import { createLinkFields } from "./fields/link";
 import { createSeoFields } from "./fields/seo";
+import { SOCIAL_ICONS } from "./domain/icons";
 import { Footer } from "./globals/Footer";
 import { Header } from "./globals/Header";
 import { SiteSettings } from "./globals/SiteSettings";
@@ -371,10 +372,18 @@ describe("CMS editing UX", () => {
   it("validates reusable social links without creating generic key value content", () => {
     const fields = createSocialLinkFields();
     const label = fieldByName(fields, "label");
+    const icon = fieldByName(fields, "icon");
     const url = fieldByName(fields, "url");
     const validate = "validate" in url ? url.validate : undefined;
+    const iconOptions = "options" in icon && Array.isArray(icon.options)
+      ? icon.options.map((option) => typeof option === "object" && "value" in option
+        ? option.value
+        : option)
+      : [];
 
     assert.equal(label.label, "Nome da rede");
+    assert.equal(icon.label, "Ícone");
+    assert.deepEqual(iconOptions, SOCIAL_ICONS);
     assert.equal(url.label, "URL oficial");
     assert.equal(typeof validate, "function");
   });

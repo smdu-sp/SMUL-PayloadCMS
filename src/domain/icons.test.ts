@@ -5,6 +5,9 @@ import {
   STANDARD_ICONS,
   STANDARD_ICON_LABELS,
   STANDARD_ICON_OPTIONS,
+  SOCIAL_ICONS,
+  SOCIAL_ICON_OPTIONS,
+  isSocialIcon,
   isStandardIcon,
   normalizeStandardIcon,
   validateStandardIcon,
@@ -67,5 +70,23 @@ describe("domain icons catalog", () => {
     assert.equal(normalizeStandardIcon("phone"), "phone");
     assert.equal(normalizeStandardIcon("invalid-icon"), "info");
     assert.equal(normalizeStandardIcon(undefined, "document"), "document");
+  });
+
+  it("keeps the social icon choices restricted to supported networks", () => {
+    assert.deepEqual(SOCIAL_ICONS, [
+      "instagram",
+      "facebook",
+      "youtube",
+      "linkedin",
+      "x-social",
+      "whatsapp",
+    ]);
+    assert.deepEqual(
+      SOCIAL_ICON_OPTIONS.map((option) => option.value),
+      SOCIAL_ICONS,
+    );
+    assert.equal(isSocialIcon("instagram"), true);
+    assert.equal(isSocialIcon("warning"), false);
+    assert.equal(isSocialIcon("<svg>"), false);
   });
 });

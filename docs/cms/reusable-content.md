@@ -16,7 +16,7 @@ Esta nota registra as decisoes da SPEC-020 para manter conteudos globais fora de
 | Helper | Uso | Motivo |
 |---|---|---|
 | `createLinkFields` | Links e CTAs em Blocks | Fonte unica em `src/fields/link.ts` para link interno/externo editorial em Blocks. |
-| `createSocialLinkFields` | Redes sociais no Footer | Criado apenas porque redes sociais usam o mesmo par nome/URL oficial e podem crescer sem virar colecao generica. |
+| `createSocialLinkFields` | Redes sociais no Footer | Reune nome, icone controlado e URL oficial sem permitir SVG arbitrario nem criar uma colecao generica. |
 
 ## Auditoria de repeticao
 
@@ -27,7 +27,7 @@ Esta nota registra as decisoes da SPEC-020 para manter conteudos globais fora de
 | Portal de Licenciamento | Aparece em CTA editorial, Footer e SiteSettings | Mantido configuravel. A repeticao no seed existe para popular superficies diferentes; valores oficiais devem ser validados antes de publicacao. |
 | Metadata padrao do layout | Antes havia titulo e descricao estaticos no layout frontend | Agora usa `SiteSettings.defaultSEO` e `siteName`, com fallback tecnico apenas para resiliencia. |
 | Endereco fisico | O mapeamento cita Rua Sao Bento, 405 | Campo `Footer.address` criado e seed inicial preenchido a partir do mapeamento para validacao editorial. |
-| Redes sociais | O mapeamento exige icones/redes, mas nao informa perfis oficiais | Campo `Footer.socialLinks` criado; seed fica vazio ate confirmacao dos perfis oficiais. |
+| Redes sociais | O mapeamento exige icones/redes, mas nao informa perfis oficiais | Campo `Footer.socialLinks` oferece icones controlados; seed fica vazio ate confirmacao dos perfis oficiais. |
 
 ## Divergencias para validacao editorial
 

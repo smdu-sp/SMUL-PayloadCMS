@@ -4,6 +4,8 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 
 import type { Footer, Header, Page } from "../../payload-types";
+import { resolveSemanticTheme } from "../../lib/theme/semantic-theme";
+import { ThemeProvider } from "../ui/ColorScope";
 import { SiteFooter } from "./SiteFooter";
 import { SiteHeader } from "./SiteHeader";
 
@@ -42,7 +44,8 @@ describe("public site shell", () => {
       email: "contato@example.gov.br",
       phone: "(11) 1234-5678",
       socialLinks: [
-        { id: "valid", label: "Rede oficial", url: "https://example.gov.br/rede" },
+        { id: "valid", icon: "instagram", label: "Rede oficial", url: "https://example.gov.br/rede" },
+        { id: "unknown-icon", icon: "<svg>", label: "Outra rede", url: "https://example.gov.br/outra" },
         { id: "invalid", label: "Link inseguro", url: "javascript:alert(1)" },
       ],
       institutionalLinks: [
@@ -56,7 +59,34 @@ describe("public site shell", () => {
     assert.match(markup, /href="mailto:contato@example.gov.br"/);
     assert.match(markup, /aria-labelledby="footer-institutional-title"/);
     assert.match(markup, /https:\/\/example.gov.br\/servico/);
+    assert.equal((markup.match(/<svg/g) ?? []).length, 1);
+    assert.match(markup, /<svg[^>]*aria-hidden="true"/);
+    assert.match(markup, /h-5 w-5/);
+    assert.match(markup, /Outra rede/);
     assert.doesNotMatch(markup, /Link inseguro/);
+  });
+
+  it("keeps footer text readable when the global foreground matches its muted background", () => {
+    const footer = {
+      id: 1,
+      phone: "(11) 1234-5678",
+    } as Footer;
+    const theme = resolveSemanticTheme({
+      background: "#000000",
+      foreground: "#f1f5f9",
+    });
+    const markup = renderToStaticMarkup(
+      createElement(
+        ThemeProvider,
+        { theme },
+        createElement(SiteFooter, { footer }),
+      ),
+    );
+
+    assert.match(markup, /data-color-scheme="muted"/);
+    assert.match(markup, /--block-background:#f1f5f9/);
+    assert.match(markup, /--block-foreground:#475569/);
+    assert.doesNotMatch(markup, /bg-muted text-foreground/);
   });
 
   it("omits an empty footer without breaking the layout", () => {

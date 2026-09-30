@@ -3,7 +3,7 @@ import { describe, it } from "node:test";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 
-import { STANDARD_ICONS } from "../../domain/icons.ts";
+import { SOCIAL_ICONS, STANDARD_ICONS } from "../../domain/icons.ts";
 import { Icon } from "./Icon.tsx";
 
 describe("Icon component", () => {
@@ -13,6 +13,14 @@ describe("Icon component", () => {
       assert.match(markup, /<svg/);
       assert.match(markup, /viewBox="0 0 24 24"/);
       assert.match(markup, /stroke="currentColor"/);
+    }
+  });
+
+  it("renders every footer social icon without exposing it to standard block choices", () => {
+    for (const name of SOCIAL_ICONS) {
+      const markup = renderToStaticMarkup(createElement(Icon, { name }));
+      assert.match(markup, /<svg/);
+      assert.match(markup, /aria-hidden="true"/);
     }
   });
 

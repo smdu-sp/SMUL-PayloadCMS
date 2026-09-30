@@ -2372,6 +2372,10 @@ export interface Footer {
          */
         label: string;
         /**
+         * Opcional. Selecione o ícone da rede; o nome visível continua sendo obrigatório para acessibilidade.
+         */
+        icon?: ('instagram' | 'facebook' | 'youtube' | 'linkedin' | 'x-social' | 'whatsapp') | null;
+        /**
          * Endereco completo do perfil oficial, incluindo https://.
          */
         url: string;
@@ -2529,6 +2533,7 @@ export interface FooterSelect<T extends boolean = true> {
     | T
     | {
         label?: T;
+        icon?: T;
         url?: T;
         id?: T;
       };

@@ -49,10 +49,40 @@ export const STANDARD_ICON_OPTIONS = STANDARD_ICONS.map((name) => ({
   value: name,
 }));
 
+export const SOCIAL_ICONS = [
+  "instagram",
+  "facebook",
+  "youtube",
+  "linkedin",
+  "x-social",
+  "whatsapp",
+] as const;
+
+export type SocialIconName = (typeof SOCIAL_ICONS)[number];
+
+export const SOCIAL_ICON_LABELS: Record<SocialIconName, string> = {
+  instagram: "Instagram",
+  facebook: "Facebook",
+  youtube: "YouTube",
+  linkedin: "LinkedIn",
+  "x-social": "X (antigo Twitter)",
+  whatsapp: "WhatsApp",
+};
+
+export const SOCIAL_ICON_OPTIONS = SOCIAL_ICONS.map((name) => ({
+  label: SOCIAL_ICON_LABELS[name],
+  value: name,
+}));
+
 const standardIconSet = new Set<string>(STANDARD_ICONS);
+const socialIconSet = new Set<string>(SOCIAL_ICONS);
 
 export function isStandardIcon(value: unknown): value is StandardIconName {
   return typeof value === "string" && standardIconSet.has(value);
+}
+
+export function isSocialIcon(value: unknown): value is SocialIconName {
+  return typeof value === "string" && socialIconSet.has(value);
 }
 
 export function normalizeStandardIcon(

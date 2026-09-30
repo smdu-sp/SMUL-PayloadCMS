@@ -215,6 +215,17 @@ permanece oculto como campo isolado porque representa um preset completo. No
 Hero com imagem de fundo, o tema `custom` substitui a receita clara ou escura;
 nos demais temas, a receita de midia continua protegendo o contraste.
 
+## Consumo no rodape
+
+O rodape usa o preset `muted` como uma receita completa, em vez de combinar o
+fundo `muted` com o `foreground` global. O renderer resolve localmente
+`background`, `foreground`, `heading` e `border` pelo mesmo guardrail dos
+Blocks. Assim, se o texto global coincidir com o fundo suave, o rodape adota o
+`mutedForeground` seguro ou o fallback neutro de maior contraste.
+
+Essa protecao e apenas de renderizacao. O global `footer` nao ganhou campos de
+cor e nenhum documento persistido precisa de migration.
+
 ## Limites
 
 - Tokens de ilustracao continuam separados em `--color-illustration-*`.

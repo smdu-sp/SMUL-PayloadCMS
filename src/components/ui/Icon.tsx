@@ -1,5 +1,7 @@
 import type { SVGProps } from "react";
 import {
+  isSocialIcon,
+  type SocialIconName,
   type StandardIconName,
   normalizeStandardIcon,
 } from "../../domain/icons.ts";
@@ -236,7 +238,63 @@ function LogOutGlyph() {
   );
 }
 
-const glyphs: Record<StandardIconName, () => React.JSX.Element> = {
+function InstagramGlyph() {
+  return (
+    <>
+      <rect height="18" rx="5" width="18" x="3" y="3" />
+      <circle cx="12" cy="12" r="4" />
+      <circle cx="17.5" cy="6.5" fill="currentColor" r="1" stroke="none" />
+    </>
+  );
+}
+
+function FacebookGlyph() {
+  return (
+    <path
+      d="M14 21v-8h3l1-4h-4V7c0-1.2.4-2 2-2h2V2.4A18 18 0 0 0 15 2c-3 0-5 1.8-5 5v2H7v4h3v8h4Z"
+      fill="currentColor"
+      stroke="none"
+    />
+  );
+}
+
+function YouTubeGlyph() {
+  return (
+    <>
+      <rect height="14" rx="4" width="20" x="2" y="5" />
+      <path d="m10 9 5 3-5 3Z" fill="currentColor" stroke="none" />
+    </>
+  );
+}
+
+function LinkedInGlyph() {
+  return (
+    <>
+      <rect height="18" rx="2" width="18" x="3" y="3" />
+      <path d="M8 10v7M8 7h.01M12 17v-7M12 13.5a3.5 3.5 0 0 1 7 0V17" />
+    </>
+  );
+}
+
+function XSocialGlyph() {
+  return (
+    <>
+      <path d="M4 4l16 16" />
+      <path d="M20 4 4 20" />
+    </>
+  );
+}
+
+function WhatsAppGlyph() {
+  return (
+    <>
+      <path d="M20 11.5a8 8 0 0 1-11.8 7L3 20l1.5-5.1A8 8 0 1 1 20 11.5Z" />
+      <path d="M8.5 8.5c.8 3.2 2.3 4.7 5.5 5.5l1.5-1.5 2 .5v2c0 1-1 1.5-2 1.5-4.4 0-8-3.6-8-8 0-1 .5-2 1.5-2h2l.5 2-1.5 1.5" />
+    </>
+  );
+}
+
+const glyphs: Record<StandardIconName | SocialIconName, () => React.JSX.Element> = {
   arrow: ArrowGlyph,
   building: BuildingGlyph,
   check: CheckGlyph,
@@ -256,6 +314,12 @@ const glyphs: Record<StandardIconName, () => React.JSX.Element> = {
   shapes: ShapesGlyph,
   users: UsersGlyph,
   warning: WarningGlyph,
+  instagram: InstagramGlyph,
+  facebook: FacebookGlyph,
+  youtube: YouTubeGlyph,
+  linkedin: LinkedInGlyph,
+  "x-social": XSocialGlyph,
+  whatsapp: WhatsAppGlyph,
 };
 
 export function Icon({
@@ -269,7 +333,7 @@ export function Icon({
   width,
   ...rest
 }: IconProps) {
-  const normalized = normalizeStandardIcon(name);
+  const normalized = isSocialIcon(name) ? name : normalizeStandardIcon(name);
   const Glyph = glyphs[normalized];
   const isDecorative = !ariaLabel;
   const pixelSize = sizePixelMap[size];
