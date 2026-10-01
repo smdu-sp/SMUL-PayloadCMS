@@ -1,17 +1,26 @@
-import type { Block, NumberFieldSingleValidation, UploadFieldSingleValidation } from "payload";
-import { characterLimitAdmin } from "../../fields/character-limit";
+import type {
+  Block,
+  NumberFieldSingleValidation,
+  RelationshipFieldSingleValidation,
+  SelectFieldSingleValidation,
+  TextFieldValidation,
+  UploadFieldSingleValidation,
+} from "payload";
 import {
   createAppearanceGroup,
-  createBlockContrastStatusField,
   createControlledColorAppearanceFields,
   createSchemeField,
 } from "../../fields/block-appearance";
 import { closedSelect } from "../../fields/editorial-validation";
-import { createLinkFields } from "../../fields/link";
 import { createBlockAdmin } from "../shared/admin";
 
-// Media content consumes these roles; brand is not read directly by this Block.
-const fullWidthBannerColorTokens = ["background", "foreground", "action", "accent"] as const;
+// Without overlaid content, only the optional overlay consumes a local color.
+const fullWidthBannerColorTokens = ["background"] as const;
+
+type BannerLinkSiblingData = {
+  enabled?: boolean | null;
+  type?: "external" | "internal" | null;
+};
 
 const overlayOptions = [
   { label: "Sem sobreposicao", value: "none" },
@@ -44,26 +53,6 @@ const validateCustomImageHeight: NumberFieldSingleValidation = (value, { sibling
 
   return true;
 };
-
-const actionFieldDbNames: Record<string, string> = {
-  label: "lbl",
-  newTab: "nt",
-  page: "pg",
-  type: "kind",
-  url: "url",
-};
-
-const createBannerActionFields = () =>
-  createLinkFields(true).map((field) => {
-    if ("name" in field && actionFieldDbNames[field.name]) {
-      return {
-        ...field,
-        dbName: actionFieldDbNames[field.name],
-      };
-    }
-
-    return field;
-  });
 
 export const FullWidthImageBannerBlock: Block = {
   slug: "fullWidthImageBanner",
@@ -103,68 +92,94 @@ export const FullWidthImageBannerBlock: Block = {
       },
     },
     {
-      name: "content",
+      name: "link",
       type: "group",
-      label: "Conteudo sobreposto",
+      label: "Link do banner",
       admin: {
         description:
-          "Opcional. Use apenas quando a mensagem tambem deve existir como texto acessivel sobre a imagem.",
+          "Opcional. Associe a imagem inteira a uma pagina do portal ou a uma URL externa.",
       },
       fields: [
         {
-          name: "eyebrow",
+          name: "enabled",
+          type: "checkbox",
+          label: "Associar banner a um link",
+        },
+        {
+          name: "type",
+          type: "select",
+          label: "Destino do link",
+          admin: {
+            condition: (_, siblingData) =>
+              (siblingData as BannerLinkSiblingData | undefined)?.enabled === true,
+          },
+          options: [
+            { label: "Pagina interna", value: "internal" },
+            { label: "URL externa", value: "external" },
+          ],
+          validate: ((value, { siblingData }) => {
+            const link = siblingData as BannerLinkSiblingData;
+            return link.enabled !== true || value === "internal" || value === "external"
+              ? true
+              : "Escolha o destino do link.";
+          }) satisfies SelectFieldSingleValidation,
+        },
+        {
+          name: "page",
+          type: "relationship",
+          relationTo: "pages",
+          label: "Pagina interna",
+          admin: {
+            condition: (_, siblingData) => {
+              const link = siblingData as BannerLinkSiblingData | undefined;
+              return link?.enabled === true && link.type === "internal";
+            },
+            description:
+              "Pagina de destino dentro do portal. Mudancas de slug nao quebram este relacionamento.",
+          },
+          validate: ((value, { siblingData }) => {
+            const link = siblingData as BannerLinkSiblingData;
+            return link.enabled !== true || link.type !== "internal" || value
+              ? true
+              : "Selecione a pagina de destino.";
+          }) satisfies RelationshipFieldSingleValidation,
+        },
+        {
+          name: "url",
           type: "text",
-          label: "Chamada superior",
-          maxLength: 50,
+          label: "URL externa",
           admin: {
-            ...characterLimitAdmin(50),
+            condition: (_, siblingData) => {
+              const link = siblingData as BannerLinkSiblingData | undefined;
+              return link?.enabled === true && link.type === "external";
+            },
+            description: "Informe o endereco completo, incluindo http:// ou https://.",
           },
+          validate: ((value, { siblingData }) => {
+            const link = siblingData as BannerLinkSiblingData;
+            if (link.enabled !== true || link.type !== "external") return true;
+            if (!value) return "Informe a URL de destino.";
+
+            try {
+              const url = new URL(value);
+              return url.protocol === "http:" || url.protocol === "https:"
+                ? true
+                : "Use uma URL iniciada por http:// ou https://.";
+            } catch {
+              return "Informe uma URL valida.";
+            }
+          }) satisfies TextFieldValidation,
         },
         {
-          name: "title",
-          type: "textarea",
-          label: "Titulo",
-          maxLength: 100,
+          name: "newTab",
+          type: "checkbox",
+          label: "Abrir em nova aba",
           admin: {
-            ...characterLimitAdmin(100, "textarea"),
-            rows: 2,
+            condition: (_, siblingData) =>
+              (siblingData as BannerLinkSiblingData | undefined)?.enabled === true,
+            description: "Recomendado para links externos.",
           },
         },
-        {
-          name: "description",
-          type: "textarea",
-          label: "Descricao",
-          maxLength: 200,
-          admin: {
-            ...characterLimitAdmin(200, "textarea"),
-            rows: 3,
-          },
-        },
-        {
-          name: "actions",
-          type: "array",
-          dbName: "acts",
-          label: "Acoes",
-          maxRows: 2,
-          fields: createBannerActionFields(),
-        },
-      ],
-    },
-    {
-      name: "contentPosition",
-      type: "select",
-      dbName: "cntPos",
-      label: "Posicao do conteudo",
-      required: true,
-      defaultValue: "left",
-      validate: closedSelect(
-        ["left", "center", "right"],
-        "Escolha uma posicao de conteudo aprovada.",
-      ),
-      options: [
-        { label: "Esquerda", value: "left" },
-        { label: "Centro", value: "center" },
-        { label: "Direita", value: "right" },
       ],
     },
     {
@@ -172,7 +187,7 @@ export const FullWidthImageBannerBlock: Block = {
       type: "select",
       label: "Sobreposicao",
       required: true,
-      defaultValue: "dark",
+      defaultValue: "none",
       validate: closedSelect(
         ["none", "light", "dark"],
         "Escolha uma sobreposicao aprovada.",
@@ -252,7 +267,6 @@ export const FullWidthImageBannerBlock: Block = {
     createAppearanceGroup([
       createSchemeField(["default", "custom"], "default"),
       ...createControlledColorAppearanceFields(fullWidthBannerColorTokens),
-      createBlockContrastStatusField(fullWidthBannerColorTokens),
     ]),
   ],
 };

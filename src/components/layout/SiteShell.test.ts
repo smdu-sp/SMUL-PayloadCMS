@@ -74,6 +74,29 @@ describe("public site shell", () => {
     assert.match(markup, /name="q"/);
   });
 
+  it("applies a custom header palette and replaces an unreadable foreground", () => {
+    const header = {
+      id: 1,
+      appearance: {
+        scheme: "custom",
+        colors: {
+          background: "#ffffff",
+          foreground: "#ffffff",
+        },
+      },
+      navigationMode: "normal",
+      navigation: [{ id: "active", label: "Orientacoes", page }],
+    } as Header;
+    const markup = renderToStaticMarkup(
+      createElement(SiteHeader, { header, siteName: "Meu Imovel Regular" }),
+    );
+
+    assert.match(markup, /<header[^>]*data-color-scheme="default"/);
+    assert.match(markup, /--block-background:#ffffff/);
+    assert.match(markup, /--block-foreground:#000000/);
+    assert.match(markup, /bg-\(--block-background\)/);
+  });
+
   it("renders accessible contact and validated footer links", () => {
     const footer = {
       id: 1,

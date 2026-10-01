@@ -35,7 +35,7 @@ export function BlockThemeScope({
 }
 
 type ColorScopeProps = Omit<HTMLAttributes<HTMLElement>, "color" | "style"> & {
-  as?: "div" | "footer" | "section";
+  as?: "div" | "footer" | "header" | "section";
   scheme?: ColorScheme | "inherit";
   overrides?: EditorialColorOverrides | null;
   /** Media overlays publish roles without painting an opaque surface. */

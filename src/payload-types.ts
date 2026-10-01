@@ -1348,39 +1348,24 @@ export interface FullWidthImageBannerBlock {
    */
   mobileImage?: (number | null) | Media;
   /**
-   * Opcional. Use apenas quando a mensagem tambem deve existir como texto acessivel sobre a imagem.
+   * Opcional. Associe a imagem inteira a uma pagina do portal ou a uma URL externa.
    */
-  content?: {
-    eyebrow?: string | null;
-    title?: string | null;
-    description?: string | null;
-    actions?:
-      | {
-          /**
-           * Texto visivel para o usuario. Use uma acao clara, como Abrir pagina ou Saiba mais.
-           */
-          label: string;
-          /**
-           * Escolha pagina interna para navegar no portal ou URL externa para encaminhar a servico oficial.
-           */
-          type: 'internal' | 'external';
-          /**
-           * Pagina publicada ou em rascunho dentro deste CMS. Mudancas de slug nao quebram este relacionamento.
-           */
-          page?: (number | null) | Page;
-          /**
-           * Informe o endereco completo, incluindo http:// ou https://.
-           */
-          url?: string | null;
-          /**
-           * Recomendado para links externos, mantendo o portal aberto na aba atual.
-           */
-          newTab?: boolean | null;
-          id?: string | null;
-        }[]
-      | null;
+  link?: {
+    enabled?: boolean | null;
+    type?: ('internal' | 'external') | null;
+    /**
+     * Pagina de destino dentro do portal. Mudancas de slug nao quebram este relacionamento.
+     */
+    page?: (number | null) | Page;
+    /**
+     * Informe o endereco completo, incluindo http:// ou https://.
+     */
+    url?: string | null;
+    /**
+     * Recomendado para links externos.
+     */
+    newTab?: boolean | null;
   };
-  contentPosition: 'left' | 'center' | 'right';
   overlay: 'none' | 'light' | 'dark';
   /**
    * Automatica preserva a proporcao original. As demais opcoes definem uma altura fixa responsiva para o banner.
@@ -2181,24 +2166,15 @@ export interface ActionBannersBlockSelect<T extends boolean = true> {
 export interface FullWidthImageBannerBlockSelect<T extends boolean = true> {
   desktopImage?: T;
   mobileImage?: T;
-  content?:
+  link?:
     | T
     | {
-        eyebrow?: T;
-        title?: T;
-        description?: T;
-        actions?:
-          | T
-          | {
-              label?: T;
-              type?: T;
-              page?: T;
-              url?: T;
-              newTab?: T;
-              id?: T;
-            };
+        enabled?: T;
+        type?: T;
+        page?: T;
+        url?: T;
+        newTab?: T;
       };
-  contentPosition?: T;
   overlay?: T;
   imageHeight?: T;
   customImageHeight?: T;
@@ -2315,6 +2291,25 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
  */
 export interface Header {
   id: number;
+  /**
+   * Opcoes semanticas controladas pelo Design System. Nao permite CSS arbitrario.
+   */
+  appearance?: {
+    /**
+     * Seleciona uma combinacao completa de fundo, texto, acao e destaque.
+     */
+    scheme?: ('default' | 'surface' | 'muted' | 'brand' | 'accent' | 'inverse' | 'custom') | null;
+    /**
+     * Deixe um campo vazio para herdar o token global. O contraste considera a paleta efetiva. Nao configura elementos individuais.
+     */
+    colors?: {
+      background?: string | null;
+      foreground?: string | null;
+      brand?: string | null;
+      action?: string | null;
+      accent?: string | null;
+    };
+  };
   /**
    * Opcional. Se vazio, o nome do site continua identificando o portal.
    */
@@ -2565,6 +2560,20 @@ export interface SiteSetting {
  * via the `definition` "header_select".
  */
 export interface HeaderSelect<T extends boolean = true> {
+  appearance?:
+    | T
+    | {
+        scheme?: T;
+        colors?:
+          | T
+          | {
+              background?: T;
+              foreground?: T;
+              brand?: T;
+              action?: T;
+              accent?: T;
+            };
+      };
   logo?: T;
   navigationMode?: T;
   enableSearch?: T;

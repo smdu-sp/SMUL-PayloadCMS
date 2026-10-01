@@ -220,16 +220,12 @@ export const seedShowcaseLayout = (
     blockType: "fullWidthImageBanner",
     blockName: "Demonstracao - Banner de imagem full-width",
     desktopImage: bannerMediaId,
-    content: {
-      eyebrow: "Imagem responsiva",
-      title: "Use uma imagem em largura total preservando sua proporcao",
-      description:
-        "O banner full-width apresenta uma midia entre secoes e se adapta as dimensoes do arquivo selecionado.",
-      actions: [
-        internalLink("Voltar ao inicio do catalogo", seedPageId),
-      ],
+    link: {
+      enabled: true,
+      type: "internal",
+      page: seedPageId,
+      newTab: false,
     },
-    contentPosition: "left",
     overlay: "none",
     imageHeight: "auto",
     imageFit: "contain",

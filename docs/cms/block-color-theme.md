@@ -201,11 +201,11 @@ titulo. Cada faixa mantem a propria receita fechada `surface`, `brand` ou
 
 ## Consumo atual no FullWidthImageBanner
 
-O FullWidthImageBanner exibe `background`, `foreground`, `action` e `accent`.
-Esses tokens controlam, respectivamente, o overlay, o conteudo textual, os
-botoes e a chamada superior. `brand` permanece oculto porque nao possui um
-consumidor visual direto. Fora do tema `custom`, o overlay claro ou escuro
-continua selecionando a receita segura para midia.
+O FullWidthImageBanner nao renderiza conteudo textual sobre a imagem. No modo
+`custom`, somente `background` permanece visivel para controlar a cor do overlay.
+Os demais tokens continuam no schema compartilhado, mas ficam ocultos porque nao
+possuem consumidor visual direto. Fora do tema `custom`, o overlay claro ou
+escuro continua selecionando a receita segura para midia.
 
 ## Consumo atual no Hero
 
@@ -228,6 +228,20 @@ customizadas sem contraste recebem um fallback neutro legivel. O painel do
 Payload apresenta a verificacao antes da publicacao.
 
 `Footer.appearance` e opcional. Documentos existentes continuam usando `muted`
+e nao precisam de migration de conteudo.
+
+## Consumo no cabecalho
+
+O cabecalho usa `default` como preset padrao e oferece as mesmas receitas
+fechadas do rodape. No modo `custom`, o editor controla somente `background` e
+`foreground`; titulo, bordas e superficies internas sao derivados pelo contrato
+semantico e protegidos pelos mesmos guardrails de contraste.
+
+O menu responsivo consome o escopo local do cabecalho. Submenus continuam usando
+uma superficie `surface` propria, derivada da paleta efetiva, para preservar a
+separacao visual e a legibilidade dos itens interativos.
+
+`Header.appearance` e opcional. Documentos existentes continuam usando `default`
 e nao precisam de migration de conteudo.
 
 ## Limites

@@ -428,18 +428,7 @@ describe("SPEC-026 content validation", () => {
       fullWidthBannerColors.fields.flatMap((field) =>
         field.type === "text" && !field.admin?.hidden ? [field.name] : [],
       ),
-      ["background", "foreground", "action", "accent"],
-    );
-    const fullWidthBannerContrastStatus = fieldByName(
-      fullWidthBannerAppearance.fields,
-      "contrastStatus",
-    );
-    assert.equal(fullWidthBannerContrastStatus.type, "ui");
-    assert.deepEqual(
-      typeof fullWidthBannerContrastStatus.admin?.components?.Field === "object"
-        ? fullWidthBannerContrastStatus.admin.components.Field.clientProps
-        : null,
-      { visibleTokens: ["background", "foreground", "action", "accent"] },
+      ["background"],
     );
 
     const heroAppearance = fieldByName(HeroBlock.fields, "appearance");
@@ -548,6 +537,37 @@ describe("SPEC-026 content validation", () => {
     assert.equal(
       await bannerImage.validate(null, validationArgs()),
       "Selecione uma imagem para o banner desktop.",
+    );
+
+    const bannerLink = fieldByName(FullWidthImageBannerBlock.fields, "link");
+    assert.ok("fields" in bannerLink);
+    assert.deepEqual(
+      bannerLink.fields.map((field) => "name" in field ? field.name : null),
+      ["enabled", "type", "page", "url", "newTab"],
+    );
+    const bannerLinkPage = fieldByName(bannerLink.fields, "page");
+    const bannerLinkUrl = fieldByName(bannerLink.fields, "url");
+    assert.ok("validate" in bannerLinkPage && bannerLinkPage.validate);
+    assert.ok("validate" in bannerLinkUrl && bannerLinkUrl.validate);
+    assert.equal(
+      await bannerLinkPage.validate(
+        null,
+        validationArgs({ enabled: true, type: "internal" }),
+      ),
+      "Selecione a pagina de destino.",
+    );
+    assert.equal(
+      await bannerLinkUrl.validate(
+        "javascript:alert(1)",
+        validationArgs({ enabled: true, type: "external" }),
+      ),
+      "Use uma URL iniciada por http:// ou https://.",
+    );
+    assert.equal(
+      FullWidthImageBannerBlock.fields.some(
+        (field) => "name" in field && ["content", "contentPosition"].includes(field.name),
+      ),
+      false,
     );
 
     const items = fieldByName(CardsBlock.fields, "items");

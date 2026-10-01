@@ -4,8 +4,17 @@ import type {
   RelationshipFieldSingleValidation,
 } from "payload";
 import { adminOrEditor } from "../access/roles.ts";
+import {
+  createAppearanceGroup,
+  createBlockContrastStatusField,
+  createControlledColorAppearanceFields,
+  createSchemeField,
+} from "../fields/block-appearance.ts";
 import { closedSelect } from "../fields/editorial-validation.ts";
+import { colorSchemes } from "../lib/theme/block-color-theme.ts";
 import { revalidateSiteShellGlobal } from "../lib/payload/revalidate-site-shell.ts";
+
+const headerColorTokens = ["background", "foreground"] as const;
 
 const availablePageFilter = {
   _status: { equals: "published" },
@@ -27,6 +36,11 @@ export const Header: GlobalConfig = {
     afterChange: [revalidateSiteShellGlobal],
   },
   fields: [
+    createAppearanceGroup([
+      createSchemeField([...colorSchemes, "custom"], "default"),
+      ...createControlledColorAppearanceFields(headerColorTokens),
+      createBlockContrastStatusField(headerColorTokens),
+    ]),
     {
       name: "logo",
       type: "upload",

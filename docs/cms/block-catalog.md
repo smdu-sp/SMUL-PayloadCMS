@@ -21,7 +21,7 @@ Este catalogo registra a base real encontrada no projeto durante a SPEC-018. Ele
 | FAQ / Accordion | `src/blocks/FAQ/config.ts` | `src/blocks/FAQ/Component.tsx` | `default`, `compact`; temas preset ou `custom` com `background` e `foreground` | Lista acessivel de perguntas e respostas com rich text, renderizada com `details` e `summary`. |
 | Alert Box | `src/blocks/AlertBox/config.ts` | `src/blocks/AlertBox/Component.tsx` | `info`, `success`, `warning`, `danger`; temas preset ou `custom` com `background` e `foreground` | Aviso editorial com tom controlado pelo Design System, rich text e link opcional. |
 | Action Banners | `src/blocks/ActionBanners/config.ts` | `src/blocks/ActionBanners/Component.tsx` | `grid`, `stacked`; temas da secao preset ou `custom` com `background` e `foreground`; faixas em `surface`, `brand` ou `accent` | Conjunto reordenavel de faixas de acao com paleta livre apenas na secao externa. |
-| Full-width Image Banner | `src/blocks/FullWidthImageBanner/config.ts` | `src/blocks/FullWidthImageBanner/Component.tsx` | Overlay `none`, `light` ou `dark`; tema `custom` com `background`, `foreground`, `action` e `accent` | Banner responsivo de imagem com conteudo e acoes opcionais sobrepostos. |
+| Full-width Image Banner | `src/blocks/FullWidthImageBanner/config.ts` | `src/blocks/FullWidthImageBanner/Component.tsx` | Overlay `none`, `light` ou `dark`; fundo customizado opcional | Banner responsivo sem campos de conteudo; a imagem inteira pode apontar para uma pagina interna ou URL externa. |
 
 ## Globals e estruturas globais
 

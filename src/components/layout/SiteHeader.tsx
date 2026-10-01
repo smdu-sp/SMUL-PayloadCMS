@@ -2,8 +2,9 @@ import Link from "next/link";
 
 import { MediaImage } from "../../blocks/shared/MediaImage";
 import { resolveHeaderNavigation } from "../../lib/navigation/resolve-header-navigation";
+import { normalizeColorScheme } from "../../lib/theme/block-color-theme";
 import type { Header } from "../../payload-types";
-import { Container } from "../ui";
+import { BlockThemeScope, ColorScope, Container } from "../ui";
 import { HeaderNavigation } from "./HeaderNavigation";
 
 export function SiteHeader({
@@ -15,14 +16,19 @@ export function SiteHeader({
 }) {
   const name = siteName?.trim() || "Portal";
   const navigation = resolveHeaderNavigation(header);
+  const customTheme = header?.appearance?.scheme === "custom";
 
-  return (
-    <header className="border-b border-border bg-background text-foreground">
+  const content = (
+    <ColorScope
+      as="header"
+      className="border-b border-(--block-border)"
+      scheme={customTheme ? "default" : normalizeColorScheme(header?.appearance?.scheme)}
+    >
       <Container size="xl">
         <div className="flex min-h-20 items-center justify-between gap-4 py-4">
           <Link
             aria-label={`${name} — página inicial`}
-            className="inline-flex min-w-0 items-center text-lg font-bold text-heading no-underline"
+            className="inline-flex min-w-0 items-center text-lg font-bold text-(--block-heading) no-underline"
             href="/"
           >
             {header?.logo && typeof header.logo === "object" ? (
@@ -43,6 +49,10 @@ export function SiteHeader({
           />
         </div>
       </Container>
-    </header>
+    </ColorScope>
   );
+
+  return customTheme
+    ? <BlockThemeScope palette={header?.appearance?.colors}>{content}</BlockThemeScope>
+    : content;
 }

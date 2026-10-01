@@ -397,6 +397,46 @@ describe("CMS editing UX", () => {
     );
   });
 
+  it("offers guarded presets and custom colors for the Header", () => {
+    const appearance = fieldByName(Header.fields, "appearance");
+    assert.equal(appearance.type, "group");
+    assert.ok("fields" in appearance && Array.isArray(appearance.fields));
+
+    const appearanceFields = appearance.fields as Field[];
+    const scheme = fieldByName(appearanceFields, "scheme");
+    const colors = fieldByName(appearanceFields, "colors");
+    const contrastStatus = fieldByName(appearanceFields, "contrastStatus");
+    const schemeOptions = "options" in scheme && Array.isArray(scheme.options)
+      ? scheme.options.map((option) => typeof option === "object" && "value" in option
+        ? option.value
+        : option)
+      : [];
+
+    assert.deepEqual(schemeOptions, [
+      "default",
+      "surface",
+      "muted",
+      "brand",
+      "accent",
+      "inverse",
+      "custom",
+    ]);
+    assert.ok("fields" in colors && Array.isArray(colors.fields));
+    assert.deepEqual(
+      (colors.fields as Field[])
+        .filter((field) => !(field as FieldLike).admin?.hidden)
+        .map((field) => "name" in field ? field.name : null),
+      ["background", "foreground"],
+    );
+    assert.equal(contrastStatus.type, "ui");
+    assert.deepEqual(
+      typeof contrastStatus.admin?.components?.Field === "object"
+        ? contrastStatus.admin.components.Field.clientProps
+        : undefined,
+      { visibleTokens: ["background", "foreground"] },
+    );
+  });
+
   it("keeps Global links compatible with existing Payload tables", () => {
     const navigation = fieldByName(Header.fields, "navigation");
     const institutionalLinks = fieldByName(Footer.fields, "institutionalLinks");

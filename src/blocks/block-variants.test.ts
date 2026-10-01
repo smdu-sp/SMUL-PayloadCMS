@@ -26,7 +26,6 @@ import {
 } from "./Carousel/Component";
 import { normalizeFAQTone, normalizeFAQVariant } from "./FAQ/Component";
 import {
-  normalizeBannerContentPosition,
   normalizeBannerImageHeight,
   normalizeBannerImageFit,
   normalizeCustomBannerImageHeight,
@@ -278,8 +277,6 @@ describe("block variant fallbacks", () => {
     assert.equal(normalizeCustomBannerImageHeight(120), 160);
     assert.equal(normalizeCustomBannerImageHeight(1000), 900);
     assert.equal(normalizeCustomBannerImageHeight(undefined), null);
-    assert.equal(normalizeBannerContentPosition("right"), "right");
-    assert.equal(normalizeBannerContentPosition("unknown"), "left");
     assert.equal(normalizeBannerImageFit("contain"), "contain");
     assert.equal(normalizeBannerImageFit("stretch"), "cover");
   });

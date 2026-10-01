@@ -119,7 +119,7 @@ export function HeaderNavigation({
       <button
         aria-controls="site-header-navigation"
         aria-expanded={mobileOpen}
-        className="rounded-md border border-border px-4 py-2 font-semibold outline-none hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus lg:hidden"
+        className="rounded-md border border-(--block-border) px-4 py-2 font-semibold outline-none hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus lg:hidden"
         onClick={() => {
           setMobileOpen((current) => !current);
           setOpenCategory(null);
@@ -131,7 +131,7 @@ export function HeaderNavigation({
       </button>
 
       <div
-        className={`${mobileOpen ? "flex" : "hidden"} absolute right-0 top-[calc(100%+0.75rem)] z-50 w-[min(22rem,calc(100vw-2rem))] flex-col gap-4 rounded-lg border border-border bg-background p-4 shadow-lg lg:static lg:flex lg:w-auto lg:flex-row lg:items-center lg:border-0 lg:bg-transparent lg:p-0 lg:shadow-none`}
+        className={`${mobileOpen ? "flex" : "hidden"} absolute right-0 top-[calc(100%+0.75rem)] z-50 w-[min(22rem,calc(100vw-2rem))] flex-col gap-4 rounded-lg border border-(--block-border) bg-(--block-background) p-4 shadow-lg lg:static lg:flex lg:w-auto lg:flex-row lg:items-center lg:border-0 lg:bg-transparent lg:p-0 lg:shadow-none`}
         id="site-header-navigation"
       >
         {items.length ? (
@@ -159,7 +159,7 @@ export function HeaderNavigation({
                     <button
                       aria-controls={submenuId}
                       aria-expanded={expanded}
-                      className="flex w-full items-center justify-between gap-2 rounded-sm py-2 font-semibold text-foreground outline-none underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus lg:py-1"
+                      className="flex w-full items-center justify-between gap-2 rounded-sm py-2 font-semibold text-(--block-foreground) outline-none underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus lg:py-1"
                       onClick={() => setOpenCategory(expanded ? null : itemKey)}
                       ref={(element) => {
                         categoryButtonRefs.current[itemKey] = element;
