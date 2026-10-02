@@ -5,7 +5,21 @@ import { useField } from "@payloadcms/ui";
 import ReactCrop, { type Crop } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 
-type MediaData = { id?: string | number; url?: string; mimeType?: string; alt?: string; focalX?: number | null; focalY?: number | null };
+type MediaData = {
+  id?: string | number;
+  url?: string;
+  mimeType?: string;
+  alt?: string;
+  focalX?: number | null;
+  focalY?: number | null;
+  isDerived?: boolean | null;
+  parentMedia?: string | number | {
+    id?: string | number;
+    url?: string;
+    focalX?: number | null;
+    focalY?: number | null;
+  } | null;
+};
 type MediaValue = string | number | MediaData | null | undefined;
 type Props = { data?: MediaData; path?: string };
 type CanvasToast = {
@@ -112,6 +126,46 @@ export function ImageEditingCanvas({ data, path }: Props) {
       x: Math.round(Math.max(0, Math.min(100, toPercent(Number(crop.x ?? 0), previewDimensions.width) + toPercent(Number(crop.width ?? 0), previewDimensions.width) / 2))),
       y: Math.round(Math.max(0, Math.min(100, toPercent(Number(crop.y ?? 0), previewDimensions.height) + toPercent(Number(crop.height ?? 0), previewDimensions.height) / 2))),
     });
+  };
+
+  const undoCrop = () => {
+    if (!previewDimensions.width || !previewDimensions.height) return;
+    const parentMedia = media?.parentMedia;
+    const parentMediaId = typeof parentMedia === "object" && parentMedia !== null
+      ? parentMedia.id
+      : parentMedia;
+
+    if (media?.isDerived) {
+      if (!parentMediaId) {
+        setToast({ message: "Não foi possível localizar a mídia original desta edição.", tone: "error" });
+        return;
+      }
+
+      mediaField.setValue(parentMediaId);
+      setCrop({ unit: "%", x: 0, y: 0, width: 100, height: 100 });
+      setRotate(0);
+      setWidth(undefined);
+      setHeight(undefined);
+      setPreviewDimensions({ width: 0, height: 0 });
+      if (typeof parentMedia === "object" && parentMedia?.url) {
+        setMedia(parentMedia);
+        setPreviewUrl(parentMedia.url);
+        setFocalPoint({ x: parentMedia.focalX ?? 50, y: parentMedia.focalY ?? 50 });
+      } else {
+        setMedia(undefined);
+        setPreviewUrl(undefined);
+        setFocalPoint({ x: 50, y: 50 });
+      }
+      setToast({ message: "Edição desfeita. A mídia original foi restaurada neste bloco.", tone: "success" });
+      return;
+    }
+
+    setCrop({ unit: "%", x: 0, y: 0, width: 100, height: 100 });
+    setRotate(0);
+    setFocalPoint({ x: media?.focalX ?? 50, y: media?.focalY ?? 50 });
+    const isQuarterTurn = rotate === 90 || rotate === 270;
+    setWidth(isQuarterTurn ? previewDimensions.height : previewDimensions.width);
+    setHeight(isQuarterTurn ? previewDimensions.width : previewDimensions.height);
   };
 
   const setCropForDimensions = (nextWidth: number, nextHeight: number) => {
@@ -234,6 +288,7 @@ export function ImageEditingCanvas({ data, path }: Props) {
     <div className="image-editing-canvas__toolbar">
       <label>Largura<input type="number" min={1} max={previewDimensions.width || undefined} value={width ?? ""} onChange={(event) => syncHeightFromWidth(event.target.value ? Number(event.target.value) : undefined)} /></label>
       <label>Altura<input type="number" min={1} max={previewDimensions.height || undefined} value={height ?? ""} onChange={(event) => syncWidthFromHeight(event.target.value ? Number(event.target.value) : undefined)} /></label>
+      <button className="image-editing-canvas__center-focus" type="button" onClick={undoCrop} disabled={!previewDimensions.width || !previewDimensions.height}>Desfazer edição</button>
       <button className="image-editing-canvas__center-focus" type="button" onClick={centerFocalPointOnCrop} disabled={!previewDimensions.width || !previewDimensions.height}>Centralizar ponto focal no corte</button>
       <div className="image-editing-canvas__rotation"><button type="button" onClick={() => setRotate((rotate + 270) % 360 as 0 | 90 | 180 | 270)} aria-label="Girar para a esquerda">↶</button><button type="button" onClick={() => setRotate((rotate + 90) % 360 as 0 | 90 | 180 | 270)} aria-label="Girar para a direita">↷</button></div>
       <button className="image-editing-canvas__save" type="button" onClick={saveCurrentAsset} disabled={busy}>{busy ? "Salvando..." : "Salvar imagem editada"}</button>
