@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { getPayload } from "payload";
 
 import config from "@payload-config";
+import { canPreviewContent } from "../../../../access/policies/preview";
 import { pageSlugToPath, pathToPageSlug } from "../../../../domain/slug";
 
 export async function GET(request: Request): Promise<Response> {
@@ -20,12 +21,18 @@ export async function GET(request: Request): Promise<Response> {
     return new Response("Live Preview nao autorizado.", { status: 401 });
   }
 
+  if (!canPreviewContent(auth.user)) {
+    return new Response("Live Preview proibido para este perfil.", { status: 403 });
+  }
+
   const pageSlug = pathToPageSlug(slug);
   const page = await payload.find({
     collection: "pages",
     depth: 0,
     draft: true,
     limit: 1,
+    overrideAccess: false,
+    user: auth.user,
     where: {
       slug: {
         equals: pageSlug,

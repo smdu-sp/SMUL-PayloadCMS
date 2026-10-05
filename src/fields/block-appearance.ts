@@ -209,7 +209,12 @@ export function createAppearanceGroup(fields: Field[]): GroupField {
         !Object.values(appearance.colors).some(Boolean)
       ) return true;
       // Validate against the same global values used by the renderer, not fixed preset hexes.
-      const settings = await req.payload.findGlobal({ slug: "site-settings", depth: 1, req });
+      const settings = await req.payload.findGlobal({
+        slug: "site-settings",
+        depth: 1,
+        overrideAccess: true,
+        req,
+      });
       const activeTheme = resolveActiveThemeConfiguration(settings);
       return validateControlledBlockColors(appearance, resolveSemanticTheme(activeTheme.colors));
     },

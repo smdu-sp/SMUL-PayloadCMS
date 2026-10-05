@@ -59,7 +59,7 @@ As mudancas das SPECS 019 a 027 foram classificadas assim:
 | `themes` | Nova Collection de temas nomeados com cores e tipografia controladas | Nova Collection | Exige migration incremental de banco; nao exige backfill de conteudo. Ver `docs/cms/alternative-themes.md`. |
 | `SiteSettings.activeTheme` | Relacionamento opcional com `themes` | Novo relacionamento opcional | Exige migration incremental de banco; `null` preserva `SiteSettings.theme` como fallback e nao exige conversao de documentos existentes. |
 | `Media.usage` | Novo field obrigatorio com default `content` | Novo field obrigatorio | Nao exige migration manual porque ha default seguro; revisar banco antes de producao. |
-| `Users.role` | Novo field com default `admin` | Novo field com default | Nao exige migration manual local; usuarios sem role seguem tratados como admin legado. |
+| `Users.role` | Field passa a ser obrigatorio e perde o default privilegiado | Novo field obrigatorio sem default | Exige backfill controlado por `20261005_000000_backfill_user_roles`; role ausente ou invalida nunca e inferida como Admin. |
 | `Pages.lifecycleStatus` | Novo field obrigatorio com default `active` | Novo field obrigatorio com default | Nao exige migration destrutiva; bases existentes devem ser auditadas antes de producao. |
 
 ## Processo
@@ -72,6 +72,38 @@ As mudancas das SPECS 019 a 027 foram classificadas assim:
 6. Submeter migration a revisao humana antes de aplicar em ambiente compartilhado.
 7. Aplicar localmente, rodar seed/fixture quando aplicavel e validar renderizacao antiga e nova.
 8. Executar lint, typecheck, testes e build.
+
+## Backfill de `Users.role`
+
+A migration `src/migrations/20261005_000000_backfill_user_roles.ts` identifica
+todos os usuários cuja role não seja exatamente `admin` ou `editor`. Antes de
+qualquer escrita, ela exige que cada registro afetado possua um mapeamento explícito
+em `CMS_USER_ROLE_BACKFILL`.
+
+As chaves aceitas são prefixadas para evitar colisões:
+
+```dotenv
+CMS_USER_ROLE_BACKFILL={"id:1":"admin","login:usuario.editor":"editor","email:outro@prefeitura.sp.gov.br":"editor"}
+```
+
+Um usuário pode ser identificado por ID, login ou e-mail. Mapeamentos ausentes,
+inválidos, conflitantes ou não utilizados abortam toda a migration antes da primeira
+atualização. Roles já válidas não são alteradas. Não existe regra `null -> admin`.
+
+O backfill não possui rollback automático, pois restaurar valores ausentes ou
+inválidos recriaria o estado inseguro. Antes de aplicar em ambiente compartilhado:
+
+1. gerar backup e validar a restauração;
+2. auditar os usuários e aprovar a role de cada registro afetado;
+3. estabelecer a baseline de migrations do schema existente;
+4. configurar temporariamente `CMS_USER_ROLE_BACKFILL` com todos os afetados;
+5. aplicar primeiro em uma cópia da base;
+6. validar login e permissões de Admin e Editor;
+7. aplicar em produção e remover a variável temporária.
+
+Como o repositório ainda não possui baseline integral do schema Payload, o arquivo
+de backfill não deve ser interpretado como essa baseline nem aplicado isoladamente
+em uma base vazia.
 
 ## Fixture de compatibilidade
 

@@ -15,12 +15,12 @@ import { ImageTextBlock } from "../blocks/ImageText/config.ts";
 import { RichTextBlock } from "../blocks/RichText/config.ts";
 import { VideoBlock } from "../blocks/VideoBlock/config.ts";
 import {
-  editorOrAdmin,
-  pageHardDeleteAdminOnly,
-  pageLifecycleEditorOrAdmin,
-  pagePublisherOrAdmin,
-  publishedOrLoggedIn,
-} from "../access/roles.ts";
+  canCreatePage,
+  canDeletePage,
+  canManagePageLifecycle,
+  canReadPages,
+  canUpdatePage,
+} from "../access/policies/pages.ts";
 import { normalizePageSlug, validatePageSlug } from "../domain/slug.ts";
 import { createSeoFields } from "../fields/seo.ts";
 import { createPageAuditLog } from "../lib/audit/page-audit.ts";
@@ -46,10 +46,10 @@ export const Pages: CollectionConfig = {
   disableBulkDelete: true,
   disableBulkEdit: true,
   access: {
-    create: editorOrAdmin,
-    read: publishedOrLoggedIn,
-    update: pagePublisherOrAdmin,
-    delete: pageHardDeleteAdminOnly,
+    create: canCreatePage,
+    read: canReadPages,
+    update: canUpdatePage,
+    delete: canDeletePage,
   },
   labels: {
     singular: "Página",
@@ -143,8 +143,8 @@ export const Pages: CollectionConfig = {
       required: true,
       defaultValue: "active",
       access: {
-        create: pageLifecycleEditorOrAdmin,
-        update: pageLifecycleEditorOrAdmin,
+        create: canManagePageLifecycle,
+        update: canManagePageLifecycle,
       },
       admin: {
         description:

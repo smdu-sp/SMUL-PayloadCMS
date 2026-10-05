@@ -1,6 +1,9 @@
 import type { GlobalConfig } from "payload";
 
-import { adminOnly } from "../access/roles.ts";
+import {
+  canReadSiteSettings,
+  canUpdateSiteSettings,
+} from "../access/policies/globals.ts";
 import { createSeoFields } from "../fields/seo.ts";
 import { createThemeFields } from "../fields/theme.ts";
 import { revalidateSiteShellGlobal } from "../lib/payload/revalidate-site-shell.ts";
@@ -8,8 +11,8 @@ import { revalidateSiteShellGlobal } from "../lib/payload/revalidate-site-shell.
 export const SiteSettings: GlobalConfig = {
   slug: "site-settings",
   access: {
-    read: () => true,
-    update: adminOnly,
+    read: canReadSiteSettings,
+    update: canUpdateSiteSettings,
   },
   label: "Configurações do site",
   admin: {

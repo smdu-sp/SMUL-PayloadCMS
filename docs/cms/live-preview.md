@@ -1,6 +1,10 @@
 # SPEC-025 — Live Preview
 
-O Payload Admin oferece Live Preview para documentos existentes da coleção Pages. O iframe abre uma rota autenticada, habilita Draft Mode e recebe as alterações ainda não salvas pelo protocolo oficial do Payload.
+O Payload Admin oferece Live Preview para documentos existentes da coleção Pages. O iframe abre uma rota autenticada, exige a permission `pages.preview`, habilita Draft Mode e recebe as alterações ainda não salvas pelo protocolo oficial do Payload.
+
+Autenticação isolada não autoriza preview. As rotas de draft e live preview validam
+a policy `canPreviewContent` e consultam Pages pela Local API com o usuário autenticado
+e `overrideAccess: false`.
 
 ## Uso editorial
 

@@ -13,6 +13,7 @@ export async function getTheme(): Promise<Theme> {
     const settings = await payload.findGlobal({
       slug: "site-settings",
       depth: 1,
+      overrideAccess: false,
     });
     return resolveSemanticTheme(resolveActiveThemeConfiguration(settings).colors);
   } catch {

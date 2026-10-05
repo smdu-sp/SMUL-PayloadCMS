@@ -1,7 +1,7 @@
 ---
 spec: SPEC-037
 title: Roles & Permissions Validation
-status: planned
+status: completed
 source: Specs030–041—MaturidadeEditorialeGovernançadoCMS.md
 ---
 

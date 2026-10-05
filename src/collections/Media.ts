@@ -1,5 +1,10 @@
 import type { CollectionConfig } from "payload";
-import { adminOnly, adminOrEditor } from "../access/roles.ts";
+import {
+  canCreateMedia,
+  canDeleteMedia,
+  canReadMedia,
+  canUpdateMedia,
+} from "../access/policies/media.ts";
 
 export const allowedMediaMimeTypes = [
   "image/jpeg",
@@ -21,10 +26,10 @@ export const mediaUsageOptions = [
 export const Media: CollectionConfig = {
   slug: "media",
   access: {
-    create: adminOrEditor,
-    read: () => true,
-    update: adminOrEditor,
-    delete: adminOnly,
+    create: canCreateMedia,
+    read: canReadMedia,
+    update: canUpdateMedia,
+    delete: canDeleteMedia,
   },
   labels: {
     singular: "Mídia",

@@ -1,5 +1,8 @@
 import type { GlobalConfig } from "payload";
-import { adminOrEditor } from "../access/roles.ts";
+import {
+  canReadFooter,
+  canUpdateFooter,
+} from "../access/policies/globals.ts";
 import { validateOfficialHttpsUrl } from "../domain/official-url.ts";
 import {
   createAppearanceGroup,
@@ -16,8 +19,8 @@ const footerColorTokens = ["background", "foreground"] as const;
 export const Footer: GlobalConfig = {
   slug: "footer",
   access: {
-    read: () => true,
-    update: adminOrEditor,
+    read: canReadFooter,
+    update: canUpdateFooter,
   },
   label: "Rodapé",
   admin: {

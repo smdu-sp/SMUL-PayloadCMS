@@ -147,7 +147,7 @@ export interface User {
   /**
    * Controla o acesso editorial no CMS. Apenas administradores podem alterar perfis.
    */
-  role?: ('admin' | 'editor') | null;
+  role: 'admin' | 'editor';
   updatedAt: string;
   createdAt: string;
   collection: 'users';

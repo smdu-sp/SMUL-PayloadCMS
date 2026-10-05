@@ -3,7 +3,10 @@ import type {
   GlobalConfig,
   RelationshipFieldSingleValidation,
 } from "payload";
-import { adminOrEditor } from "../access/roles.ts";
+import {
+  canReadHeader,
+  canUpdateHeader,
+} from "../access/policies/globals.ts";
 import {
   createAppearanceGroup,
   createBlockContrastStatusField,
@@ -24,8 +27,8 @@ const availablePageFilter = {
 export const Header: GlobalConfig = {
   slug: "header",
   access: {
-    read: () => true,
-    update: adminOrEditor,
+    read: canReadHeader,
+    update: canUpdateHeader,
   },
   label: "Cabeçalho",
   admin: {

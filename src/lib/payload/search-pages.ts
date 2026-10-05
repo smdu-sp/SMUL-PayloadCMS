@@ -78,6 +78,7 @@ export async function searchPublishedPages(
     collection: "pages",
     depth: 0,
     limit: SEARCH_RESULTS_PER_PAGE,
+    overrideAccess: false,
     page: normalizedPage,
     sort: "title",
     where: buildPageSearchWhere(normalizedQuery),

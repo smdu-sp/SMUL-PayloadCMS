@@ -12,8 +12,12 @@ export async function getSiteShell(): Promise<SiteShellData> {
   try {
     const payload = await getPayload({ config });
     const [header, footer] = await Promise.all([
-      payload.findGlobal({ slug: "header", depth: 2 }).catch(() => null),
-      payload.findGlobal({ slug: "footer", depth: 1 }).catch(() => null),
+      payload
+        .findGlobal({ slug: "header", depth: 2, overrideAccess: false })
+        .catch(() => null),
+      payload
+        .findGlobal({ slug: "footer", depth: 1, overrideAccess: false })
+        .catch(() => null),
     ]);
 
     return { footer, header };

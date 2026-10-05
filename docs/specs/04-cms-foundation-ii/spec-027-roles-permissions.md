@@ -1,7 +1,7 @@
 ---
 spec: SPEC-027
 title: Roles & Permissions
-status: updated
+status: completed
 source: SPECS-018-029-CMS-Foundation-II-ATUALIZADO.md
 ---
 
@@ -100,11 +100,11 @@ não autenticado
 
 ## 5. Critérios de aceite
 
-- [ ] roles existem;
-- [ ] regras estão centralizadas;
-- [ ] editor não acessa Users;
-- [ ] acesso direto por API também respeita regras;
-- [ ] não depende só de esconder UI;
-- [ ] testes passam.
+- [x] roles existem;
+- [x] regras estão centralizadas;
+- [x] editor não acessa Users;
+- [x] acesso direto por API também respeita regras;
+- [x] não depende só de esconder UI;
+- [x] testes passam.
 
 ---

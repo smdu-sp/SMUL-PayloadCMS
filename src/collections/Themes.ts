@@ -1,6 +1,11 @@
 import { APIError, type CollectionBeforeDeleteHook, type CollectionConfig } from "payload";
 
-import { adminOnly } from "../access/roles.ts";
+import {
+  canCreateTheme,
+  canDeleteTheme,
+  canReadThemes,
+  canUpdateTheme,
+} from "../access/policies/themes.ts";
 import { createThemeFields } from "../fields/theme.ts";
 import {
   revalidateSiteShellCollection,
@@ -14,6 +19,7 @@ export const preventDeletingActiveTheme: CollectionBeforeDeleteHook = async ({
   const settings = await req.payload.findGlobal({
     slug: "site-settings",
     depth: 0,
+    overrideAccess: true,
     req,
   });
 
@@ -30,10 +36,10 @@ export const preventDeletingActiveTheme: CollectionBeforeDeleteHook = async ({
 export const Themes: CollectionConfig = {
   slug: "themes",
   access: {
-    create: adminOnly,
-    read: () => true,
-    update: adminOnly,
-    delete: adminOnly,
+    create: canCreateTheme,
+    read: canReadThemes,
+    update: canUpdateTheme,
+    delete: canDeleteTheme,
   },
   labels: {
     singular: "Tema alternativo",

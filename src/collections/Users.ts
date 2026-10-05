@@ -1,5 +1,13 @@
 import type { CollectionConfig } from "payload";
-import { adminFieldOnly, adminOnly, roleOptions } from "../access/roles.ts";
+import {
+  canAccessAdmin,
+  canAssignRole,
+  canCreateUser,
+  canDeleteUser,
+  canReadUsers,
+  canUpdateUser,
+} from "../access/policies/users.ts";
+import { roleOptions } from "../access/roles.ts";
 import { ldapAuthStrategy } from "../lib/ldap/auth-strategy.ts";
 import { ldapLoginEndpoint } from "../lib/ldap/login-endpoint.ts";
 import { syncLdapUserFields } from "../lib/ldap/sync-user-hook.ts";
@@ -12,10 +20,11 @@ export const Users: CollectionConfig = {
     strategies: [ldapAuthStrategy],
   },
   access: {
-    create: adminOnly,
-    read: adminOnly,
-    update: adminOnly,
-    delete: adminOnly,
+    admin: canAccessAdmin,
+    create: canCreateUser,
+    read: canReadUsers,
+    update: canUpdateUser,
+    delete: canDeleteUser,
   },
   admin: {
     useAsTitle: "email",
@@ -75,10 +84,10 @@ export const Users: CollectionConfig = {
       name: "role",
       type: "select",
       label: "Perfil de acesso",
-      defaultValue: "admin",
+      required: true,
       access: {
-        create: adminFieldOnly,
-        update: adminFieldOnly,
+        create: canAssignRole,
+        update: canAssignRole,
       },
       admin: {
         description:

@@ -155,7 +155,13 @@ describe("CMS editing UX", () => {
     assert.equal(Pages.disableBulkDelete, true);
     assert.equal(Pages.disableBulkEdit, true);
     assert.equal(Pages.admin?.useAsTitle, "title");
-    assert.deepEqual(Pages.admin?.defaultColumns, ["title", "slug", "_status", "updatedAt"]);
+    assert.deepEqual(Pages.admin?.defaultColumns, [
+      "title",
+      "slug",
+      "viewPage",
+      "_status",
+      "updatedAt",
+    ]);
 
     const previewUrl = Pages.admin?.preview?.(
       { slug: "entenda-a-lei" },
@@ -168,10 +174,11 @@ describe("CMS editing UX", () => {
     );
   });
 
-  it("wires CMS access control to roles", () => {
+  it("wires CMS access control to permission policies", () => {
     const role = fieldByName(Users.fields, "role");
 
-    assert.equal(Users.access?.create, Users.access?.update);
+    assert.equal(typeof Users.access?.create, "function");
+    assert.equal(typeof Users.access?.update, "function");
     assert.equal(typeof Users.access?.read, "function");
     assert.equal(typeof Pages.access?.create, "function");
     assert.equal(typeof Pages.access?.read, "function");
@@ -180,7 +187,8 @@ describe("CMS editing UX", () => {
     assert.equal(Footer.access?.read?.({ req: {} } as Parameters<NonNullable<typeof Footer.access.read>>[0]), true);
     assert.equal(SiteSettings.access?.read?.({ req: {} } as Parameters<NonNullable<typeof SiteSettings.access.read>>[0]), true);
     assert.equal(role.label, "Perfil de acesso");
-    assert.equal("defaultValue" in role ? role.defaultValue : undefined, "admin");
+    assert.equal("required" in role ? role.required : undefined, true);
+    assert.equal("defaultValue" in role ? role.defaultValue : undefined, undefined);
   });
 
   it("adds editor-facing descriptions to page structure fields", () => {

@@ -137,6 +137,15 @@ Remove-Item Env:NODE_ENV
 npm.cmd run dev
 ```
 
+Nesse fluxo:
+
+- `$env:NODE_ENV = 'development'` define temporariamente o ambiente de desenvolvimento na sessao atual do PowerShell. Isso permite carregar `.env.development.local` e habilita o modo LDAP `mock`;
+- `npm.cmd run seed:dev-admin` le `LDAP_DEV_LOGIN` e `LDAP_DEV_PASSWORD`, verifica o usuario no banco configurado e cria a conta com role `admin` quando ela ainda nao existe. Esse e o unico comando do bloco que pode alterar dados;
+- `Remove-Item Env:NODE_ENV` remove a variavel temporaria para que ela nao afete outros comandos executados no mesmo terminal;
+- `npm.cmd run dev` inicia o servidor de desenvolvimento. Se ele ja estava em execucao durante a criacao da conta ou uma alteracao no `.env.development.local`, reinicie-o.
+
+Executar somente `npm.cmd run seed:dev-admin` funciona se `NODE_ENV` ja estiver definido como `development` na sessao. Caso contrario, execute as tres primeiras linhas do bloco. O seed nao inicia o servidor.
+
 O seed cadastra o login configurado com email `dev.admin@example.test`, nome `Administrador local de desenvolvimento` e role `admin`. Ele funciona mesmo quando outras contas ja existem. Reexecutar para a mesma conta Admin nao duplica dados; conflitos de login, email ou perfil interrompem o seed sem sobrescrever contas.
 
 Acesse `http://localhost:3000/admin` com o **login** `dev.admin` e a senha definida em `LDAP_DEV_PASSWORD`. O email e um dado do cadastro; o formulario usa o login. Autenticacao e consulta de perfil funcionam sem chamadas a API externa.

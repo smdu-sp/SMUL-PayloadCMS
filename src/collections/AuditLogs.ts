@@ -1,5 +1,8 @@
 import type { CollectionConfig } from "payload";
-import { auditLogsAdminOnly, denyAll } from "../access/roles.ts";
+import {
+  canReadAuditLogs,
+  denyAuditLogMutation,
+} from "../access/policies/audit-logs.ts";
 
 export const auditLogActionOptions = [
   { label: "Criacao", value: "create" },
@@ -17,10 +20,10 @@ export const AuditLogs: CollectionConfig = {
   disableBulkEdit: true,
   disableDuplicate: true,
   access: {
-    create: denyAll,
-    read: auditLogsAdminOnly,
-    update: denyAll,
-    delete: denyAll,
+    create: denyAuditLogMutation,
+    read: canReadAuditLogs,
+    update: denyAuditLogMutation,
+    delete: denyAuditLogMutation,
   },
   labels: {
     singular: "Log de auditoria",

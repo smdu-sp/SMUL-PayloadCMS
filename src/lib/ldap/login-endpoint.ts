@@ -1,7 +1,8 @@
 import { addDataAndFileToRequest, getFieldsToSign, jwtSign } from "payload";
 import type { Endpoint } from "payload";
 import { generatePayloadCookie } from "payload/shared";
-import { autenticarLdap, buscarUsuarioLdapPorLogin } from "./client.ts";
+import { can } from "../../access/can.ts";
+import { autenticarLdap } from "./client.ts";
 
 export const ldapLoginEndpoint: Endpoint = {
   path: "/ldap-login",
@@ -36,46 +37,16 @@ export const ldapLoginEndpoint: Endpoint = {
       limit: 1,
       overrideAccess: true,
     });
-    let user = docs[0];
+    const user = docs[0];
 
-    if (!user) {
-      const { totalDocs } = await payload.count({
-        collection: "users",
-        overrideAccess: true,
-      });
-
-      if (totalDocs > 0) {
-        return Response.json(
-          {
-            message:
-              "Usuario autenticado na SMUL, mas sem acesso ao CMS. Peca a um administrador para cadastra-lo.",
-          },
-          { status: 403 },
-        );
-      }
-
-      const perfil = await buscarUsuarioLdapPorLogin(login);
-      if (!perfil) {
-        return Response.json(
-          {
-            message:
-              "Usuario autenticado na SMUL, mas sem acesso ao CMS. Peca a um administrador para cadastra-lo.",
-          },
-          { status: 403 },
-        );
-      }
-
-      user = await payload.create({
-        collection: "users",
-        data: {
-          login: perfil.login,
-          email: perfil.email,
-          nome: perfil.nome,
-          telefone: perfil.telefone,
-          role: "admin",
+    if (!user || !can(user, "admin.access")) {
+      return Response.json(
+        {
+          message:
+            "Usuario autenticado na SMUL, mas sem acesso ao CMS. Peca a um administrador para cadastra-lo.",
         },
-        overrideAccess: true,
-      });
+        { status: 403 },
+      );
     }
 
     user.collection = "users";

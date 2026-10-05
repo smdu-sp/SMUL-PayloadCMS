@@ -4,7 +4,7 @@
 
 - `payload generate:types` pode falhar no ambiente Windows atual com `uv_os_get_passwd returned ENOMEM`; quando isso ocorre, os tipos precisam ser revisados com cuidado antes das validacoes.
 - Migrations destrutivas ainda exigem revisao humana e plano operacional antes de serem aplicadas em bases compartilhadas.
-- `Media.usage` e `Users.role` possuem defaults seguros, mas bases existentes devem ser auditadas antes de producao.
+- `Media.usage` possui default seguro. `Users.role` nao possui default e exige o backfill explicito documentado em `schema-evolution-migrations.md`; bases existentes devem ser auditadas antes de producao.
 
 ## Visual fidelity
 

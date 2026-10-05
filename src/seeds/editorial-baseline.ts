@@ -11,6 +11,7 @@ const existingDemoImage = await payload.find({
   collection: "media",
   depth: 0,
   limit: 1,
+  overrideAccess: true,
   where: {
     alt: {
       equals: demoImageAlt,
@@ -20,6 +21,7 @@ const existingDemoImage = await payload.find({
 
 const demoImage = existingDemoImage.docs[0] ?? await payload.create({
   collection: "media",
+  overrideAccess: true,
   data: {
     alt: demoImageAlt,
     caption:
@@ -42,6 +44,7 @@ const existingBannerImage = await payload.find({
   collection: "media",
   depth: 0,
   limit: 1,
+  overrideAccess: true,
   where: {
     alt: {
       equals: bannerImageAlt,
@@ -52,6 +55,7 @@ const existingBannerImage = await payload.find({
 const bannerImageData = await readFile(new URL("../../media/300", import.meta.url));
 const bannerImage = existingBannerImage.docs[0] ?? await payload.create({
   collection: "media",
+  overrideAccess: true,
   data: {
     alt: bannerImageAlt,
     caption:
@@ -71,6 +75,7 @@ const existingSeedPages = await payload.find({
   depth: 0,
   draft: true,
   limit: 1,
+  overrideAccess: true,
   where: {
     slug: {
       equals: "seed",
@@ -99,11 +104,13 @@ const seedPage = existingSeedPage
       id: existingSeedPage.id,
       data: baseSeedPageData,
       draft: false,
+      overrideAccess: true,
     })
   : await payload.create({
       collection: "pages",
       data: baseSeedPageData,
       draft: false,
+      overrideAccess: true,
     });
 
 await payload.update({
@@ -113,6 +120,7 @@ await payload.update({
     layout: seedShowcaseLayout(demoImage.id, seedPage.id, bannerImage.id),
   },
   draft: false,
+  overrideAccess: true,
 });
 
 await payload.destroy();

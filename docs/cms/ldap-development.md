@@ -33,6 +33,10 @@ Abra `/admin` e use o login e a senha configurados. Reinicie o servidor se ele j
 
 O seed usa o `DATABASE_URI` configurado (por padrao, o SQLite local), cria a conta com role `admin` mesmo quando outras contas existem e nao modifica as demais. Reexecutar para a mesma conta Admin nao altera nem duplica dados. Colisao de login/email ou role diferente causa erro em vez de sobrescrever/promover uma conta existente. Use um banco de desenvolvimento.
 
+O endpoint LDAP nunca cria o primeiro Admin. Mesmo com a coleção `users` vazia,
+um login LDAP válido recebe `403` até que um administrador seja cadastrado pelo seed
+explícito. LDAP autentica identidade; não atribui privilégio.
+
 ## Retorno ao servico externo
 
 Defina `LDAP_AUTH_MODE=external` ou remova a configuracao de mock e reinicie. A conta local permanece no banco, mas novas autenticacoes voltam a exigir validacao externa. Encerre a sessao de teste antes da troca: cookies ja emitidos seguem a validade do fluxo JWT existente.

@@ -43,6 +43,9 @@ export async function getPage(
     depth: 2,
     draft,
     limit: 1,
+    // Draft Mode is enabled only by the permission-protected preview routes.
+    // Public reads still execute the Pages access policy.
+    overrideAccess: draft,
     where: buildPageLookupWhere(slug, { draft }),
   });
 
@@ -56,6 +59,7 @@ export async function getSiteSettings(): Promise<SiteSetting | null> {
     return await payload.findGlobal({
       slug: "site-settings",
       depth: 2,
+      overrideAccess: false,
     });
   } catch {
     return null;
@@ -71,6 +75,7 @@ export async function getPublishedPagesForSitemap(): Promise<Page[]> {
     collection: "pages",
     depth: 0,
     limit: 1000,
+    overrideAccess: false,
     pagination: false,
     where: {
       ...activeLifecycleWhere,

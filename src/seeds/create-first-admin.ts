@@ -26,6 +26,7 @@ if (!usuario) {
 const existing = await payload.find({
   collection: "users",
   limit: 1,
+  overrideAccess: true,
   where: {
     login: {
       equals: usuario.login,
