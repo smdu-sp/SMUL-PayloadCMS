@@ -331,8 +331,84 @@
 }
 
 .image-editing-canvas__stage .ReactCrop {
+  --rc-border-color: #fff;
+  --rc-drag-bar-size: 16px;
+  --rc-drag-handle-bg-colour: #fff;
+  --rc-drag-handle-mobile-size: 18px;
+  --rc-drag-handle-size: 14px;
+
   display: inline-block;
   max-height: 480px;
+}
+
+.image-editing-canvas__stage .ReactCrop__crop-selection {
+  box-shadow: inset 0 0 0 1px #fff;
+  outline: 1px solid rgba(0, 0, 0, 0.9);
+}
+
+.image-editing-canvas__stage .ReactCrop--active .ReactCrop__crop-selection {
+  outline-color: var(--theme-success-500);
+}
+
+.image-editing-canvas__stage .ReactCrop__drag-handle {
+  border: 2px solid #171717;
+  border-radius: 3px;
+  box-shadow: 0 0 0 1px #fff, 0 1px 4px rgba(0, 0, 0, 0.55);
+  z-index: 1;
+}
+
+.image-editing-canvas__stage .ReactCrop__drag-handle::before {
+  content: "";
+  inset: -11px;
+  position: absolute;
+}
+
+.image-editing-canvas__stage .ReactCrop__drag-handle:hover,
+.image-editing-canvas__stage .ReactCrop__drag-handle:focus-visible,
+.image-editing-canvas__stage .ReactCrop--active .ReactCrop__drag-handle {
+  background: var(--theme-success-500);
+  border-color: #171717;
+}
+
+.image-editing-canvas__stage .ReactCrop__drag-handle:focus-visible {
+  outline: 2px solid var(--theme-success-500);
+  outline-offset: 2px;
+}
+
+.image-editing-canvas__stage .ReactCrop__drag-bar {
+  background: transparent;
+  z-index: 1;
+}
+
+.image-editing-canvas__stage .ReactCrop__drag-bar::before {
+  background: #fff;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.9);
+  content: "";
+  position: absolute;
+}
+
+.image-editing-canvas__stage .ReactCrop__drag-bar.ord-n::before,
+.image-editing-canvas__stage .ReactCrop__drag-bar.ord-s::before {
+  height: 2px;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.image-editing-canvas__stage .ReactCrop__drag-bar.ord-e::before,
+.image-editing-canvas__stage .ReactCrop__drag-bar.ord-w::before {
+  bottom: 0;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  width: 2px;
+}
+
+.image-editing-canvas__stage .ReactCrop__drag-bar:hover::before,
+.image-editing-canvas__stage .ReactCrop--active .ReactCrop__drag-bar::before {
+  background: var(--theme-success-500);
+  box-shadow: 0 0 0 1px #fff, 0 0 0 2px rgba(0, 0, 0, 0.9);
 }
 
 .image-editing-canvas__stage img {
@@ -340,6 +416,17 @@
   max-height: 480px;
   max-width: 100%;
   object-fit: contain;
+}
+
+@media (pointer: coarse) {
+  .image-editing-canvas__stage .ReactCrop {
+    --rc-drag-bar-size: 24px;
+    --rc-drag-handle-mobile-size: 18px;
+  }
+
+  .image-editing-canvas__stage .ReactCrop__drag-handle::before {
+    inset: -13px;
+  }
 }
 
 .image-editing-canvas__focal-point {
