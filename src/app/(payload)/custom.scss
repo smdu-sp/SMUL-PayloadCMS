@@ -318,14 +318,20 @@
 .image-editing-canvas__stage {
   background: var(--theme-elevation-50);
   border: 1px solid var(--theme-elevation-200);
-  cursor: crosshair;
   max-width: 760px;
   overflow: hidden;
+}
+
+.image-editing-canvas__frame {
+  cursor: crosshair;
+  display: inline-block;
+  line-height: 0;
+  max-width: 100%;
   position: relative;
 }
 
 .image-editing-canvas__stage .ReactCrop {
-  display: block;
+  display: inline-block;
   max-height: 480px;
 }
 

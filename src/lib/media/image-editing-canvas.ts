@@ -60,6 +60,17 @@ export function normalizeAltText(value: string): string {
     .toLocaleLowerCase("pt-BR");
 }
 
+export function hasDuplicateAltText(
+  media: { id: number | string; alt?: string | null }[],
+  altText: string,
+  currentId?: number | string,
+): boolean {
+  const normalizedAltText = normalizeAltText(altText);
+  return media.some((item) =>
+    item.id !== currentId && normalizeAltText(item.alt ?? "") === normalizedAltText,
+  );
+}
+
 export function validateCanvasTransformPayload(
   payload: unknown,
 ): CanvasTransformPayload {
@@ -178,6 +189,7 @@ export async function processImageTransform(
     image = image.resize({
       width: validatedPayload.resize.width,
       height: validatedPayload.resize.height,
+      fit: "fill",
     });
   }
 

@@ -4,6 +4,7 @@ import sharp from "sharp";
 import { canUseImageEditingCanvas } from "../../access/roles.ts";
 import {
   cropToPixels,
+  hasDuplicateAltText,
   processImageTransform,
   normalizeAltText,
   validateCanvasTransformPayload,
