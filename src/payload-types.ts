@@ -172,6 +172,24 @@ export interface Media {
    * Opcional. Use quando a imagem precisar de credito, contexto ou complemento editorial.
    */
   caption?: string | null;
+  /**
+   * Derivada criada pelo Canvas. O arquivo original permanece preservado.
+   */
+  parentMedia?: (number | null) | Media;
+  isDerived?: boolean | null;
+  focalPoint?: {
+    x?: number | null;
+    y?: number | null;
+  };
+  editingMetadata?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -344,7 +362,7 @@ export interface HeroBlock {
    */
   variant: 'default' | 'centered' | 'split';
   /**
-   * Opcoes semanticas controladas pelo Design System. Nao permite CSS arbitrario.
+   * Opcoes semanticas de apresentacao controladas pelo Design System. Nao permite CSS arbitrario.
    */
   appearance?: {
     /**
@@ -398,7 +416,7 @@ export interface RichTextBlock {
    */
   variant: 'default' | 'narrow';
   /**
-   * Opcoes semanticas controladas pelo Design System. Nao permite CSS arbitrario.
+   * Opcoes semanticas de apresentacao controladas pelo Design System. Nao permite CSS arbitrario.
    */
   appearance?: {
     /**
@@ -755,7 +773,7 @@ export interface ImageTextBlock {
     newTab?: boolean | null;
   };
   /**
-   * Opcoes semanticas controladas pelo Design System. Nao permite CSS arbitrario.
+   * Opcoes semanticas de apresentacao controladas pelo Design System. Nao permite CSS arbitrario.
    */
   appearance?: {
     /**
@@ -799,7 +817,7 @@ export interface CardsBlock {
    */
   variant: 'default' | 'modalities';
   /**
-   * Opcoes semanticas controladas pelo Design System. Nao permite CSS arbitrario.
+   * Opcoes semanticas de apresentacao controladas pelo Design System. Nao permite CSS arbitrario.
    */
   appearance?: {
     /**
@@ -968,7 +986,7 @@ export interface CTABlock {
    */
   variant: 'default' | 'brand' | 'compact';
   /**
-   * Opcoes semanticas controladas pelo Design System. Nao permite CSS arbitrario.
+   * Opcoes semanticas de apresentacao controladas pelo Design System. Nao permite CSS arbitrario.
    */
   appearance?: {
     /**
@@ -1016,7 +1034,7 @@ export interface IconGridBlock {
    */
   variant: 'default' | 'compact';
   /**
-   * Opcoes semanticas controladas pelo Design System. Nao permite CSS arbitrario.
+   * Opcoes semanticas de apresentacao controladas pelo Design System. Nao permite CSS arbitrario.
    */
   appearance?: {
     /**
@@ -1372,7 +1390,7 @@ export interface FullWidthImageBannerBlock {
    */
   imageHeight: 'auto' | 'compact' | 'medium' | 'large' | 'custom';
   /**
-   * Informe uma altura entre 160 e 900 pixels. O valor controla apenas a apresentacao deste banner.
+   * Informe uma altura entre 160 e 900 pixels. O valor controla apenas a apresentação deste banner.
    */
   customImageHeight?: number | null;
   /**
@@ -1470,7 +1488,7 @@ export interface AuditLog {
   timestamp: string;
   actor?: (number | null) | User;
   actorEmail?: string | null;
-  action: 'create' | 'update' | 'publish' | 'unpublish' | 'deactivate' | 'reactivate';
+  action: 'create' | 'update' | 'publish' | 'unpublish' | 'deactivate' | 'reactivate' | 'image-edit';
   collection: string;
   documentId: string;
   documentTitle: string;
@@ -1591,6 +1609,15 @@ export interface MediaSelect<T extends boolean = true> {
   usage?: T;
   alt?: T;
   caption?: T;
+  parentMedia?: T;
+  isDerived?: T;
+  focalPoint?:
+    | T
+    | {
+        x?: T;
+        y?: T;
+      };
+  editingMetadata?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;

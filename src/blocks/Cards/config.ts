@@ -137,7 +137,7 @@ export const CardsBlock: Block = {
         {
           name: "imagePresentation",
           type: "group",
-          label: "Apresentacao da imagem",
+          label: "Apresentação da imagem",
           admin: {
             condition: (_, siblingData) => siblingData?.mediaSource === "image",
             description:

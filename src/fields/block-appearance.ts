@@ -167,7 +167,7 @@ export function createInteractionField(
     ),
     admin: {
       description:
-        "Define feedback de hover, foco e movimento por presets controlados. Nao expõe CSS.",
+        "Opcoes semanticas de apresentacao controladas pelo Design System, incluindo feedback de hover, foco e movimento por presets. Nao permite CSS arbitrario.",
     },
     options: filtered.map((o) => ({ label: o.label, value: o.value })),
   };

@@ -77,7 +77,7 @@ export const seedShowcaseLayout = (
     blockName: "Demonstracao - Imagem unica",
     media: mediaId,
     caption:
-      "Imagem editorial unica com legenda opcional e controles fechados de apresentacao.",
+      "Imagem editorial unica com legenda opcional e controles fechados de apresentação.",
     imagePresentation: {
       size: "large",
       aspectRatio: "original",
