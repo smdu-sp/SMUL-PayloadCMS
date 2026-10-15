@@ -15,6 +15,7 @@ describe("permission catalog", () => {
   it("contains the permissions enforced by the CMS", () => {
     assert.ok(PERMISSIONS.includes("admin.access"));
     assert.ok(PERMISSIONS.includes("pages.preview"));
+    assert.ok(PERMISSIONS.includes("media.editCanvas"));
     assert.ok(PERMISSIONS.includes("users.assignRole"));
     assert.ok(PERMISSIONS.includes("auditLogs.read"));
   });

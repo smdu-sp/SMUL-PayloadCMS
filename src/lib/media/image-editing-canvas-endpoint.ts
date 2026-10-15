@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
 import { addDataAndFileToRequest, type Endpoint } from "payload";
-import { imageEditingCanvasAdminOnly } from "../../access/roles.ts";
+import { canEditMediaCanvas } from "../../access/policies/media.ts";
 import {
   processImageTransform,
   resolveMediaPath,
@@ -13,7 +13,7 @@ export const imageEditingCanvasEndpoint: Endpoint = {
   path: "/edit-canvas",
   method: "post",
   handler: async (req) => {
-    if (!(await imageEditingCanvasAdminOnly({ req }))) {
+    if (!(await canEditMediaCanvas({ req }))) {
       return Response.json({ message: "Sem permissao para usar o Canvas." }, { status: 403 });
     }
     try {

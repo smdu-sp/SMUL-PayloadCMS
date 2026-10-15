@@ -186,10 +186,13 @@ export async function processImageTransform(
   };
   let image = rotatedImage.extract(pixelCrop);
   if (validatedPayload.resize.width || validatedPayload.resize.height) {
+    const hasBothDimensions = Boolean(
+      validatedPayload.resize.width && validatedPayload.resize.height,
+    );
     image = image.resize({
       width: validatedPayload.resize.width,
       height: validatedPayload.resize.height,
-      fit: "fill",
+      ...(hasBothDimensions ? { fit: "fill" as const } : {}),
     });
   }
 

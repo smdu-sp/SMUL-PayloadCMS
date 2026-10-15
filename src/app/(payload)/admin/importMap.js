@@ -31,6 +31,7 @@ import { BlockquoteFeatureClient as BlockquoteFeatureClient_e70f5e05f09f93e00b99
 import { HorizontalRuleFeatureClient as HorizontalRuleFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { InlineToolbarFeatureClient as InlineToolbarFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { RichTextFullScreen as RichTextFullScreen_65acaa4b066b5182ca36171bd91f0dfa } from '../../../components/admin/RichTextFullScreen'
+import { ImageEditingCanvas as ImageEditingCanvas_111bccef76473ed486e4c4f4c2335248 } from '../../../components/admin/ImageEditingCanvas'
 import { ThemeColorReset as ThemeColorReset_477b42945c88043439e5d946a379222e } from '../../../components/admin/ThemeColorReset'
 import { CustomNav as CustomNav_6de4d01e9d2fdd107175007ae639960b } from '../../../components/admin/CustomNav'
 import { Icon as Icon_dfe4008080d895d460898c3a6155e9ba } from '../../../components/admin/Icon'
@@ -77,6 +78,7 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#HorizontalRuleFeatureClient": HorizontalRuleFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#InlineToolbarFeatureClient": InlineToolbarFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "/components/admin/RichTextFullScreen#RichTextFullScreen": RichTextFullScreen_65acaa4b066b5182ca36171bd91f0dfa,
+  "/components/admin/ImageEditingCanvas#ImageEditingCanvas": ImageEditingCanvas_111bccef76473ed486e4c4f4c2335248,
   "/components/admin/ThemeColorReset#ThemeColorReset": ThemeColorReset_477b42945c88043439e5d946a379222e,
   "/components/admin/CustomNav#CustomNav": CustomNav_6de4d01e9d2fdd107175007ae639960b,
   "/components/admin/Icon#Icon": Icon_dfe4008080d895d460898c3a6155e9ba,

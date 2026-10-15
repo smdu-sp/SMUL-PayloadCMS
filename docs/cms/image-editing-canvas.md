@@ -5,8 +5,8 @@
 - A SPEC-034 foi considerada insuficiente para o caso de uso de gerar uma imagem editada: seus controles alteram somente a apresentação dentro do bloco e não criam um novo asset.
 - Nenhum feedback editorial foi anexado ao pedido. A justificativa foi registrada a partir do gap observável entre apresentação e geração de derivados; a validação com usuários continua sendo uma decisão operacional pendente.
 - O processamento usa `sharp`, no servidor, e aceita somente operações validadas: rotação em ângulos fixos, redimensionamento em presets de largura, proporção e ponto focal.
-- Cada execução lê o arquivo indicado por `filename`, aplica a transformação no servidor e salva a edição no próprio asset atual da collection `Media`.
-- O Canvas é restrito ao perfil administrador, e a edição gera um registro em `AuditLogs` para o asset original, sem criar outra mídia como derivada.
+- Cada execução lê o arquivo indicado por `filename`, aplica a transformação no servidor e cria um novo asset derivado na collection `Media`, preservando o original.
+- O Canvas é restrito ao perfil administrador, e a edição gera um registro em `AuditLogs` para a mídia derivada com referência ao asset original.
 
 ## Fora desta implementação
 
@@ -19,5 +19,8 @@
 
 ## Validação executada
 
-- `node --import tsx --test src/lib/media/image-editing-canvas.test.ts`
-- `get_errors` nos arquivos alterados: sem erros reportados.
+- `npm run typecheck`
+- `npm run lint -- --quiet`
+- `node --import tsx --test src/access/permissions.test.ts src/access/role-permissions.test.ts src/access/policies.test.ts src/lib/media/image-editing-canvas.test.ts`
+- `npm test` (`254` testes aprovados)
+- `npm run build`

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import sharp from "sharp";
-import { canUseImageEditingCanvas } from "../../access/roles.ts";
+import { canUseImageEditingCanvas } from "../../access/policies/media.ts";
 import {
   cropToPixels,
   hasDuplicateAltText,
@@ -42,7 +42,7 @@ describe("image editing canvas", () => {
     });
     assert.deepEqual(original, originalSnapshot);
     assert.equal(result.metrics.width, 20);
-    assert.equal(result.metrics.height, 10);
+    assert.equal(result.metrics.height, 80);
     assert.equal(result.metrics.format, "webp");
     assert.deepEqual(result.focalPoint, { x: 100, y: 50 });
     assert.notDeepEqual(result.buffer, original);
@@ -52,7 +52,7 @@ describe("image editing canvas", () => {
     const original = await sharp({ create: { width: 100, height: 50, channels: 3, background: "red" } }).png().toBuffer();
     const result = await processImageTransform(original, {
       originalMediaId: "1",
-      crop: { x: 0, y: 0, width: 100, height: 50, unit: "px" },
+      crop: { x: 0, y: 0, width: 50, height: 100, unit: "px" },
       resize: {},
       rotate: 90,
       focalPoint: { x: 50, y: 50 },

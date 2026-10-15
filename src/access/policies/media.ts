@@ -9,3 +9,9 @@ export const canUpdateMedia: Access = ({ req }) =>
   can(req.user, "media.update");
 export const canDeleteMedia: Access = ({ req }) =>
   can(req.user, "media.delete");
+
+export const canUseImageEditingCanvas = (user: unknown): boolean =>
+  can(user, "media.editCanvas");
+
+export const canEditMediaCanvas: Access = ({ req }) =>
+  canUseImageEditingCanvas(req.user);

@@ -17,6 +17,10 @@ describe("role permission matrix", () => {
     assert.ok(rolePermissions.editor.includes("header.update"));
     assert.ok(rolePermissions.editor.includes("footer.update"));
     assert.equal(
+      (rolePermissions.editor as readonly string[]).includes("media.editCanvas"),
+      false,
+    );
+    assert.equal(
       (rolePermissions.editor as readonly string[]).includes("pages.delete"),
       false,
     );

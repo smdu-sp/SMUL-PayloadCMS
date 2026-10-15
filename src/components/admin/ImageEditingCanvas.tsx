@@ -32,7 +32,19 @@ export function ImageEditingCanvas({ data, path }: Props) {
   const mediaField = useField<MediaValue>({ path: path ?? "media" });
   const aspectRatioField = useField<string | undefined>({ path: "imagePresentation.aspectRatio" });
   const aspectRatio = aspectRatioField.value ?? "original";
-  const [media, setMedia] = useState<MediaData | undefined>(data);
+  const fieldValue = mediaField.value;
+  const selectedMedia = typeof fieldValue === "object" && fieldValue !== null
+    ? fieldValue
+    : undefined;
+  const selectedId = typeof fieldValue === "string" || typeof fieldValue === "number"
+    ? fieldValue
+    : selectedMedia?.id;
+  const [resolvedMedia, setResolvedMedia] = useState<MediaData | undefined>(data);
+  const media = selectedMedia?.url
+    ? selectedMedia
+    : resolvedMedia?.id && String(resolvedMedia.id) === String(selectedId)
+      ? resolvedMedia
+      : undefined;
   const [rotate, setRotate] = useState<0 | 90 | 180 | 270>(0);
   const frameRef = useRef<HTMLDivElement>(null);
   const justCroppedRef = useRef(false);
@@ -45,11 +57,6 @@ export function ImageEditingCanvas({ data, path }: Props) {
   const [busy, setBusy] = useState(false);
   const [toast, setToast] = useState<CanvasToast | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | undefined>(data?.url);
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
 
   useEffect(() => {
     if (!toast) return;
@@ -58,29 +65,27 @@ export function ImageEditingCanvas({ data, path }: Props) {
   }, [toast]);
 
   useEffect(() => {
-    const fieldValue = mediaField.value;
-    const selectedMedia = typeof fieldValue === "object" && fieldValue !== null ? fieldValue : undefined;
-    const selectedId = typeof fieldValue === "string" || typeof fieldValue === "number"
-      ? fieldValue
-      : selectedMedia?.id;
+    if (!selectedMedia?.url) return;
 
-    if (!selectedId) {
-      setMedia(undefined);
-      setPreviewUrl(undefined);
-      return;
-    }
+    queueMicrotask(() => {
+      setResolvedMedia(selectedMedia);
+      setFocalPoint({
+        x: selectedMedia.focalX ?? 50,
+        y: selectedMedia.focalY ?? 50,
+      });
+    });
+  }, [
+    selectedMedia?.focalX,
+    selectedMedia?.focalY,
+    selectedMedia?.id,
+    selectedMedia?.url,
+  ]);
 
-    if (selectedMedia?.url) {
-      setMedia(selectedMedia);
-      setFocalPoint({ x: selectedMedia.focalX ?? 50, y: selectedMedia.focalY ?? 50 });
-      return;
-    }
-
-    if (media?.id && String(media.id) === String(selectedId)) return;
+  useEffect(() => {
+    if (!selectedId || selectedMedia?.url) return;
+    if (resolvedMedia?.id && String(resolvedMedia.id) === String(selectedId)) return;
 
     const controller = new AbortController();
-    setMedia(undefined);
-    setPreviewUrl(undefined);
     fetch(`/api/media/${encodeURIComponent(String(selectedId))}?depth=0`, { signal: controller.signal })
       .then(async (response) => {
         if (!response.ok) return undefined;
@@ -88,14 +93,14 @@ export function ImageEditingCanvas({ data, path }: Props) {
       })
       .then((resolvedMedia) => {
         if (resolvedMedia) {
-          setMedia(resolvedMedia);
+          setResolvedMedia(resolvedMedia);
           setFocalPoint({ x: resolvedMedia.focalX ?? 50, y: resolvedMedia.focalY ?? 50 });
         }
       })
       .catch(() => undefined);
 
     return () => controller.abort();
-  }, [mediaField.value, media?.id]);
+  }, [resolvedMedia?.id, selectedId, selectedMedia?.url]);
 
   const getCropPixelDimensions = (nextCrop: Crop = crop) => ({
     width: Math.max(1, Math.round((Number(nextCrop.width ?? 0) / 100) * previewDimensions.width)),
@@ -159,11 +164,11 @@ export function ImageEditingCanvas({ data, path }: Props) {
       setHeight(undefined);
       setPreviewDimensions({ width: 0, height: 0 });
       if (typeof parentMedia === "object" && parentMedia?.url) {
-        setMedia(parentMedia);
+        setResolvedMedia(parentMedia);
         setPreviewUrl(parentMedia.url);
         setFocalPoint({ x: parentMedia.focalX ?? 50, y: parentMedia.focalY ?? 50 });
       } else {
-        setMedia(undefined);
+        setResolvedMedia(undefined);
         setPreviewUrl(undefined);
         setFocalPoint({ x: 50, y: 50 });
       }
@@ -224,14 +229,6 @@ export function ImageEditingCanvas({ data, path }: Props) {
   };
 
   useEffect(() => {
-    if (previewDimensions.width && previewDimensions.height) {
-      const dimensions = getCropPixelDimensions();
-      setWidth(dimensions.width);
-      setHeight(dimensions.height);
-    }
-  }, [previewDimensions.width, previewDimensions.height]);
-
-  useEffect(() => {
     if (!media?.url) return;
 
     const image = new Image();
@@ -252,7 +249,7 @@ export function ImageEditingCanvas({ data, path }: Props) {
       setPreviewUrl(canvas.toDataURL("image/png"));
     };
     image.src = media.url;
-  }, [media?.url, rotate]);
+  }, [crop.height, crop.width, media?.url, rotate]);
 
   if (media?.mimeType && !media.mimeType.startsWith("image/")) return null;
 
@@ -276,7 +273,7 @@ export function ImageEditingCanvas({ data, path }: Props) {
         return;
       }
       mediaField.setValue(result.doc.id);
-      setMedia(result.doc);
+      setResolvedMedia(result.doc);
       if (result.doc.url) setPreviewUrl(result.doc.url);
       setToast({ message: "Imagem derivada criada e vinculada a esta página.", derivedId: result.doc.id, tone: "success" });
     } catch (error) {
@@ -288,7 +285,7 @@ export function ImageEditingCanvas({ data, path }: Props) {
 
   return <section className="image-editing-canvas">
     <h2>Editar no Canvas</h2>
-    {previewUrl && isMounted ? <div className="image-editing-canvas__stage">
+    {media && previewUrl ? <div className="image-editing-canvas__stage">
       <div className="image-editing-canvas__frame" ref={frameRef} onPointerMove={(event) => {
         if (draggingFocalPoint) updateFocalPointFromPointer(event.clientX, event.clientY);
       }} onPointerUp={() => setDraggingFocalPoint(false)} onPointerLeave={() => setDraggingFocalPoint(false)}>
