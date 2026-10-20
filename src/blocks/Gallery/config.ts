@@ -9,6 +9,7 @@ import {
   createSpacingField,
 } from "../../fields/block-appearance";
 import { closedSelect } from "../../fields/editorial-validation";
+import { createImagePresentationFields } from "../../fields/image-presentation";
 import { createBlockAdmin } from "../shared/admin";
 
 const columnOptions = [
@@ -27,6 +28,11 @@ const thumbnailEffectOptions = [
 
 type GalleryImageInput = {
   caption?: string | null;
+  imagePresentation?: {
+    aspectRatio: "4:3";
+    fit: "cover";
+    size: "full";
+  };
   media?: unknown;
 };
 
@@ -114,6 +120,23 @@ export const GalleryBlock: Block = {
             rows: 2,
           },
         },
+        {
+          name: "imagePresentation",
+          type: "group",
+          label: "Apresentacao desta imagem",
+          admin: {
+            description:
+              "Ajustes exclusivos desta ocorrencia na galeria, sem alterar a Midia original.",
+          },
+          fields: createImagePresentationFields({
+            canvas: { mediaFieldName: "media" },
+            sizes: ["full"],
+            aspectRatios: ["1:1", "4:3"],
+            defaultSize: "full",
+            defaultAspectRatio: "4:3",
+            defaultFit: "cover",
+          }),
+        },
       ],
     },
     {
@@ -143,7 +166,14 @@ export const GalleryBlock: Block = {
                 existingIds.add(id);
                 return true;
               })
-              .map((media) => ({ media }));
+              .map((media) => ({
+                imagePresentation: {
+                  aspectRatio: "4:3" as const,
+                  fit: "cover" as const,
+                  size: "full" as const,
+                },
+                media,
+              }));
 
             siblingData.images = [...currentImages, ...newImages];
             return undefined;

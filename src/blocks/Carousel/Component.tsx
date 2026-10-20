@@ -5,6 +5,7 @@ import {
   type EditorialColorOverrides,
 } from "../../lib/theme/block-color-theme";
 import { CarouselClient } from "./CarouselClient";
+import type { ImagePresentation } from "../shared/image-presentation";
 
 export type CarouselSlidesPerView = "1" | "2" | "3";
 export type CarouselNavigation = "arrows" | "arrows-dots";
@@ -22,6 +23,7 @@ export type CarouselItem = {
   description?: string | null;
   id?: string | null;
   image: number | Media;
+  imagePresentation?: ImagePresentation;
   link?: CarouselLink | null;
   title?: string | null;
 };

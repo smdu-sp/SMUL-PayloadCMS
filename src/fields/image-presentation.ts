@@ -1,4 +1,5 @@
 import type { Field } from "payload";
+import { validateImageCanvasValue } from "../domain/image-presentation";
 import { closedSelect } from "./editorial-validation";
 
 export const imagePresentationSizes = [
@@ -24,6 +25,9 @@ export type ImagePresentationFit = (typeof imagePresentationFits)[number];
 
 export function createImagePresentationFields(options?: {
   aspectRatios?: ImagePresentationAspectRatio[];
+  canvas?: {
+    mediaFieldName: string;
+  };
   defaultSize?: ImagePresentationSize;
   defaultAspectRatio?: ImagePresentationAspectRatio;
   defaultFit?: ImagePresentationFit;
@@ -37,7 +41,7 @@ export function createImagePresentationFields(options?: {
   const sizes = options?.sizes ?? [...imagePresentationSizes];
   const aspectRatios = options?.aspectRatios ?? [...imagePresentationAspectRatios];
 
-  return [
+  const fields: Field[] = [
     {
       name: "size",
       type: "select",
@@ -106,4 +110,33 @@ export function createImagePresentationFields(options?: {
       ],
     },
   ];
+
+  if (options?.canvas) {
+    fields.push(createImageCanvasField(options.canvas.mediaFieldName));
+  }
+
+  return fields;
+}
+
+export function createImageCanvasField(
+  mediaFieldName: string,
+  name = "canvas",
+  label = "Enquadramento visual",
+): Field {
+  return {
+    name,
+    type: "json",
+    label,
+    validate: validateImageCanvasValue,
+    admin: {
+      description:
+        "Ajuste esta ocorrencia da imagem. O arquivo original na biblioteca de Midia nao e alterado.",
+      components: {
+        Field: {
+          path: "/components/admin/ImageEditingCanvas#ImageEditingCanvas",
+          clientProps: { mediaFieldName },
+        },
+      },
+    },
+  };
 }

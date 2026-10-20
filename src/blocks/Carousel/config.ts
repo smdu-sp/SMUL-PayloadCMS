@@ -7,6 +7,7 @@ import {
   createSchemeField,
 } from "../../fields/block-appearance";
 import { closedSelect } from "../../fields/editorial-validation";
+import { createImagePresentationFields } from "../../fields/image-presentation";
 import { createLinkFields } from "../../fields/link";
 import { createBlockAdmin } from "../shared/admin";
 
@@ -92,6 +93,23 @@ export const CarouselBlock: Block = {
             ...characterLimitAdmin(90),
             description: "Opcional. Titulo curto exibido junto da imagem.",
           },
+        },
+        {
+          name: "imagePresentation",
+          type: "group",
+          label: "Apresentacao da imagem",
+          admin: {
+            description:
+              "Ajustes exclusivos desta ocorrencia no slide, sem alterar a Midia original.",
+          },
+          fields: createImagePresentationFields({
+            canvas: { mediaFieldName: "image" },
+            sizes: ["full"],
+            aspectRatios: ["1:1", "4:3", "16:9", "portrait"],
+            defaultSize: "full",
+            defaultAspectRatio: "16:9",
+            defaultFit: "cover",
+          }),
         },
         {
           name: "description",

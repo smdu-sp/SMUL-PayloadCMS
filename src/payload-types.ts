@@ -153,7 +153,7 @@ export interface User {
   collection: 'users';
 }
 /**
- * Cadastre imagens e documentos usados nos blocos...
+ * Cadastre imagens e documentos usados nos blocos, SEO e identidade visual. O texto alternativo e obrigatorio para acessibilidade.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media".
@@ -316,6 +316,18 @@ export interface HeroBlock {
      * Preencher recorta a imagem para cobrir o espaco; Conter mostra a imagem inteira, podendo sobrar espaco vazio. Usa o ponto focal definido na Midia quando disponivel.
      */
     fit?: ('cover' | 'contain') | null;
+    /**
+     * Ajuste esta ocorrencia da imagem. O arquivo original na biblioteca de Midia nao e alterado.
+     */
+    canvas?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
   };
   /**
    * Link opcional exibido como botao principal da abertura.
@@ -354,6 +366,30 @@ export interface HeroBlock {
      * Opcional. Use quando a composicao desktop nao funcionar bem em telas estreitas.
      */
     mobileImage?: (number | null) | Media;
+    /**
+     * Ajuste esta ocorrencia da imagem. O arquivo original na biblioteca de Midia nao e alterado.
+     */
+    desktopCanvas?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Ajuste esta ocorrencia da imagem. O arquivo original na biblioteca de Midia nao e alterado.
+     */
+    mobileCanvas?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
     overlay?: ('none' | 'light' | 'dark') | null;
     focalPoint?: ('center' | 'top' | 'bottom' | 'left' | 'right') | null;
   };
@@ -362,7 +398,7 @@ export interface HeroBlock {
    */
   variant: 'default' | 'centered' | 'split';
   /**
-   * Opcoes semanticas de apresentacao controladas pelo Design System. Nao permite CSS arbitrario.
+   * Opcoes semanticas controladas pelo Design System. Nao permite CSS arbitrario.
    */
   appearance?: {
     /**
@@ -416,7 +452,7 @@ export interface RichTextBlock {
    */
   variant: 'default' | 'narrow';
   /**
-   * Opcoes semanticas de apresentacao controladas pelo Design System. Nao permite CSS arbitrario.
+   * Opcoes semanticas controladas pelo Design System. Nao permite CSS arbitrario.
    */
   appearance?: {
     /**
@@ -475,6 +511,18 @@ export interface ImageBlock {
      * Preencher recorta a imagem para cobrir o espaco; Conter mostra a imagem inteira, podendo sobrar espaco vazio. Usa o ponto focal definido na Midia quando disponivel.
      */
     fit?: ('cover' | 'contain') | null;
+    /**
+     * Ajuste esta ocorrencia da imagem. O arquivo original na biblioteca de Midia nao e alterado.
+     */
+    canvas?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
   };
   /**
    * Opcoes semanticas controladas pelo Design System. Nao permite CSS arbitrario.
@@ -520,6 +568,35 @@ export interface GalleryBlock {
      * Opcional. Texto exibido somente quando a imagem estiver aberta.
      */
     caption?: string | null;
+    /**
+     * Ajustes exclusivos desta ocorrencia na galeria, sem alterar a Midia original.
+     */
+    imagePresentation: {
+      /**
+       * Controla a largura da imagem dentro do espaco do bloco. Em celulares, a imagem sempre ocupa a largura total.
+       */
+      size: 'full';
+      /**
+       * Original preserva as proporcoes do arquivo enviado. As demais opcoes recortam a imagem para a proporcao escolhida.
+       */
+      aspectRatio: '1:1' | '4:3';
+      /**
+       * Preencher recorta a imagem para cobrir o espaco; Conter mostra a imagem inteira, podendo sobrar espaco vazio. Usa o ponto focal definido na Midia quando disponivel.
+       */
+      fit?: ('cover' | 'contain') | null;
+      /**
+       * Ajuste esta ocorrencia da imagem. O arquivo original na biblioteca de Midia nao e alterado.
+       */
+      canvas?:
+        | {
+            [k: string]: unknown;
+          }
+        | unknown[]
+        | string
+        | number
+        | boolean
+        | null;
+    };
     id?: string | null;
   }[];
   /**
@@ -547,7 +624,7 @@ export interface GalleryBlock {
      */
     spacing?: ('compact' | 'default' | 'spacious') | null;
     /**
-     * Define feedback de hover, foco e movimento por presets controlados. Nao expõe CSS.
+     * Opcoes semanticas de apresentacao controladas pelo Design System, incluindo feedback de hover, foco e movimento por presets. Nao permite CSS arbitrario.
      */
     interaction?: ('none' | 'subtle' | 'default' | 'emphasized') | null;
     /**
@@ -586,6 +663,35 @@ export interface CarouselBlock {
      * Opcional. Titulo curto exibido junto da imagem.
      */
     title?: string | null;
+    /**
+     * Ajustes exclusivos desta ocorrencia no slide, sem alterar a Midia original.
+     */
+    imagePresentation: {
+      /**
+       * Controla a largura da imagem dentro do espaco do bloco. Em celulares, a imagem sempre ocupa a largura total.
+       */
+      size: 'full';
+      /**
+       * Original preserva as proporcoes do arquivo enviado. As demais opcoes recortam a imagem para a proporcao escolhida.
+       */
+      aspectRatio: '1:1' | '4:3' | '16:9' | 'portrait';
+      /**
+       * Preencher recorta a imagem para cobrir o espaco; Conter mostra a imagem inteira, podendo sobrar espaco vazio. Usa o ponto focal definido na Midia quando disponivel.
+       */
+      fit?: ('cover' | 'contain') | null;
+      /**
+       * Ajuste esta ocorrencia da imagem. O arquivo original na biblioteca de Midia nao e alterado.
+       */
+      canvas?:
+        | {
+            [k: string]: unknown;
+          }
+        | unknown[]
+        | string
+        | number
+        | boolean
+        | null;
+    };
     /**
      * Opcional. Texto de apoio para explicar o slide sem transformar o carrossel em texto longo.
      */
@@ -742,6 +848,18 @@ export interface ImageTextBlock {
      * Preencher recorta a imagem para cobrir o espaco; Conter mostra a imagem inteira, podendo sobrar espaco vazio. Usa o ponto focal definido na Midia quando disponivel.
      */
     fit?: ('cover' | 'contain') | null;
+    /**
+     * Ajuste esta ocorrencia da imagem. O arquivo original na biblioteca de Midia nao e alterado.
+     */
+    canvas?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
   };
   /**
    * Escolha o lado da imagem em telas grandes. Em dispositivos moveis, imagem e texto ficam empilhados.
@@ -773,7 +891,7 @@ export interface ImageTextBlock {
     newTab?: boolean | null;
   };
   /**
-   * Opcoes semanticas de apresentacao controladas pelo Design System. Nao permite CSS arbitrario.
+   * Opcoes semanticas controladas pelo Design System. Nao permite CSS arbitrario.
    */
   appearance?: {
     /**
@@ -817,7 +935,7 @@ export interface CardsBlock {
    */
   variant: 'default' | 'modalities';
   /**
-   * Opcoes semanticas de apresentacao controladas pelo Design System. Nao permite CSS arbitrario.
+   * Opcoes semanticas controladas pelo Design System. Nao permite CSS arbitrario.
    */
   appearance?: {
     /**
@@ -829,7 +947,7 @@ export interface CardsBlock {
      */
     spacing?: ('compact' | 'default' | 'spacious') | null;
     /**
-     * Define feedback de hover, foco e movimento por presets controlados. Nao expõe CSS.
+     * Opcoes semanticas de apresentacao controladas pelo Design System, incluindo feedback de hover, foco e movimento por presets. Nao permite CSS arbitrario.
      */
     interaction?: ('none' | 'subtle' | 'default' | 'emphasized') | null;
     /**
@@ -865,6 +983,18 @@ export interface CardsBlock {
        * Preencher recorta a imagem para cobrir o espaco; Conter mostra a imagem inteira, podendo sobrar espaco vazio. Usa o ponto focal definido na Midia quando disponivel.
        */
       fit?: ('cover' | 'contain') | null;
+      /**
+       * Ajuste esta ocorrencia da imagem. O arquivo original na biblioteca de Midia nao e alterado.
+       */
+      canvas?:
+        | {
+            [k: string]: unknown;
+          }
+        | unknown[]
+        | string
+        | number
+        | boolean
+        | null;
     };
     /**
      * Texto principal do card. Pode quebrar linha sem afetar os demais itens.
@@ -986,7 +1116,7 @@ export interface CTABlock {
    */
   variant: 'default' | 'brand' | 'compact';
   /**
-   * Opcoes semanticas de apresentacao controladas pelo Design System. Nao permite CSS arbitrario.
+   * Opcoes semanticas controladas pelo Design System. Nao permite CSS arbitrario.
    */
   appearance?: {
     /**
@@ -1034,7 +1164,7 @@ export interface IconGridBlock {
    */
   variant: 'default' | 'compact';
   /**
-   * Opcoes semanticas de apresentacao controladas pelo Design System. Nao permite CSS arbitrario.
+   * Opcoes semanticas controladas pelo Design System. Nao permite CSS arbitrario.
    */
   appearance?: {
     /**
@@ -1366,6 +1496,30 @@ export interface FullWidthImageBannerBlock {
    */
   mobileImage?: (number | null) | Media;
   /**
+   * Ajuste esta ocorrencia da imagem. O arquivo original na biblioteca de Midia nao e alterado.
+   */
+  desktopCanvas?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * Ajuste esta ocorrencia da imagem. O arquivo original na biblioteca de Midia nao e alterado.
+   */
+  mobileCanvas?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
    * Opcional. Associe a imagem inteira a uma pagina do portal ou a uma URL externa.
    */
   link?: {
@@ -1688,6 +1842,7 @@ export interface HeroBlockSelect<T extends boolean = true> {
         size?: T;
         aspectRatio?: T;
         fit?: T;
+        canvas?: T;
       };
   cta?:
     | T
@@ -1703,6 +1858,8 @@ export interface HeroBlockSelect<T extends boolean = true> {
     | {
         image?: T;
         mobileImage?: T;
+        desktopCanvas?: T;
+        mobileCanvas?: T;
         overlay?: T;
         focalPoint?: T;
       };
@@ -1764,6 +1921,7 @@ export interface ImageBlockSelect<T extends boolean = true> {
         size?: T;
         aspectRatio?: T;
         fit?: T;
+        canvas?: T;
       };
   appearance?:
     | T
@@ -1793,6 +1951,14 @@ export interface GalleryBlockSelect<T extends boolean = true> {
     | {
         media?: T;
         caption?: T;
+        imagePresentation?:
+          | T
+          | {
+              size?: T;
+              aspectRatio?: T;
+              fit?: T;
+              canvas?: T;
+            };
         id?: T;
       };
   bulkImages?: T;
@@ -1833,6 +1999,14 @@ export interface CarouselBlockSelect<T extends boolean = true> {
     | {
         image?: T;
         title?: T;
+        imagePresentation?:
+          | T
+          | {
+              size?: T;
+              aspectRatio?: T;
+              fit?: T;
+              canvas?: T;
+            };
         description?: T;
         link?:
           | T
@@ -1914,6 +2088,7 @@ export interface ImageTextBlockSelect<T extends boolean = true> {
         size?: T;
         aspectRatio?: T;
         fit?: T;
+        canvas?: T;
       };
   variant?: T;
   cta?:
@@ -1978,6 +2153,7 @@ export interface CardsBlockSelect<T extends boolean = true> {
               size?: T;
               aspectRatio?: T;
               fit?: T;
+              canvas?: T;
             };
         title?: T;
         description?: T;
@@ -2193,6 +2369,8 @@ export interface ActionBannersBlockSelect<T extends boolean = true> {
 export interface FullWidthImageBannerBlockSelect<T extends boolean = true> {
   desktopImage?: T;
   mobileImage?: T;
+  desktopCanvas?: T;
+  mobileCanvas?: T;
   link?:
     | T
     | {

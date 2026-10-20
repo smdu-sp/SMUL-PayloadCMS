@@ -12,6 +12,7 @@ import {
   createSchemeField,
 } from "../../fields/block-appearance";
 import { closedSelect } from "../../fields/editorial-validation";
+import { createImageCanvasField } from "../../fields/image-presentation";
 import { createBlockAdmin } from "../shared/admin";
 
 // Without overlaid content, only the optional overlay consumes a local color.
@@ -91,6 +92,16 @@ export const FullWidthImageBannerBlock: Block = {
           "Opcional. Use uma composicao alternativa quando a imagem desktop nao for adequada em telas estreitas.",
       },
     },
+    createImageCanvasField(
+      "desktopImage",
+      "desktopCanvas",
+      "Enquadramento visual desktop",
+    ),
+    createImageCanvasField(
+      "mobileImage",
+      "mobileCanvas",
+      "Enquadramento visual mobile",
+    ),
     {
       name: "link",
       type: "group",

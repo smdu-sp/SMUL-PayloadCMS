@@ -33,15 +33,9 @@ export const ImageBlock: Block = {
       required: true,
       validate: ((value) =>
         value ? true : "Selecione uma imagem da biblioteca de midia.") satisfies UploadFieldSingleValidation,
-      filterOptions: { isDerived: { not_equals: true } },
       admin: {
         description:
           "Imagem exibida como bloco editorial unico. O arquivo original permanece preservado na biblioteca de midia.",
-        components: {
-          afterInput: [
-            "/components/admin/ImageEditingCanvas#ImageEditingCanvas",
-          ],
-        },
       },
     },
     {
@@ -65,6 +59,7 @@ export const ImageBlock: Block = {
           "Define como esta imagem e exibida neste bloco. O arquivo original na Midia nao e alterado.",
       },
       fields: createImagePresentationFields({
+        canvas: { mediaFieldName: "media" },
         defaultSize: "large",
         defaultAspectRatio: "original",
         defaultFit: "cover",

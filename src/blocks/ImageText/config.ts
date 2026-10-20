@@ -75,6 +75,7 @@ export const ImageTextBlock: Block = {
           "Define como esta imagem é exibida neste bloco. O arquivo original na Mídia não é alterado.",
       },
       fields: createImagePresentationFields({
+        canvas: { mediaFieldName: "image" },
         defaultSize: "medium",
         defaultAspectRatio: "original",
         defaultFit: "cover",

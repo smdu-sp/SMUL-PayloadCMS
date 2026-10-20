@@ -144,6 +144,7 @@ export const CardsBlock: Block = {
               "Define como esta imagem aparece neste card sem alterar o arquivo original na Midia.",
           },
           fields: createImagePresentationFields({
+            canvas: { mediaFieldName: "image" },
             sizes: ["small", "medium", "large"],
             aspectRatios: ["original", "1:1", "4:3", "16:9"],
             defaultSize: "medium",

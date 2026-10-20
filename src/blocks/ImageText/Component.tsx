@@ -2,11 +2,8 @@ import { RichText } from "@payloadcms/richtext-lexical/react";
 import type { ImageTextBlock as ImageTextBlockProps } from "../../payload-types";
 import { BlockThemeScope, Container, Heading, Section } from "../../components/ui";
 import type { EditorialColorOverrides } from "../../lib/theme/block-color-theme";
-import {
-  getFocalPointStyle,
-  getImagePresentationClassName,
-} from "../shared/image-presentation";
-import { MediaImage } from "../shared/MediaImage";
+import type { ImagePresentation } from "../shared/image-presentation";
+import { PresentedMediaImage } from "../shared/PresentedMediaImage";
 import { BlockLink } from "../shared/BlockLink";
 
 type ImageTextVariant = "image-left" | "image-right";
@@ -62,14 +59,11 @@ export function ImageTextBlock({
     <Section spacing={effectiveSpacing} scheme={customTheme ? "default" : effectiveTone}>
       <Container size="lg">
         <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
-          <MediaImage
-            className={`h-auto rounded-xl border border-(--block-border) ${getImagePresentationClassName(imagePresentation)} ${imageOnRight ? "lg:order-2" : ""}`}
+          <PresentedMediaImage
+            className={`rounded-xl border border-(--block-border) ${imageOnRight ? "lg:order-2" : ""}`}
             media={image}
+            presentation={imagePresentation as ImagePresentation}
             sizes="(min-width: 1024px) 50vw, 100vw"
-            style={getFocalPointStyle(
-              typeof image === "object" ? image : null,
-              imagePresentation,
-            )}
           />
           <div className="max-w-container-sm">
             <Heading level={2} size="lg">

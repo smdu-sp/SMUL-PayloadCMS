@@ -5,7 +5,6 @@ import {
   canReadMedia,
   canUpdateMedia,
 } from "../access/policies/media.ts";
-import { imageEditingCanvasEndpoint } from "../lib/media/image-editing-canvas-endpoint.ts";
 
 export const allowedMediaMimeTypes = [
   "image/jpeg",
@@ -38,7 +37,6 @@ export const Media: CollectionConfig = {
   },
   admin: {
     defaultColumns: ["alt", "usage", "caption", "updatedAt"],
-    baseFilter: () => ({ isDerived: { not_equals: true } }),
     description:
       "Cadastre imagens e documentos usados nos blocos, SEO e identidade visual. O texto alternativo e obrigatorio para acessibilidade.",
     useAsTitle: "alt",
@@ -50,7 +48,6 @@ export const Media: CollectionConfig = {
       },
     },
   },
-  endpoints: [imageEditingCanvasEndpoint],
   upload: {
     displayPreview: true,
     focalPoint: true,

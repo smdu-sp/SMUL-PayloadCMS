@@ -9,7 +9,10 @@ import {
 } from "../../fields/block-appearance";
 
 import { closedSelect, requiredText } from "../../fields/editorial-validation";
-import { createImagePresentationFields } from "../../fields/image-presentation";
+import {
+  createImageCanvasField,
+  createImagePresentationFields,
+} from "../../fields/image-presentation";
 import { createLinkFields } from "../../fields/link";
 import { createBlockAdmin } from "../shared/admin";
 
@@ -98,6 +101,7 @@ export const HeroBlock: Block = {
           "Define como esta imagem é exibida neste bloco. O arquivo original na Mídia não é alterado.",
       },
       fields: createImagePresentationFields({
+        canvas: { mediaFieldName: "image" },
         defaultSize: "full",
         defaultAspectRatio: "16:9",
         defaultFit: "cover",
@@ -143,6 +147,16 @@ export const HeroBlock: Block = {
               "Opcional. Use quando a composicao desktop nao funcionar bem em telas estreitas.",
           },
         },
+        createImageCanvasField(
+          "image",
+          "desktopCanvas",
+          "Enquadramento visual desktop",
+        ),
+        createImageCanvasField(
+          "mobileImage",
+          "mobileCanvas",
+          "Enquadramento visual mobile",
+        ),
         {
           name: "overlay",
           type: "select",

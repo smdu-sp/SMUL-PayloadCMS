@@ -21,31 +21,51 @@ const media: Media = {
 
 type Item = CardsProps["items"][number];
 
+type ImageInspection = {
+  className: string;
+  element: NonNullable<ReturnType<typeof MediaImage>>;
+};
+
 // Inspect the actual props passed through MediaImage. Next's default image
 // export requires its bundler and cannot be rendered directly by Node/tsx.
-function findImage(node: ReactNode): ReturnType<typeof MediaImage> {
+function findImage(node: ReactNode, ancestorClassNames: string[] = []): ImageInspection | null {
   if (Array.isArray(node)) {
     for (const child of node) {
-      const image = findImage(child);
+      const image = findImage(child, ancestorClassNames);
       if (image) return image;
     }
     return null;
   }
   if (!isValidElement(node)) return null;
   if (node.type === MediaImage) {
-    return MediaImage(node.props as Parameters<typeof MediaImage>[0]);
+    const element = MediaImage(node.props as Parameters<typeof MediaImage>[0]);
+    if (!element) return null;
+    return {
+      className: [...ancestorClassNames, element.props.className].filter(Boolean).join(" "),
+      element,
+    };
   }
   if (typeof node.type === "function") {
     try {
-      return findImage((node.type as (props: unknown) => ReactNode)(node.props));
+      return findImage(
+        (node.type as (props: unknown) => ReactNode)(node.props),
+        ancestorClassNames,
+      );
     } catch (e) {
       if (e instanceof Error && e.message.includes("useContext")) {
-        return findImage((node.props as { children?: ReactNode }).children);
+        return findImage(
+          (node.props as { children?: ReactNode }).children,
+          ancestorClassNames,
+        );
       }
       throw e;
     }
   }
-  return findImage((node.props as { children?: ReactNode }).children);
+  const props = node.props as { children?: ReactNode; className?: string };
+  const classNames = props.className
+    ? [...ancestorClassNames, props.className]
+    : ancestorClassNames;
+  return findImage(props.children, classNames);
 }
 
 function renderImage(overrides: Partial<Item> = {}) {
@@ -61,11 +81,11 @@ function renderImage(overrides: Partial<Item> = {}) {
       ...overrides,
     }],
   }));
-  assert.ok(element);
+  assert.ok(element?.element);
   return renderToStaticMarkup(createElement("img", {
-    className: element.props.className,
-    style: element.props.style,
-    alt: element.props.alt,
+    className: element.className,
+    style: element.element.props.style,
+    alt: element.element.props.alt,
   }));
 }
 

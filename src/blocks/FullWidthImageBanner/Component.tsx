@@ -5,6 +5,7 @@ import { classNames } from "../../components/ui/classNames";
 import { resolveLinkHref } from "../../lib/navigation/resolve-link";
 import type { EditorialColorOverrides } from "../../lib/theme/block-color-theme";
 import { MediaImage } from "../shared/MediaImage";
+import { getFocalPointStyle } from "../shared/image-presentation";
 import { normalizeFocalPoint, normalizeHeroOverlay } from "../Hero/Component";
 
 type BannerVariant = "compact" | "default" | "immersive";
@@ -26,6 +27,7 @@ export type FullWidthImageBannerBlockProps = {
   } | null;
   blockType: "fullWidthImageBanner";
   customImageHeight?: number | null;
+  desktopCanvas?: unknown;
   desktopImage: number | Media;
   focalPoint?: "bottom" | "center" | "left" | "right" | "top" | null;
   id?: string | null;
@@ -33,6 +35,7 @@ export type FullWidthImageBannerBlockProps = {
   imageFit?: ImageFit | null;
   link?: BannerLink | null;
   mobileImage?: (number | null) | Media;
+  mobileCanvas?: unknown;
   overlay?: "dark" | "light" | "none" | null;
 };
 
@@ -101,12 +104,14 @@ const overlayClasses = {
 export function FullWidthImageBannerBlock({
   appearance,
   customImageHeight,
+  desktopCanvas,
   desktopImage,
   focalPoint,
   imageHeight,
   imageFit,
   link,
   mobileImage,
+  mobileCanvas,
   overlay,
   variant,
 }: BannerProps) {
@@ -157,6 +162,11 @@ export function FullWidthImageBannerBlock({
         fill={shouldUseFixedHeight}
         media={desktopImage}
         sizes="100vw"
+        style={getFocalPointStyle(desktopImage, {
+          aspectRatio: "original",
+          canvas: desktopCanvas,
+          fit: normalizedFit,
+        })}
       />
       {hasMobileImage ? (
         <MediaImage
@@ -169,6 +179,10 @@ export function FullWidthImageBannerBlock({
           fill={shouldUseFixedHeight}
           media={mobileImage}
           sizes="100vw"
+          style={getFocalPointStyle(
+            typeof mobileImage === "object" ? mobileImage : null,
+            { aspectRatio: "original", canvas: mobileCanvas, fit: normalizedFit },
+          )}
         />
       ) : null}
       {normalizedOverlay !== "none" ? (

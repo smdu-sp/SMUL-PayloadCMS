@@ -5,6 +5,8 @@ import type { Media } from "../../payload-types";
 import { MediaColorScope, Text } from "../../components/ui";
 import { classNames } from "../../components/ui/classNames";
 import { MediaImage } from "../shared/MediaImage";
+import { getFocalPointStyle, type ImagePresentation } from "../shared/image-presentation";
+import { PresentedMediaImage } from "../shared/PresentedMediaImage";
 import type {
   GalleryColumns,
   GalleryInteraction,
@@ -148,6 +150,11 @@ export function GalleryLightbox({
         {images.map((item, index) => {
           const media = item.media as Media;
           const label = mediaLabel(item, index);
+          const presentation: NonNullable<ImagePresentation> = item.imagePresentation ?? {
+            aspectRatio: "4:3",
+            fit: "cover",
+            size: "full",
+          };
 
           return (
             <li key={item.id ?? `${media.id}-${index}`}>
@@ -163,19 +170,15 @@ export function GalleryLightbox({
                 }}
                 type="button"
               >
-                <span
+                <PresentedMediaImage
                   className={classNames(
-                    "relative block aspect-square w-full overflow-hidden sm:aspect-[4/3]",
+                    "block w-full",
                     thumbnailEffectClasses[thumbnailEffect],
                   )}
-                >
-                  <MediaImage
-                    className="object-cover"
-                    fill
-                    media={media}
-                    sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-                  />
-                </span>
+                  media={media}
+                  presentation={presentation}
+                  sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+                />
               </button>
             </li>
           );
@@ -226,6 +229,10 @@ export function GalleryLightbox({
                     fill
                     media={activeItem.media}
                     sizes="100vw"
+                    style={getFocalPointStyle(
+                      typeof activeItem.media === "object" ? activeItem.media : null,
+                      activeItem.imagePresentation,
+                    )}
                   />
                 </div>
                 {activeItem.caption ? (

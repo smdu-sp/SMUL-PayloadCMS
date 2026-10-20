@@ -92,4 +92,22 @@ describe("image presentation fields", () => {
     assert.equal(ratioField.validate?.("square", {} as never), "Escolha uma proporcao aprovada.");
     assert.equal(ratioField.validate?.("1:1", {} as never), true);
   });
+
+  it("adds a non-destructive Canvas bound to the media occurrence", () => {
+    const fields = createImagePresentationFields({
+      canvas: { mediaFieldName: "image" },
+    });
+    const canvas = findNamedField(fields, "canvas");
+
+    assert.equal(fields.length, 4);
+    assert.equal(canvas?.type, "json");
+  const fieldComponent =
+    canvas && "admin" in canvas ? canvas.admin?.components?.Field : undefined;
+
+  assert.ok(fieldComponent && typeof fieldComponent === "object");
+  assert.deepEqual(
+    "clientProps" in fieldComponent ? fieldComponent.clientProps : undefined,
+    { mediaFieldName: "image" },
+  );
+  });
 });

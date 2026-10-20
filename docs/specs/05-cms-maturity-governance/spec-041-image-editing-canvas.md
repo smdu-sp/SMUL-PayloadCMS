@@ -1,204 +1,91 @@
 ---
 spec: SPEC-041
 title: Image Editing Canvas
-status: planned
-source: Specs030–041—MaturidadeEditorialeGovernançadoCMS.md
+status: implemented
+source: Specs030-041-MaturidadeEditorialeGovernancadoCMS.md
 ---
 
-> **Regra de execução:** implemente exclusivamente esta Spec. Não antecipe funcionalidades futuras. Ao finalizar, valide lint, typecheck, testes e build aplicáveis, registre decisões e declare explicitamente o que não foi implementado.
+> **Regra de execucao:** implemente exclusivamente esta Spec. Nao antecipe funcionalidades futuras. Ao finalizar, valide lint, typecheck, testes e build aplicaveis, registre decisoes e declare explicitamente o que nao foi implementado.
 
-# SPEC-041 — Image Editing Canvas
+# SPEC-041 - Image Editing Canvas
 
-## Status
+## Objetivo validado
 
-```text
-DEFERRED / OPTIONAL
-```
-
----
-
-## Objetivo
-
-Avaliar futuramente uma experiência de edição visual de imagens dentro do CMS.
-
-Possíveis funcionalidades:
+Permitir que o editor configure visualmente cada uso de uma imagem sem modificar o asset de `Media`.
 
 ```text
-crop
-resize
-rotate
-focal point
-aspect ratio
-preview
+Media (arquivo original unico)
+  -> Block A: corte/foco/rotacao A
+  -> Block B: corte/foco/rotacao B
+  -> Block C: apresentacao original
 ```
 
----
+A configuracao e parte da ocorrencia do Block em `Pages.layout`, e nao da imagem compartilhada.
 
-## Não confundir com SPEC-034
+## Escopo funcional
 
-SPEC-034:
+O Canvas oferece:
+
+- crop visual em percentuais;
+- ponto focal por clique, arraste ou teclado;
+- rotacao em intervalos de 90 graus;
+- proporcoes fechadas definidas pelo Block;
+- preview no Admin;
+- restauracao da apresentacao;
+- renderizacao responsiva baseada no mesmo asset original.
+
+## Contrato de persistencia
+
+```ts
+type ImageCanvasValue = {
+  crop: { x: number; y: number; width: number; height: number }
+  focalPoint: { x: number; y: number }
+  rotation: 0 | 90 | 180 | 270
+}
+```
+
+Todos os valores geometricos sao percentuais entre `0` e `100`. O crop deve permanecer dentro da imagem e possuir pelo menos `5%` em cada dimensao.
+
+## Relacao com a SPEC-034
+
+A interpretacao inicial previa a geracao de um novo asset. A decisao de produto validada para esta implementacao substitui essa leitura: a SPEC-041 estende os controles da SPEC-034 com uma experiencia visual de enquadramento por ocorrencia. A imagem original deve permanecer intacta e nenhum derivado deve ser criado.
+
+## Arquitetura
 
 ```text
-como uma imagem é apresentada
+Payload Block config
+  -> JSON canvas opcional ao lado do upload
+  -> regra pura em src/domain/image-presentation.ts
+  -> componente Admin apenas edita o JSON da ocorrencia
+  -> renderer aplica o JSON sobre MediaImage
+  -> Media e storage permanecem inalterados
 ```
 
-SPEC-041:
+O editor nao chama endpoint de processamento de imagem. O preview rotacionado e gerado localmente no navegador e salvo apenas como metadados do documento.
 
-```text
-alterar/gerar uma versão do asset
-```
+## Compatibilidade
 
----
+- Campos Canvas sao aditivos e opcionais; os grupos novos de Galeria e Carrossel usam defaults seguros.
+- Pages existentes continuam renderizando com os defaults da SPEC-034.
+- O ponto focal global de `Media` permanece como fallback quando nao ha Canvas por ocorrencia.
+- Campos legados de derivados em `Media` sao preservados temporariamente para evitar uma remocao destrutiva sem migration.
 
-## Requisito antes de implementação
+## Definition of Done
 
-Realizar uma análise separada de:
+- [x] Um mesmo asset pode possuir apresentacoes diferentes em Blocks diferentes.
+- [x] O Canvas nao altera nem cria registros em `Media`.
+- [x] Crop, ponto focal e rotacao sao validados por regra de dominio.
+- [x] Blocks com imagem renderizam o contrato por ocorrencia.
+- [x] Documentos anteriores possuem fallback seguro.
+- [x] A estrategia de migration esta registrada.
+- [x] Tipos do Payload foram regenerados.
+- [x] Lint, typecheck, testes e build aplicaveis sao executados antes da entrega.
 
-- biblioteca utilizada;
-- manutenção;
-- segurança;
-- compatibilidade Payload;
-- storage;
-- geração de derivados;
-- preservação do original.
+## Nao implementado
 
-O arquivo original deve ser preservado.
-
----
-
-## Não implementar agora
-
-A Feature só deve ser retomada se controles da SPEC-034 forem insuficientes para os usuários reais.
-
----
-
-# Definition of Done deste ciclo
-
-Ao final da SPEC-040:
-
-## Editor
-
-Deve conseguir:
-
-```text
-criar Page
-↓
-escolher Blocks em português
-↓
-identificar Blocks visualmente
-↓
-selecionar imagens
-↓
-configurar sua apresentação
-↓
-selecionar ícones
-↓
-usar opções visuais aprovadas
-↓
-Preview
-↓
-Publish
-↓
-Unpublish
-```
-
-de acordo com suas permissões.
-
----
-
-## Admin
-
-Além disso:
-
-```text
-gerenciar usuários
-↓
-acessar configurações restritas
-↓
-consultar logs
-↓
-desativar/reativar conteúdo conforme política
-```
-
----
-
-## O CMS não deve permitir
-
-```text
-CSS arbitrário
-SVG arbitrário
-hard delete editorial normal
-acesso do Editor aos logs
-acesso do Editor a Users
-cores fora do sistema visual
-configuração responsiva manual
-```
-
----
-
-# Resultado arquitetural esperado
-
-```text
-                     PAYLOAD CMS
-                         │
-         ┌───────────────┼────────────────┐
-         │               │                │
-      Content          Visual          Governance
-         │               │                │
-       Pages         SMUL Theme          Roles
-       Blocks        Media Controls      Audit Logs
-       Media         Icon Registry       Lifecycle
-       Links         Style Presets       Permissions
-         │               │                │
-         └───────────────┼────────────────┘
-                         ▼
-                    Editor UX
-                         │
-              ┌──────────┼──────────┐
-              │          │          │
-          Admin Help   Preview    Publishing
-                         │
-                         ▼
-                      Next.js
-```
-
----
-
-# Prioridade sugerida
-
-## P0 — corrigir antes de continuar
-
-```text
-030 — Unpublish Bugfix
-```
-
-## P1 — experiência visual/editorial
-
-```text
-031 — SMUL Identity
-032 — Admin Localization
-033 — Hero Background
-034 — Image Controls
-035 — Icons
-036 — Controlled Styling
-```
-
-## P1 — governança
-
-```text
-037 — Roles
-038 — Audit Logs
-039 — Soft Delete
-```
-
-## P2 — adoção
-
-```text
-040 — User Documentation
-```
-
-## Backlog
-
-```text
-041 — Image Editing Canvas
-```
+- filtros ou ajustes fotograficos;
+- texto ou desenho sobre imagens;
+- overwrite do original;
+- geracao e gerenciamento de derivados;
+- configuracao responsiva manual fora dos campos desktop/mobile ja previstos pelos Blocks;
+- remocao dos campos legados de `Media`.

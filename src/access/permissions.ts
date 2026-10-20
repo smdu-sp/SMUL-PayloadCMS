@@ -10,7 +10,6 @@ export const PERMISSIONS = [
   "media.create",
   "media.update",
   "media.delete",
-  "media.editCanvas",
   "header.read",
   "header.update",
   "footer.read",

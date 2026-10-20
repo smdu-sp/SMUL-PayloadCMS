@@ -5,6 +5,7 @@ import {
   type EditorialColorOverrides,
 } from "../../lib/theme/block-color-theme";
 import { GalleryLightbox } from "./GalleryLightbox";
+import type { ImagePresentation } from "../shared/image-presentation";
 
 export type GalleryColumns = "2" | "3" | "4" | "8";
 export type GalleryPreset = "grid";
@@ -14,6 +15,7 @@ export type GalleryInteraction = "none" | "subtle" | "default" | "emphasized";
 export type GalleryItem = {
   caption?: string | null;
   id?: string | null;
+  imagePresentation?: ImagePresentation;
   media: number | Media;
 };
 

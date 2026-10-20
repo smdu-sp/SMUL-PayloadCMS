@@ -92,10 +92,20 @@ export const seedShowcaseLayout = (
       {
         media: mediaId,
         caption: "Miniaturas abrem a imagem ampliada em um dialog acessivel.",
+        imagePresentation: {
+          size: "full",
+          aspectRatio: "4:3",
+          fit: "cover",
+        },
       },
       {
         media: mediaId,
         caption: "A galeria permite navegacao anterior e proxima pelo teclado.",
+        imagePresentation: {
+          size: "full",
+          aspectRatio: "4:3",
+          fit: "cover",
+        },
       },
     ],
     layout: {
@@ -111,6 +121,11 @@ export const seedShowcaseLayout = (
     items: [
       {
         image: mediaId,
+        imagePresentation: {
+          size: "full",
+          aspectRatio: "16:9",
+          fit: "cover",
+        },
         title: "Primeiro slide",
         description:
           "Use o carrossel para uma sequencia curta de conteudos relacionados.",
@@ -118,12 +133,22 @@ export const seedShowcaseLayout = (
       },
       {
         image: mediaId,
+        imagePresentation: {
+          size: "full",
+          aspectRatio: "16:9",
+          fit: "cover",
+        },
         title: "Segundo slide",
         description:
           "A navegacao manual funciona por botoes e teclado, e a rotacao para quando houver interacao.",
       },
       {
         image: mediaId,
+        imagePresentation: {
+          size: "full",
+          aspectRatio: "16:9",
+          fit: "cover",
+        },
         title: "Terceiro slide",
         description:
           "O schema mantem autoplay desligado por padrao; este exemplo liga a opcao para demonstracao.",

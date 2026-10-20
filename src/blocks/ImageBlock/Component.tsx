@@ -7,11 +7,9 @@ import {
 } from "../../lib/theme/block-color-theme";
 import type { ImagePresentation } from "../shared/image-presentation";
 import {
-  getFocalPointStyle,
-  getImagePresentationClassName,
-  getImagePresentationFitClassName,
+  getImagePresentationSizeClassName,
 } from "../shared/image-presentation";
-import { MediaImage } from "../shared/MediaImage";
+import { PresentedMediaImage } from "../shared/PresentedMediaImage";
 
 type ImageBlockAlignment = "center" | "left" | "right";
 
@@ -55,11 +53,10 @@ export function ImageBlock({
   const presentation: NonNullable<ImagePresentation> = {
     size: imagePresentation?.size ?? "large",
     aspectRatio: imagePresentation?.aspectRatio ?? "original",
+    canvas: imagePresentation?.canvas,
     fit: imagePresentation?.fit ?? "cover",
   };
-  const presentationClassName = getImagePresentationClassName(presentation);
-  const constrainedCrop = presentation.aspectRatio !== "original";
-  const fitClassName = getImagePresentationFitClassName(presentation);
+  const presentationSizeClassName = getImagePresentationSizeClassName(presentation);
   const customTheme = appearance?.scheme === "custom";
 
   const section = (
@@ -70,28 +67,18 @@ export function ImageBlock({
       <Container size="lg">
         <figure
           className={classNames(
-            presentationClassName,
+            presentationSizeClassName,
             alignmentClasses[alignment],
             "overflow-hidden",
           )}
         >
-          {constrainedCrop ? (
-            <div className="relative h-full w-full overflow-hidden rounded-xl border border-border bg-muted">
-              <MediaImage
-                className={fitClassName}
-                fill
-                media={media}
-                sizes="(min-width: 1024px) 75vw, 100vw"
-                style={getFocalPointStyle(media, presentation)}
-              />
-            </div>
-          ) : (
-            <MediaImage
-              className="h-auto w-full rounded-xl border border-border"
-              media={media}
-              sizes="(min-width: 1024px) 75vw, 100vw"
-            />
-          )}
+          <PresentedMediaImage
+            className="rounded-xl border border-border bg-muted"
+            imageClassName="w-full"
+            media={media}
+            presentation={{ ...presentation, size: "full" }}
+            sizes="(min-width: 1024px) 75vw, 100vw"
+          />
           {caption ? (
             <figcaption className="mt-3">
               <Text variant="small">

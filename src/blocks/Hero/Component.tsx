@@ -5,9 +5,10 @@ import { classNames } from "../../components/ui/classNames";
 import type { EditorialColorOverrides } from "../../lib/theme/block-color-theme";
 import {
   getFocalPointStyle,
-  getImagePresentationClassName,
+  type ImagePresentation,
 } from "../shared/image-presentation";
 import { MediaImage } from "../shared/MediaImage";
+import { PresentedMediaImage } from "../shared/PresentedMediaImage";
 import { BlockLink } from "../shared/BlockLink";
 
 type HeroVariant = "centered" | "default" | "split";
@@ -15,8 +16,10 @@ type HeroOverlay = "dark" | "light" | "none";
 type FocalPoint = "bottom" | "center" | "left" | "right" | "top";
 
 type HeroBackground = {
+  desktopCanvas?: unknown;
   focalPoint?: FocalPoint | string | null;
   image?: HeroBlockProps["image"];
+  mobileCanvas?: unknown;
   mobileImage?: HeroBlockProps["image"];
   overlay?: HeroOverlay | string | null;
 };
@@ -150,6 +153,10 @@ export function HeroBlock({
               media={backgroundImage}
               preload
               sizes="100vw"
+              style={getFocalPointStyle(
+                typeof backgroundImage === "object" ? backgroundImage : null,
+                { aspectRatio: "original", canvas: background?.desktopCanvas, fit: "cover" },
+              )}
             />
             {hasMobileBackground ? (
               <MediaImage
@@ -161,6 +168,10 @@ export function HeroBlock({
                 media={mobileBackgroundImage}
                 preload
                 sizes="100vw"
+                style={getFocalPointStyle(
+                  typeof mobileBackgroundImage === "object" ? mobileBackgroundImage : null,
+                  { aspectRatio: "original", canvas: background?.mobileCanvas, fit: "cover" },
+                )}
               />
             ) : null}
             {overlay !== "none" ? (
@@ -219,15 +230,12 @@ export function HeroBlock({
               ) : null}
             </div>
             {split ? (
-              <MediaImage
-                className={`h-auto rounded-xl border border-border ${getImagePresentationClassName(imagePresentation)}`}
+              <PresentedMediaImage
+                className="rounded-xl border border-border"
                 media={image}
+                presentation={imagePresentation as ImagePresentation}
                 priority
                 sizes="(min-width: 1024px) 50vw, 100vw"
-                style={getFocalPointStyle(
-                  typeof image === "object" ? image : null,
-                  imagePresentation,
-                )}
               />
             ) : null}
           </div>

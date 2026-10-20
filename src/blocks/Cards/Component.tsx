@@ -3,13 +3,9 @@ import { BlockThemeScope, Card, Container, Heading, Section, Text } from "../../
 import { classNames } from "../../components/ui/classNames";
 import type { EditorialColorOverrides } from "../../lib/theme/block-color-theme";
 import type { ImagePresentation } from "../shared/image-presentation";
-import {
-  getFocalPointStyle,
-  getImagePresentationClassName,
-} from "../shared/image-presentation";
 import { BlockIcon } from "../shared/BlockIcon";
 import { BlockLink } from "../shared/BlockLink";
-import { MediaImage } from "../shared/MediaImage";
+import { PresentedMediaImage } from "../shared/PresentedMediaImage";
 
 type CardsVariant = "default" | "modalities";
 type CardMediaSource = "icon" | "image" | "none";
@@ -156,23 +152,19 @@ function CardMedia({
   const presentation: NonNullable<ImagePresentation> = {
     size: item.imagePresentation?.size ?? "medium",
     aspectRatio: item.imagePresentation?.aspectRatio ?? "original",
+    canvas: item.imagePresentation?.canvas,
     fit: item.imagePresentation?.fit ?? "cover",
   };
 
   return (
-    <MediaImage
+    <PresentedMediaImage
       className={classNames(
         side ? "mt-1" : "mb-5",
-        getImagePresentationClassName(presentation, {
-          sizeClassNames: side ? cardImageSizeClasses.side : cardImageSizeClasses.top,
-        }),
         "rounded-md border border-(--block-border) bg-(--block-background)",
       )}
       media={item.image}
-      style={getFocalPointStyle(
-        typeof item.image === "object" ? item.image : null,
-        presentation,
-      )}
+      presentation={presentation}
+      sizeClassNames={side ? cardImageSizeClasses.side : cardImageSizeClasses.top}
       sizes={side ? "128px" : "(min-width: 1024px) 33vw, 100vw"}
     />
   );

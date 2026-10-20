@@ -5,7 +5,8 @@ import type { Media } from "../../payload-types";
 import { Card, Heading, Text } from "../../components/ui";
 import { classNames } from "../../components/ui/classNames";
 import { BlockLink } from "../shared/BlockLink";
-import { MediaImage } from "../shared/MediaImage";
+import type { ImagePresentation } from "../shared/image-presentation";
+import { PresentedMediaImage } from "../shared/PresentedMediaImage";
 import type { CarouselAutoplay, CarouselItem, CarouselNavigation, CarouselSlidesPerView } from "./Component";
 
 const AUTOPLAY_DELAY_MS = 600;
@@ -257,6 +258,11 @@ export function CarouselClient({ autoplay, items, navigation, slidesPerView }: C
         >
           {items.map((item, index) => {
             const image = item.image as Media;
+            const presentation: NonNullable<ImagePresentation> = item.imagePresentation ?? {
+              aspectRatio: "16:9",
+              fit: "cover",
+              size: "full",
+            };
 
             return (
               <li
@@ -273,9 +279,12 @@ export function CarouselClient({ autoplay, items, navigation, slidesPerView }: C
                   <Card fullHeight padding="sm" scheme="surface">
                     <article className="flex h-full flex-col">
                       <div className="-m-5 mb-0 overflow-hidden rounded-t-lg bg-muted">
-                        <div className="relative aspect-video w-full">
-                          <MediaImage className="object-cover" fill media={image} sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw" />
-                        </div>
+                        <PresentedMediaImage
+                          className="w-full"
+                          media={image}
+                          presentation={presentation}
+                          sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                        />
                       </div>
                       <div className="flex flex-1 flex-col pt-5">
                         {item.title ? (

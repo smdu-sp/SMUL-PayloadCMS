@@ -1,319 +1,342 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useField } from "@payloadcms/ui";
-import ReactCrop, { type Crop } from "react-image-crop";
+import ReactCrop, { centerCrop, makeAspectCrop, type Crop } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
+import {
+  DEFAULT_IMAGE_CANVAS,
+  getCropCenter,
+  normalizeImageCanvasValue,
+  rotateImageCanvasValue,
+  type ImageCanvasCrop,
+  type ImageCanvasValue,
+} from "../../domain/image-presentation";
 
 type MediaData = {
-  id?: string | number;
-  url?: string;
-  mimeType?: string;
-  alt?: string;
   focalX?: number | null;
   focalY?: number | null;
-  isDerived?: boolean | null;
-  parentMedia?: string | number | {
-    id?: string | number;
-    url?: string;
-    focalX?: number | null;
-    focalY?: number | null;
-  } | null;
-};
-type MediaValue = string | number | MediaData | null | undefined;
-type Props = { data?: MediaData; path?: string };
-type CanvasToast = {
-  message: string;
-  derivedId?: string | number;
-  tone: "success" | "error";
+  id?: number | string;
+  mimeType?: string;
+  url?: string;
 };
 
-export function ImageEditingCanvas({ data, path }: Props) {
-  const mediaField = useField<MediaValue>({ path: path ?? "media" });
-  const aspectRatioField = useField<string | undefined>({ path: "imagePresentation.aspectRatio" });
-  const aspectRatio = aspectRatioField.value ?? "original";
-  const fieldValue = mediaField.value;
-  const selectedMedia = typeof fieldValue === "object" && fieldValue !== null
-    ? fieldValue
+type MediaValue = MediaData | number | string | null | undefined;
+
+type ImageEditingCanvasProps = {
+  mediaFieldName: string;
+  path: string;
+};
+
+const aspectRatioValue = (value: string | null | undefined): number | undefined => {
+  if (value === "1:1") return 1;
+  if (value === "4:3") return 4 / 3;
+  if (value === "16:9") return 16 / 9;
+  if (value === "portrait") return 3 / 4;
+  return undefined;
+};
+
+const cropsEqual = (left: ImageCanvasCrop, right: ImageCanvasCrop): boolean =>
+  ["x", "y", "width", "height"].every((key) =>
+    Math.abs(left[key as keyof ImageCanvasCrop] - right[key as keyof ImageCanvasCrop]) < 0.05,
+  );
+
+export function ImageEditingCanvas({ mediaFieldName, path }: ImageEditingCanvasProps) {
+  const presentationPath = path.replace(/\.canvas$/, "");
+  const parentPath = presentationPath.includes(".")
+    ? presentationPath.slice(0, presentationPath.lastIndexOf("."))
+    : "";
+  const mediaPath = parentPath ? `${parentPath}.${mediaFieldName}` : mediaFieldName;
+  const aspectPath = `${presentationPath}.aspectRatio`;
+  const canvasField = useField<ImageCanvasValue | null>({ path });
+  const mediaField = useField<MediaValue>({ path: mediaPath });
+  const aspectField = useField<string | null>({ path: aspectPath });
+  const selectedMedia = typeof mediaField.value === "object" && mediaField.value !== null
+    ? mediaField.value
     : undefined;
-  const selectedId = typeof fieldValue === "string" || typeof fieldValue === "number"
-    ? fieldValue
+  const selectedId = typeof mediaField.value === "string" || typeof mediaField.value === "number"
+    ? mediaField.value
     : selectedMedia?.id;
-  const [resolvedMedia, setResolvedMedia] = useState<MediaData | undefined>(data);
+  const [resolvedMedia, setResolvedMedia] = useState<MediaData>();
+  const [preview, setPreview] = useState<{
+    error?: string;
+    height: number;
+    key: string;
+    url?: string;
+    width: number;
+  }>();
+  const [draggingFocalPoint, setDraggingFocalPoint] = useState(false);
+  const frameRef = useRef<HTMLDivElement>(null);
+  const justCroppedRef = useRef(false);
   const media = selectedMedia?.url
     ? selectedMedia
     : resolvedMedia?.id && String(resolvedMedia.id) === String(selectedId)
       ? resolvedMedia
       : undefined;
-  const [rotate, setRotate] = useState<0 | 90 | 180 | 270>(0);
-  const frameRef = useRef<HTMLDivElement>(null);
-  const justCroppedRef = useRef(false);
-  const [width, setWidth] = useState<number | undefined>();
-  const [height, setHeight] = useState<number | undefined>();
-  const [previewDimensions, setPreviewDimensions] = useState({ width: 0, height: 0 });
-  const [crop, setCrop] = useState<Crop>({ unit: "%", x: 0, y: 0, width: 100, height: 100 });
-  const [focalPoint, setFocalPoint] = useState({ x: data?.focalX ?? 50, y: data?.focalY ?? 50 });
-  const [draggingFocalPoint, setDraggingFocalPoint] = useState(false);
-  const [busy, setBusy] = useState(false);
-  const [toast, setToast] = useState<CanvasToast | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | undefined>(data?.url);
+  const fallbackFocalPoint = useMemo(() => ({
+    x: media?.focalX ?? 50,
+    y: media?.focalY ?? 50,
+  }), [media?.focalX, media?.focalY]);
+  const canvas = normalizeImageCanvasValue(canvasField.value, fallbackFocalPoint);
+  const crop: Crop = { unit: "%", ...canvas.crop };
+  const cropAspect = aspectRatioValue(aspectField.value);
+  const previewKey = media?.url ? `${media.url}:${canvas.rotation}` : undefined;
+  const currentPreview = previewKey && preview?.key === previewKey ? preview : undefined;
+  const previewDimensions = {
+    height: currentPreview?.height ?? 0,
+    width: currentPreview?.width ?? 0,
+  };
+  const previewError = currentPreview?.error;
+  const previewUrl = currentPreview?.url;
 
-  useEffect(() => {
-    if (!toast) return;
-    const timeout = window.setTimeout(() => setToast(null), 7000);
-    return () => window.clearTimeout(timeout);
-  }, [toast]);
-
-  useEffect(() => {
-    if (!selectedMedia?.url) return;
-
-    queueMicrotask(() => {
-      setResolvedMedia(selectedMedia);
-      setFocalPoint({
-        x: selectedMedia.focalX ?? 50,
-        y: selectedMedia.focalY ?? 50,
-      });
-    });
-  }, [
-    selectedMedia?.focalX,
-    selectedMedia?.focalY,
-    selectedMedia?.id,
-    selectedMedia?.url,
-  ]);
+  const setCanvas = (value: ImageCanvasValue) => {
+    canvasField.setValue(normalizeImageCanvasValue(value, fallbackFocalPoint));
+  };
 
   useEffect(() => {
     if (!selectedId || selectedMedia?.url) return;
     if (resolvedMedia?.id && String(resolvedMedia.id) === String(selectedId)) return;
 
     const controller = new AbortController();
-    fetch(`/api/media/${encodeURIComponent(String(selectedId))}?depth=0`, { signal: controller.signal })
-      .then(async (response) => {
-        if (!response.ok) return undefined;
-        return (await response.json()) as MediaData;
-      })
-      .then((resolvedMedia) => {
-        if (resolvedMedia) {
-          setResolvedMedia(resolvedMedia);
-          setFocalPoint({ x: resolvedMedia.focalX ?? 50, y: resolvedMedia.focalY ?? 50 });
-        }
+    fetch(`/api/media/${encodeURIComponent(String(selectedId))}?depth=0`, {
+      signal: controller.signal,
+    })
+      .then(async (response) => response.ok ? await response.json() as MediaData : undefined)
+      .then((value) => {
+        if (value) setResolvedMedia(value);
       })
       .catch(() => undefined);
 
     return () => controller.abort();
   }, [resolvedMedia?.id, selectedId, selectedMedia?.url]);
 
-  const getCropPixelDimensions = (nextCrop: Crop = crop) => ({
-    width: Math.max(1, Math.round((Number(nextCrop.width ?? 0) / 100) * previewDimensions.width)),
-    height: Math.max(1, Math.round((Number(nextCrop.height ?? 0) / 100) * previewDimensions.height)),
-  });
+  useEffect(() => {
+    if (!media?.url) return;
 
-  const getCropAspect = (nextCrop: Crop = crop) => {
-    const dimensions = getCropPixelDimensions(nextCrop);
-    return dimensions.width / dimensions.height;
-  };
+    let active = true;
+    const key = `${media.url}:${canvas.rotation}`;
+    const image = new Image();
+    image.crossOrigin = "anonymous";
+    image.onload = () => {
+      if (!active) return;
+      const quarterTurn = canvas.rotation === 90 || canvas.rotation === 270;
+      const width = quarterTurn ? image.naturalHeight : image.naturalWidth;
+      const height = quarterTurn ? image.naturalWidth : image.naturalHeight;
+      const preview = document.createElement("canvas");
+      preview.width = width;
+      preview.height = height;
+      const context = preview.getContext("2d");
+      if (!context) return;
+      context.translate(width / 2, height / 2);
+      context.rotate((canvas.rotation * Math.PI) / 180);
+      context.drawImage(image, -image.naturalWidth / 2, -image.naturalHeight / 2);
 
-  const editAspectRatio = aspectRatio === "original" ? undefined :
-    aspectRatio === "1:1" ? 1 :
-    aspectRatio === "4:3" ? 4 / 3 :
-    aspectRatio === "16:9" ? 16 / 9 :
-    aspectRatio === "portrait" ? 3 / 4 : undefined;
+      try {
+        setPreview({ height, key, url: preview.toDataURL("image/png"), width });
+      } catch {
+        setPreview({
+          error: "A origem da imagem nao permite gerar a pre-visualizacao girada.",
+          height,
+          key,
+          url: media.url,
+          width,
+        });
+      }
+    };
+    image.onerror = () => {
+      if (active) {
+        setPreview({
+          error: "Nao foi possivel carregar a imagem para edicao visual.",
+          height: 0,
+          key,
+          width: 0,
+        });
+      }
+    };
+    image.src = media.url;
+
+    return () => {
+      active = false;
+    };
+  }, [canvas.rotation, media?.url]);
+
+  useEffect(() => {
+    if (!cropAspect || !previewDimensions.width || !previewDimensions.height) return;
+    const currentAspect = (
+      canvas.crop.width * previewDimensions.width
+    ) / (
+      canvas.crop.height * previewDimensions.height
+    );
+    if (Math.abs(currentAspect - cropAspect) < 0.01) return;
+
+    const nextCrop = centerCrop(
+      makeAspectCrop(
+        { unit: "%", width: Math.min(canvas.crop.width, 100) },
+        cropAspect,
+        previewDimensions.width,
+        previewDimensions.height,
+      ),
+      previewDimensions.width,
+      previewDimensions.height,
+    );
+    const normalized = normalizeImageCanvasValue({
+      ...canvas,
+      crop: nextCrop,
+      focalPoint: getCropCenter(nextCrop as ImageCanvasCrop),
+    }, fallbackFocalPoint);
+    if (!cropsEqual(normalized.crop, canvas.crop)) canvasField.setValue(normalized);
+  }, [
+    canvas,
+    canvasField,
+    cropAspect,
+    fallbackFocalPoint,
+    previewDimensions.height,
+    previewDimensions.width,
+  ]);
 
   const updateFocalPointFromPointer = (clientX: number, clientY: number) => {
     const frame = frameRef.current;
     if (!frame) return;
     const rect = frame.getBoundingClientRect();
     if (!rect.width || !rect.height) return;
-    setFocalPoint({
-      x: Math.round(Math.max(0, Math.min(100, ((clientX - rect.left) / rect.width) * 100))),
-      y: Math.round(Math.max(0, Math.min(100, ((clientY - rect.top) / rect.height) * 100))),
+    setCanvas({
+      ...canvas,
+      focalPoint: {
+        x: Math.round(Math.max(0, Math.min(100, ((clientX - rect.left) / rect.width) * 100))),
+        y: Math.round(Math.max(0, Math.min(100, ((clientY - rect.top) / rect.height) * 100))),
+      },
     });
   };
 
-  const rotateFocalPoint = (direction: "cw" | "ccw") => {
-    setFocalPoint((point) => direction === "cw"
-      ? { x: 100 - point.y, y: point.x }
-      : { x: point.y, y: 100 - point.x });
-  };
-
-  const centerFocalPointOnCrop = () => {
-    const toPercent = (value: number, total: number) =>
-      crop.unit === "%" ? value : (value / total) * 100;
-    setFocalPoint({
-      x: Math.round(Math.max(0, Math.min(100, toPercent(Number(crop.x ?? 0), previewDimensions.width) + toPercent(Number(crop.width ?? 0), previewDimensions.width) / 2))),
-      y: Math.round(Math.max(0, Math.min(100, toPercent(Number(crop.y ?? 0), previewDimensions.height) + toPercent(Number(crop.height ?? 0), previewDimensions.height) / 2))),
-    });
-  };
-
-  const undoCrop = () => {
-    if (!previewDimensions.width || !previewDimensions.height) return;
-    const parentMedia = media?.parentMedia;
-    const parentMediaId = typeof parentMedia === "object" && parentMedia !== null
-      ? parentMedia.id
-      : parentMedia;
-
-    if (media?.isDerived) {
-      if (!parentMediaId) {
-        setToast({ message: "Não foi possível localizar a mídia original desta edição.", tone: "error" });
-        return;
-      }
-
-      mediaField.setValue(parentMediaId);
-      setCrop({ unit: "%", x: 0, y: 0, width: 100, height: 100 });
-      setRotate(0);
-      setWidth(undefined);
-      setHeight(undefined);
-      setPreviewDimensions({ width: 0, height: 0 });
-      if (typeof parentMedia === "object" && parentMedia?.url) {
-        setResolvedMedia(parentMedia);
-        setPreviewUrl(parentMedia.url);
-        setFocalPoint({ x: parentMedia.focalX ?? 50, y: parentMedia.focalY ?? 50 });
-      } else {
-        setResolvedMedia(undefined);
-        setPreviewUrl(undefined);
-        setFocalPoint({ x: 50, y: 50 });
-      }
-      setToast({ message: "Edição desfeita. A mídia original foi restaurada neste bloco.", tone: "success" });
-      return;
-    }
-
-    setCrop({ unit: "%", x: 0, y: 0, width: 100, height: 100 });
-    setRotate(0);
-    setFocalPoint({ x: media?.focalX ?? 50, y: media?.focalY ?? 50 });
-    const isQuarterTurn = rotate === 90 || rotate === 270;
-    setWidth(isQuarterTurn ? previewDimensions.height : previewDimensions.width);
-    setHeight(isQuarterTurn ? previewDimensions.width : previewDimensions.height);
-  };
-
-  const setCropForDimensions = (nextWidth: number, nextHeight: number) => {
-    if (!previewDimensions.width || !previewDimensions.height) return;
-    const cropWidth = Math.min(100, (nextWidth / previewDimensions.width) * 100);
-    const cropHeight = Math.min(100, (nextHeight / previewDimensions.height) * 100);
-    const nextCrop: Crop = {
-      unit: "%",
-      x: Math.max(0, Math.min(100 - cropWidth, Number(crop.x ?? 0) + (Number(crop.width ?? 0) - cropWidth) / 2)),
-      y: Math.max(0, Math.min(100 - cropHeight, Number(crop.y ?? 0) + (Number(crop.height ?? 0) - cropHeight) / 2)),
-      width: cropWidth,
-      height: cropHeight,
-    };
-    setCrop(nextCrop);
-  };
-
-  const syncHeightFromWidth = (nextWidth: number | undefined, nextCrop: Crop = crop) => {
-    const boundedWidth = nextWidth && previewDimensions.width
-      ? Math.min(nextWidth, previewDimensions.width)
-      : nextWidth;
-    setWidth(boundedWidth);
-    if (boundedWidth) {
-      const nextHeight = Math.min(
-        previewDimensions.height || Number.MAX_SAFE_INTEGER,
-        Math.max(1, Math.round(boundedWidth / getCropAspect(nextCrop))),
-      );
-      setHeight(nextHeight);
-      setCropForDimensions(boundedWidth, nextHeight);
-    }
-  };
-
-  const syncWidthFromHeight = (nextHeight: number | undefined, nextCrop: Crop = crop) => {
-    const boundedHeight = nextHeight && previewDimensions.height
-      ? Math.min(nextHeight, previewDimensions.height)
-      : nextHeight;
-    setHeight(boundedHeight);
-    if (boundedHeight) {
-      const nextWidth = Math.min(
-        previewDimensions.width || Number.MAX_SAFE_INTEGER,
-        Math.max(1, Math.round(boundedHeight * getCropAspect(nextCrop))),
-      );
-      setWidth(nextWidth);
-      setCropForDimensions(nextWidth, boundedHeight);
-    }
-  };
-
-  useEffect(() => {
-    if (!media?.url) return;
-
-    const image = new Image();
-    image.onload = () => {
-      const quarterTurns = rotate / 90;
-      const swapDimensions = quarterTurns % 2 === 1;
-      const canvas = document.createElement("canvas");
-      canvas.width = swapDimensions ? image.naturalHeight : image.naturalWidth;
-      canvas.height = swapDimensions ? image.naturalWidth : image.naturalHeight;
-      setPreviewDimensions({ width: canvas.width, height: canvas.height });
-      setWidth(Math.max(1, Math.round((Number(crop.width ?? 100) / 100) * canvas.width)));
-      setHeight(Math.max(1, Math.round((Number(crop.height ?? 100) / 100) * canvas.height)));
-      const context = canvas.getContext("2d");
-      if (!context) return;
-      context.translate(canvas.width / 2, canvas.height / 2);
-      context.rotate((rotate * Math.PI) / 180);
-      context.drawImage(image, -image.naturalWidth / 2, -image.naturalHeight / 2);
-      setPreviewUrl(canvas.toDataURL("image/png"));
-    };
-    image.src = media.url;
-  }, [crop.height, crop.width, media?.url, rotate]);
+  const resetCanvas = () => setCanvas({
+    ...DEFAULT_IMAGE_CANVAS,
+    focalPoint: fallbackFocalPoint,
+  });
 
   if (media?.mimeType && !media.mimeType.startsWith("image/")) return null;
 
-  async function saveCurrentAsset() {
-    setToast(null);
-    if (!media?.id || !crop.width || !crop.height) {
-      setToast({ message: "Selecione uma área válida para editar a imagem.", tone: "error" });
-      return;
-    }
-    setBusy(true);
-    const nextAltText = (media?.alt ?? "").trim();
-    try {
-      const response = await fetch("/api/media/edit-canvas", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ originalMediaId: String(media.id), rotate, resize: { width, height }, aspectRatio: aspectRatio === "original" ? undefined : aspectRatio, crop, focalPoint, altText: nextAltText }),
-      });
-      const result = (await response.json().catch(() => ({}))) as { message?: string; doc?: MediaData };
-      if (!response.ok || !result.doc?.id) {
-        setToast({ message: result.message ?? "Falha ao gerar a imagem derivada.", tone: "error" });
-        return;
-      }
-      mediaField.setValue(result.doc.id);
-      setResolvedMedia(result.doc);
-      if (result.doc.url) setPreviewUrl(result.doc.url);
-      setToast({ message: "Imagem derivada criada e vinculada a esta página.", derivedId: result.doc.id, tone: "success" });
-    } catch (error) {
-      setToast({ message: error instanceof Error ? error.message : "Falha ao gerar a imagem derivada.", tone: "error" });
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  return <section className="image-editing-canvas">
-    <h2>Editar no Canvas</h2>
-    {media && previewUrl ? <div className="image-editing-canvas__stage">
-      <div className="image-editing-canvas__frame" ref={frameRef} onPointerMove={(event) => {
-        if (draggingFocalPoint) updateFocalPointFromPointer(event.clientX, event.clientY);
-      }} onPointerUp={() => setDraggingFocalPoint(false)} onPointerLeave={() => setDraggingFocalPoint(false)}>
-        <ReactCrop crop={crop} aspect={editAspectRatio} onChange={(_, percentCrop) => { setCrop(percentCrop); const dimensions = getCropPixelDimensions(percentCrop); setWidth(dimensions.width); setHeight(dimensions.height); }} onDragEnd={() => {
-          justCroppedRef.current = true;
-          window.setTimeout(() => { justCroppedRef.current = false; }, 0);
-        }}>
-          <img alt="Pré-visualização da imagem original" src={previewUrl} onClick={(event) => {
-            if (justCroppedRef.current) return;
-            event.stopPropagation();
-            updateFocalPointFromPointer(event.clientX, event.clientY);
-          }} />
-        </ReactCrop>
-        <span className="image-editing-canvas__focal-point" role="button" tabIndex={0} aria-label={`Ponto focal: ${focalPoint.x}% horizontal, ${focalPoint.y}% vertical`} title="Arraste ou clique na imagem para mover o ponto focal" style={{ left: `${focalPoint.x}%`, top: `${focalPoint.y}%` }} onPointerDown={(event) => { event.preventDefault(); event.stopPropagation(); setDraggingFocalPoint(true); event.currentTarget.setPointerCapture(event.pointerId); }} onKeyDown={(event) => { const step = event.shiftKey ? 10 : 1; if (event.key === "ArrowLeft") setFocalPoint((point) => ({ ...point, x: Math.max(0, point.x - step) })); if (event.key === "ArrowRight") setFocalPoint((point) => ({ ...point, x: Math.min(100, point.x + step) })); if (event.key === "ArrowUp") setFocalPoint((point) => ({ ...point, y: Math.max(0, point.y - step) })); if (event.key === "ArrowDown") setFocalPoint((point) => ({ ...point, y: Math.min(100, point.y + step) })); }} />
+  return (
+    <section className="image-editing-canvas">
+      <h3>Editar apresentacao desta imagem</h3>
+      <p className="image-editing-canvas__description">
+        O corte, o foco e a rotacao valem somente para este bloco. O arquivo da biblioteca permanece intacto.
+      </p>
+      {!media ? (
+        <p className="image-editing-canvas__empty">Selecione uma imagem para abrir o Canvas.</p>
+      ) : null}
+      {media && previewUrl ? (
+        <div className="image-editing-canvas__stage">
+          <div
+            className="image-editing-canvas__frame"
+            ref={frameRef}
+            onPointerLeave={() => setDraggingFocalPoint(false)}
+            onPointerMove={(event) => {
+              if (draggingFocalPoint) updateFocalPointFromPointer(event.clientX, event.clientY);
+            }}
+            onPointerUp={() => setDraggingFocalPoint(false)}
+          >
+            <ReactCrop
+              aspect={cropAspect}
+              crop={crop}
+              minHeight={5}
+              minWidth={5}
+              onChange={(_, percentCrop) => {
+                const normalizedCrop = normalizeImageCanvasValue({
+                  ...canvas,
+                  crop: percentCrop,
+                }, fallbackFocalPoint).crop;
+                setCanvas({
+                  ...canvas,
+                  crop: normalizedCrop,
+                  focalPoint: getCropCenter(normalizedCrop),
+                });
+              }}
+              onDragEnd={() => {
+                justCroppedRef.current = true;
+                window.setTimeout(() => {
+                  justCroppedRef.current = false;
+                }, 0);
+              }}
+            >
+              {/* The editor needs the browser's natural image dimensions and a data-URL canvas source. */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                alt="Pre-visualizacao da apresentacao da imagem"
+                src={previewUrl}
+                onClick={(event) => {
+                  if (justCroppedRef.current) return;
+                  updateFocalPointFromPointer(event.clientX, event.clientY);
+                }}
+              />
+            </ReactCrop>
+            <span
+              aria-label={`Ponto focal: ${Math.round(canvas.focalPoint.x)}% horizontal, ${Math.round(canvas.focalPoint.y)}% vertical`}
+              className="image-editing-canvas__focal-point"
+              role="button"
+              style={{ left: `${canvas.focalPoint.x}%`, top: `${canvas.focalPoint.y}%` }}
+              tabIndex={0}
+              title="Arraste, clique ou use as setas para mover o ponto focal"
+              onKeyDown={(event) => {
+                const step = event.shiftKey ? 10 : 1;
+                const next = { ...canvas.focalPoint };
+                if (event.key === "ArrowLeft") next.x -= step;
+                else if (event.key === "ArrowRight") next.x += step;
+                else if (event.key === "ArrowUp") next.y -= step;
+                else if (event.key === "ArrowDown") next.y += step;
+                else return;
+                event.preventDefault();
+                setCanvas({ ...canvas, focalPoint: next });
+              }}
+              onPointerDown={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                setDraggingFocalPoint(true);
+                event.currentTarget.setPointerCapture(event.pointerId);
+              }}
+            />
+          </div>
+        </div>
+      ) : null}
+      <div className="image-editing-canvas__toolbar">
+        <button
+          className="image-editing-canvas__center-focus"
+          disabled={!media}
+          type="button"
+          onClick={() => setCanvas({ ...canvas, focalPoint: getCropCenter(canvas.crop) })}
+        >
+          Centralizar foco no corte
+        </button>
+        <div className="image-editing-canvas__rotation">
+          <button
+            aria-label="Girar para a esquerda"
+            disabled={!media}
+            type="button"
+            onClick={() => setCanvas(rotateImageCanvasValue(canvas, "counterclockwise"))}
+          >
+            ↶
+          </button>
+          <button
+            aria-label="Girar para a direita"
+            disabled={!media}
+            type="button"
+            onClick={() => setCanvas(rotateImageCanvasValue(canvas, "clockwise"))}
+          >
+            ↷
+          </button>
+        </div>
+        <button
+          className="image-editing-canvas__center-focus"
+          disabled={!media}
+          type="button"
+          onClick={resetCanvas}
+        >
+          Restaurar apresentacao
+        </button>
       </div>
-    </div> : null}
-    <div className="image-editing-canvas__toolbar">
-      <label>Largura<input type="number" min={1} max={previewDimensions.width || undefined} value={width ?? ""} onChange={(event) => syncHeightFromWidth(event.target.value ? Number(event.target.value) : undefined)} /></label>
-      <label>Altura<input type="number" min={1} max={previewDimensions.height || undefined} value={height ?? ""} onChange={(event) => syncWidthFromHeight(event.target.value ? Number(event.target.value) : undefined)} /></label>
-      <button className="image-editing-canvas__center-focus" type="button" onClick={undoCrop} disabled={!previewDimensions.width || !previewDimensions.height}>Desfazer edição</button>
-      <button className="image-editing-canvas__center-focus" type="button" onClick={centerFocalPointOnCrop} disabled={!previewDimensions.width || !previewDimensions.height}>Centralizar ponto focal no corte</button>
-      <div className="image-editing-canvas__rotation"><button type="button" onClick={() => { rotateFocalPoint("ccw"); setRotate((rotate + 270) % 360 as 0 | 90 | 180 | 270); }} aria-label="Girar para a esquerda">↶</button><button type="button" onClick={() => { rotateFocalPoint("cw"); setRotate((rotate + 90) % 360 as 0 | 90 | 180 | 270); }} aria-label="Girar para a direita">↷</button></div>
-      <button className="image-editing-canvas__save" type="button" onClick={saveCurrentAsset} disabled={busy}>{busy ? "Salvando..." : "Salvar imagem editada"}</button>
-    </div>
-    {toast ? <div className={`image-editing-canvas__toast image-editing-canvas__toast--${toast.tone}`} role={toast.tone === "error" ? "alert" : "status"}>
-      <span>{toast.message}</span>
-      {toast.derivedId ? <a href={`/admin/collections/media/${encodeURIComponent(String(toast.derivedId))}`}>Abrir mídia</a> : null}
-      <button type="button" aria-label="Fechar aviso" onClick={() => setToast(null)}>×</button>
-    </div> : null}
-  </section>;
+      {previewError ? <p className="image-editing-canvas__error" role="alert">{previewError}</p> : null}
+      <p className="image-editing-canvas__status" role="status">
+        Rotacao: {canvas.rotation}° · foco: {Math.round(canvas.focalPoint.x)}%, {Math.round(canvas.focalPoint.y)}%. Salve a pagina para persistir.
+      </p>
+    </section>
+  );
 }
