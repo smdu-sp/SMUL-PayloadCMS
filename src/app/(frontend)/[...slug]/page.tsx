@@ -1,15 +1,11 @@
-import type { Metadata } from "next";
-import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 
-import { RenderBlocks } from "../../../components/RenderBlocks";
-import { LivePreviewPage } from "../../../components/LivePreviewPage";
+import { PageContent } from "../../../components/PageContent";
 import { HOME_SLUG, pathToPageSlug } from "../../../domain/slug";
 import {
-  getPage,
-  getSiteSettings,
-  resolvePageMetadata,
-} from "../../../lib/payload/get-page";
+  getPageRouteMetadata,
+  getPageRouteState,
+} from "../../../lib/payload/page-route";
 
 export const dynamic = "force-dynamic";
 
@@ -19,45 +15,26 @@ type Args = {
   }>;
 };
 
-async function getRoutePage({ params }: Args, draft: boolean) {
+async function getRouteSlug({ params }: Args): Promise<string | null> {
   const { slug } = await params;
   const pageSlug = pathToPageSlug(slug);
-
-  if (pageSlug === HOME_SLUG) {
-    return null;
-  }
-
-  return getPage(pageSlug, { draft });
+  return pageSlug === HOME_SLUG ? null : pageSlug;
 }
 
-export async function generateMetadata(args: Args): Promise<Metadata> {
-  const { isEnabled } = await draftMode();
-  const page = await getRoutePage(args, isEnabled);
-
-  if (!page) {
-    return {};
-  }
-
-  const siteSettings = await getSiteSettings();
-
-  return resolvePageMetadata(page, siteSettings, { draft: isEnabled });
+export async function generateMetadata(args: Args) {
+  const slug = await getRouteSlug(args);
+  return slug ? getPageRouteMetadata(slug) : {};
 }
 
 export default async function Page(args: Args) {
-  const { isEnabled } = await draftMode();
-  const page = await getRoutePage(args, isEnabled);
+  const slug = await getRouteSlug(args);
+  if (!slug) notFound();
+
+  const { page, draft } = await getPageRouteState(slug);
 
   if (!page) {
     notFound();
   }
 
-  return (
-    <main className="min-h-screen bg-background text-foreground">
-      {isEnabled ? (
-        <LivePreviewPage initialData={page} />
-      ) : (
-        <RenderBlocks blocks={page.layout} />
-      )}
-    </main>
-  );
+  return <PageContent page={page} draft={draft} />;
 }

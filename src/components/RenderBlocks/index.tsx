@@ -1,4 +1,6 @@
+import { Fragment, type ReactNode } from "react";
 import type { Page } from "../../payload-types";
+import type { PageBlockSlug } from "../../blocks/catalog";
 import { ActionBannersBlock } from "../../blocks/ActionBanners/Component";
 import { AlertBoxBlock } from "../../blocks/AlertBox/Component";
 import { CardsBlock } from "../../blocks/Cards/Component";
@@ -23,44 +25,35 @@ type RenderablePageBlock =
   | Parameters<typeof FullWidthImageBannerBlock>[0]
   | Parameters<typeof VideoBlock>[0];
 
+type BlockOf<K extends PageBlockSlug> = Extract<RenderablePageBlock, { blockType: K }>;
+
+const blockRenderers = {
+  hero: (block) => <HeroBlock {...block} />,
+  richText: (block) => <RichTextBlock {...block} />,
+  imageBlock: (block) => <ImageBlock {...block} />,
+  gallery: (block) => <GalleryBlock {...block} />,
+  carousel: (block) => <CarouselBlock {...block} />,
+  videoBlock: (block) => <VideoBlock {...block} />,
+  imageText: (block) => <ImageTextBlock {...block} />,
+  cards: (block) => <CardsBlock {...block} />,
+  cta: (block) => <CTABlock {...block} />,
+  iconGrid: (block) => <IconGridBlock {...block} />,
+  faqAccordion: (block) => <FAQAccordionBlock {...block} />,
+  alertBox: (block) => <AlertBoxBlock {...block} />,
+  actionBanners: (block) => <ActionBannersBlock {...block} />,
+  fullWidthImageBanner: (block) => <FullWidthImageBannerBlock {...block} />,
+} satisfies { [K in PageBlockSlug]: (block: BlockOf<K>) => ReactNode };
+
 export function RenderBlocks({ blocks }: { blocks?: Page["layout"] | null }) {
   if (!blocks?.length) return null;
 
   return (blocks as RenderablePageBlock[]).map((block, index) => {
     const key = block.id || `${block.blockType}-${index}`;
-
-    switch (block.blockType) {
-      case "hero":
-        return <HeroBlock {...block} key={key} />;
-      case "richText":
-        return <RichTextBlock {...block} key={key} />;
-      case "imageBlock":
-        return <ImageBlock {...block} key={key} />;
-      case "gallery":
-        return <GalleryBlock {...block} key={key} />;
-      case "carousel":
-        return <CarouselBlock {...block} key={key} />;
-      case "imageText":
-        return <ImageTextBlock {...block} key={key} />;
-      case "cards":
-        return <CardsBlock {...block} key={key} />;
-      case "cta":
-        return <CTABlock {...block} key={key} />;
-      case "iconGrid":
-        return <IconGridBlock {...block} key={key} />;
-      case "faqAccordion":
-        return <FAQAccordionBlock {...block} key={key} />;
-      case "alertBox":
-        return <AlertBoxBlock {...block} key={key} />;
-      case "actionBanners":
-        return <ActionBannersBlock {...block} key={key} />;
-      case "fullWidthImageBanner":
-        return <FullWidthImageBannerBlock {...block} key={key} />;
-      case "videoBlock":
-        return <VideoBlock {...block} key={key} />;
-      default:
-        return null;
-    }
+    // The mapped type checks each handler; this cast restores the correlation
+    // between a union member and its handler after the dynamic lookup.
+    const render = blockRenderers[block.blockType];
+    if (!render) return null;
+    return <Fragment key={key}>{render(block as never)}</Fragment>;
   });
 }
 

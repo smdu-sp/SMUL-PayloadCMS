@@ -25,7 +25,7 @@ const payloadSecret =
 const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3000";
 
 export const adminLogoComponent = "/components/admin/Logo#Logo";
-export const adminIconComponent = "/components/admin/Icon#Icon"; // 👈 VOLTOU AQUI
+export const adminIconComponent = "/components/admin/Icon#Icon";
 export const customNavComponent = "/components/admin/CustomNav#CustomNav";
 
 export const adminHelpView = {
@@ -60,7 +60,7 @@ export default buildConfig({
       Nav: customNavComponent,
       graphics: {
         Logo: adminLogoComponent,
-        Icon: adminIconComponent, // 👈 REGISTRADO AQUI DE VOLTA
+        Icon: adminIconComponent,
       },
       afterNavLinks: [adminHelpNavLink, adminIconsNavLink],
       beforeLogin: [ldapLoginFormComponent],

@@ -1,5 +1,4 @@
-// src/collections/pages.ts
-import type { CollectionConfig } from "payload";
+import type { Block, CollectionConfig } from "payload";
 import { ActionBannersBlock } from "../blocks/ActionBanners/config.ts";
 import { AlertBoxBlock } from "../blocks/AlertBox/config.ts";
 import { CardsBlock } from "../blocks/Cards/config.ts";
@@ -14,6 +13,7 @@ import { ImageBlock } from "../blocks/ImageBlock/config.ts";
 import { ImageTextBlock } from "../blocks/ImageText/config.ts";
 import { RichTextBlock } from "../blocks/RichText/config.ts";
 import { VideoBlock } from "../blocks/VideoBlock/config.ts";
+import { pageBlockSlugs, type PageBlockSlug } from "../blocks/catalog.ts";
 import {
   canCreatePage,
   canDeletePage,
@@ -30,6 +30,23 @@ import {
 } from "../lib/payload/revalidate-page.ts";
 
 const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3000";
+
+const pageBlockConfigs = {
+  hero: HeroBlock,
+  richText: RichTextBlock,
+  imageBlock: ImageBlock,
+  gallery: GalleryBlock,
+  carousel: CarouselBlock,
+  videoBlock: VideoBlock,
+  imageText: ImageTextBlock,
+  cards: CardsBlock,
+  cta: CTABlock,
+  iconGrid: IconGridBlock,
+  faqAccordion: FAQBlock,
+  alertBox: AlertBoxBlock,
+  actionBanners: ActionBannersBlock,
+  fullWidthImageBanner: FullWidthImageBannerBlock,
+} satisfies Record<PageBlockSlug, Block>;
 
 export const getPageLivePreviewUrl = (data: Record<string, unknown>): string | null => {
   if (typeof data.slug !== "string" || !data.slug.trim()) {
@@ -125,7 +142,6 @@ export const Pages: CollectionConfig = {
       },
       validate: validatePageSlug,
     },
-    // 2. ADICIONADO AQUI: Campo virtual do tipo 'ui' para renderizar o botão na tabela
     {
       name: "viewPage",
       type: "ui",
@@ -160,22 +176,7 @@ export const Pages: CollectionConfig = {
       name: "layout",
       type: "blocks",
       label: "Blocos de conteudo",
-      blocks: [
-        HeroBlock,
-        RichTextBlock,
-        ImageBlock,
-        GalleryBlock,
-        CarouselBlock,
-        VideoBlock,
-        ImageTextBlock,
-        CardsBlock,
-        CTABlock,
-        IconGridBlock,
-        FAQBlock,
-        AlertBoxBlock,
-        ActionBannersBlock,
-        FullWidthImageBannerBlock,
-      ],
+      blocks: pageBlockSlugs.map((slug) => pageBlockConfigs[slug]),
       admin: {
         description:
           "Monte a pagina escolhendo blocos prontos, agrupados por Conteúdo, Mídia e Ações. As aparências usam opções controladas pelo Design System; nenhum bloco executa contador ou timer automático nesta fase.",

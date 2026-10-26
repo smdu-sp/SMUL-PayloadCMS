@@ -1,12 +1,12 @@
-# Base CMS Editorial
+# Meu Imóvel Regular
 
-Base em Next.js e Payload CMS para criar portais editoriais administraveis, com Pages, Blocks, Media, navegacao, preview, publicacao, permissoes, auditoria e documentacao de uso no Admin.
+Portal Meu Imóvel Regular, construído em Next.js e Payload CMS sobre uma base editorial reutilizável. A aplicação organiza conteúdo, orienta o público e encaminha para serviços oficiais; as regras de domínio são desenvolvidas apenas quando uma spec as autoriza.
 
-Este repositorio deve servir como fundacao reutilizavel de CMS. Regras, textos, links oficiais, identidade visual e conteudos especificos de um projeto devem ser tratados como configuracao, seed, spec de dominio ou extensao propria, nao como premissa fixa da base.
+A base CMS oferece Pages, Blocks, Media, navegação, preview, publicação, permissões, auditoria e documentação do Admin. Textos, links oficiais, identidade visual e regras específicas do portal pertencem ao CMS, a seeds revisáveis ou a specs próprias.
 
 A fonte canonica das specs esta em [docs/specs/README.md](./docs/specs/README.md).
 
-## Objetivo Da Base
+## Base editorial e escopo do portal
 
 A base fornece:
 
@@ -20,7 +20,7 @@ A base fornece:
 - roles, permissoes e logs de auditoria;
 - padrao de evolucao por specs.
 
-A base nao deve:
+A plataforma não deve:
 
 - codificar conteudo institucional definitivo;
 - acoplar regras de negocio de um dominio especifico aos componentes React;
@@ -66,13 +66,13 @@ As specs ficam separadas por dominio funcional:
 docs/specs/
   00-project/
   01-cms-core/
-  02-domain/
+  02-domain(staged)/
   03-design-system/
   04-cms-foundation-ii/
   05-cms-maturity-governance/
 ```
 
-Use [docs/specs/README.md](./docs/specs/README.md) para navegar pela lista completa e [docs/specs/modelo-de-spec.md](./docs/specs/modelo-de-spec.md) como modelo para novas specs.
+Use [docs/specs/README.md](./docs/specs/README.md) para navegar pela lista completa e [docs/specs/modelo-de-spec.md](./docs/specs/modelo-de-spec.md) como modelo para novas specs. As specs em `02-domain(staged)` estão preparadas para uma etapa futura; sua presença não indica implementação no código.
 
 ## Ordem De Trabalho
 

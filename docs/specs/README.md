@@ -10,7 +10,7 @@ As specs estao organizadas por dominio funcional. O numero da spec continua send
 docs/specs/
   00-project/
   01-cms-core/
-  02-domain/
+  02-domain(staged)/
   03-design-system/
   04-cms-foundation-ii/
   05-cms-maturity-governance/
@@ -41,13 +41,13 @@ Fundacao editorial inicial: Payload, Pages, Blocks, routing, drafts, seed e UX d
 
 ## 02 Domain
 
-Regras de negocio e integracoes oficiais, isoladas de React e do CMS visual.
+Specs de regras de negócio e integrações oficiais em preparação. Esta pasta ainda não representa funcionalidades implementadas.
 
 | Spec | Arquivo | Tema |
 |---|---|---|
-| SPEC-007 | [spec-007-domain-eligibility.md](./02-domain/spec-007-domain-eligibility.md) | Elegibilidade de dominio. |
-| SPEC-008 | [spec-008-cadi-situation-integration.md](./02-domain/spec-008-cadi-situation-integration.md) | Boundary de situacao/CEDI. |
-| SPEC-009 | [spec-009-documents-and-outorga.md](./02-domain/spec-009-documents-and-outorga.md) | Documentos e outorga. |
+| SPEC-007 | [spec-007-domain-eligibility.md](<./02-domain(staged)/spec-007-domain-eligibility.md>) | Elegibilidade de dominio. |
+| SPEC-008 | [spec-008-cadi-situation-integration.md](<./02-domain(staged)/spec-008-cadi-situation-integration.md>) | Boundary de situacao/CEDI. |
+| SPEC-009 | [spec-009-documents-and-outorga.md](<./02-domain(staged)/spec-009-documents-and-outorga.md>) | Documentos e outorga. |
 
 ## 03 Design System
 
