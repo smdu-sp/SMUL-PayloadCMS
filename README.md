@@ -137,6 +137,19 @@ Remove-Item Env:NODE_ENV
 npm.cmd run dev
 ```
 
+```Linux
+NODE_ENV=development npm run seed:dev-admin
+npm run dev
+
+ou
+
+export NODE_ENV=development
+npm run seed:dev-admin
+unset NODE_ENV
+npm run dev
+
+```
+
 Nesse fluxo:
 
 - `$env:NODE_ENV = 'development'` define temporariamente o ambiente de desenvolvimento na sessao atual do PowerShell. Isso permite carregar `.env.development.local` e habilita o modo LDAP `mock`;
