@@ -12,6 +12,7 @@ import { PresentedMediaImage } from "../shared/PresentedMediaImage";
 import { BlockLink } from "../shared/BlockLink";
 
 type HeroVariant = "centered" | "default" | "split";
+type HeroImageMode = "background" | "none" | "side";
 type HeroOverlay = "dark" | "light" | "none";
 type FocalPoint = "bottom" | "center" | "left" | "right" | "top";
 
@@ -33,6 +34,7 @@ type HeroAppearance = {
 type HeroBlockWithBackgroundProps = Omit<HeroBlockProps, "appearance" | "background"> & {
   appearance?: HeroAppearance | null;
   background?: HeroBackground | null;
+  imageMode?: HeroImageMode | string | null;
 };
 
 export function normalizeHeroVariant(
@@ -93,6 +95,29 @@ const overlayClasses: Record<HeroOverlay, string> = {
   none: "",
 };
 
+export function resolveHeroMediaVisibility({
+  hasBackgroundImage,
+  hasSideImage,
+  imageMode,
+  variant,
+}: {
+  hasBackgroundImage: boolean;
+  hasSideImage: boolean;
+  imageMode?: HeroImageMode | string | null;
+  variant: HeroVariant;
+}): { hasBackground: boolean; split: boolean } {
+  if (imageMode === "none") return { hasBackground: false, split: false };
+  if (imageMode === "background") {
+    return { hasBackground: hasBackgroundImage, split: false };
+  }
+  if (imageMode === "side") {
+    return { hasBackground: false, split: hasSideImage };
+  }
+
+  // Existing Pages have no imageMode and may intentionally contain both images.
+  return { hasBackground: hasBackgroundImage, split: variant === "split" && hasSideImage };
+}
+
 export function HeroBlock({
   appearance,
   background,
@@ -100,6 +125,7 @@ export function HeroBlock({
   description,
   eyebrow,
   image,
+  imageMode,
   imagePresentation,
   title,
   variant,
@@ -113,12 +139,17 @@ export function HeroBlock({
   const normalizedTone = normalizeHeroTone(appearance?.scheme);
   const customTheme = appearance?.scheme === "custom";
   const hasImage = Boolean(image && typeof image === "object" && image.url);
-  const split = normalizedVariant === "split" && hasImage;
   const backgroundImage = background?.image;
   const mobileBackgroundImage = background?.mobileImage;
-  const hasBackground = Boolean(
+  const hasBackgroundImage = Boolean(
     backgroundImage && typeof backgroundImage === "object" && backgroundImage.url,
   );
+  const { hasBackground, split } = resolveHeroMediaVisibility({
+    hasBackgroundImage,
+    hasSideImage: hasImage,
+    imageMode,
+    variant: normalizedVariant,
+  });
   const hasMobileBackground = Boolean(
     hasBackground &&
       mobileBackgroundImage &&
@@ -231,7 +262,7 @@ export function HeroBlock({
             </div>
             {split ? (
               <PresentedMediaImage
-                className="rounded-xl border border-border"
+                className="rounded-xl border border-(--block-border)"
                 media={image}
                 presentation={imagePresentation as ImagePresentation}
                 priority

@@ -19,7 +19,7 @@ Toda mudanca de schema deve ser classificada antes do patch:
 
 ## Estado atual
 
-As mudancas das SPECS 019 a 027 foram classificadas assim:
+As mudancas de schema registradas neste projeto foram classificadas assim:
 
 | Area | Mudanca | Classificacao | Migration |
 |---|---|---|---|
@@ -27,6 +27,16 @@ As mudancas das SPECS 019 a 027 foram classificadas assim:
 | `Pages.layout` | Novo Block `imageBlock` | Novo Block | Nao exige migration; dados antigos continuam renderizando. |
 | `Pages.layout` | Novo Block `gallery` | Novo Block | Nao exige migration; dados antigos continuam renderizando. |
 | `Pages.layout` | Novo Block `carousel` | Novo Block | Nao exige migration; dados antigos continuam renderizando. |
+| `hero.imageMode` | Novo select opcional para sem imagem, fundo ou imagem lateral; `variant`, `image` e `background` preservados | Novo field opcional | Nao exige backfill de conteudo. Sem valor, o renderer usa a apresentacao antiga; o deploy precisa da atualizacao incremental do schema do banco. |
+| `cards.items` | Campos de midia reordenados no Admin sem alterar nomes, tipos ou relacionamentos | Ordem de fields | Nao exige migration; os documentos existentes conservam os mesmos caminhos e valores. |
+| `cards.items.imageLayout` | Novo select opcional para imagem contida ou ocupando o topo | Novo field opcional | Nao exige backfill; valores ausentes ou desconhecidos usam a imagem contida. O deploy precisa da atualizacao incremental do schema do banco. |
+| `carousel.display.contentAlignment` | Novo select opcional para alinhar textos e link de cada slide | Novo field opcional | Nao exige backfill; valores ausentes ou desconhecidos ficam alinhados a esquerda. O deploy precisa da atualizacao incremental do schema do banco. |
+| `Footer.logo` | Novo upload/relacionamento opcional com `Media` | Novo relacionamento opcional | Plano de migration incremental abaixo; registros antigos permanecem com `null`, sem backfill. |
+| `Footer.socialLinks[].label` | Nome passa a opcional quando ha icone social valido | Relaxamento de validacao | Links antigos continuam validos. Renderer usa o nome do catalogo de icones como nome acessivel para links sem texto. |
+| `Media.upload.mimeTypes` | SVG e AVIF passam a ser formatos de imagem permitidos; SVG recebe verificacao do Payload e CSP restritiva | Politica de upload | Nao altera colunas nem exige migration; arquivos antigos continuam validos. |
+| `richText.content` | Novos valores opcionais de fonte e cor semantica no estado Lexical | Expansao compativel do JSON | Nao exige migration; estados antigos e desconhecidos continuam com a aparencia padrao. |
+| `cards.items.description`, `cta.description` | Descricao do card passa a opcional e aceita ate 300 caracteres; CTA aceita ate 300 caracteres | Relaxamento de validacao | Dados antigos permanecem validos; atualizar o schema incrementalmente para permitir `null` no card. |
+| `cta.title`, `faqAccordion.title`, `iconGrid.title`, `imageText.title` | Titulos de secao passam a opcionais | Relaxamento de validacao | Dados antigos permanecem validos; atualizar constraints de nulidade no banco e omitir headings vazios no renderer. |
 | `cta.appearance` | Paleta opcional expandida de `background`, `foreground` e `accent` para `background`, `foreground`, `brand`, `action` e `accent`; novo valor `custom` no tema | Novos fields opcionais e novo enum | Nao exige migration de conteudo; documentos antigos continuam usando presets, e valores customizados inativos permanecem armazenados. |
 | `imageBlock.appearance` | Novo grupo opcional com presets e paleta customizada restrita a `background` e `foreground` no Admin | Novos fields opcionais e novo enum | Nao exige migration; documentos antigos continuam usando o tema `default`. |
 | `videoBlock.appearance` | Novo grupo opcional com presets e paleta customizada restrita a `background` e `foreground` no Admin | Novos fields opcionais e novo enum | Nao exige migration; documentos antigos continuam usando o tema `default`. |
@@ -106,6 +116,14 @@ inválidos recriaria o estado inseguro. Antes de aplicar em ambiente compartilha
 Como o repositório ainda não possui baseline integral do schema Payload, o arquivo
 de backfill não deve ser interpretado como essa baseline nem aplicado isoladamente
 em uma base vazia.
+
+## Plano incremental para `Footer.logo`
+
+1. Antes do deploy, criar backup da base e validar restauracao em copia. Confirmar a baseline de migrations Payload usada pelo ambiente. Este repositorio ainda nao fornece baseline integral, portanto a alteracao nao deve ser executada como migration isolada.
+2. Aplicar uma alteracao incremental que adicione `footer.logo` como relacao nullable para `media`, preservando os demais campos do Global. Nao converter nem preencher os registros atuais.
+3. Publicar o renderer condicional junto ao schema. Quando o relacionamento estiver vazio ou nao populado, manter o rodape atual.
+4. Em copia da base, validar leitura e edicao de Footer antigo, gravacao e remocao do novo logo, e renderizacao de rodape com e sem logo. Em producao, aplicar a mesma migration antes de disponibilizar o novo campo no Admin.
+5. Rollback de codigo: manter a coluna nullable; sua remocao posterior exigiria inventario de referencias, backup e outra migration. Nao executar rollback destrutivo automatico.
 
 ## Fixture de compatibilidade
 

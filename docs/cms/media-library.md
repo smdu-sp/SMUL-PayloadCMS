@@ -57,3 +57,7 @@ O Payload nao gera derivados de imagem nesta fase. Isso evita adicionar processa
 - Nenhum catalogo fechado de icones foi criado.
 - Nenhum tratamento especial para SVG foi implementado porque SVG nao esta permitido.
 - Nenhum novo Block de Media Highlight ou Hero Countdown foi criado.
+
+## Atualizacao dos testes manuais — fase 5
+
+SVG (`image/svg+xml`) e AVIF (`image/avif`) foram incluidos nos formatos de imagem. O Payload valida o conteudo de SVG antes de aceita-lo; a rota de entrega aplica CSP que bloqueia recursos externos e scripts, e o frontend exibe SVG sem passar pelo otimizador de imagem. JPEG, PNG, WebP, GIF e PDF permanecem permitidos. Essa mudanca de politica nao altera o schema nem arquivos ja salvos.

@@ -32,13 +32,11 @@ export const FAQBlock: Block = {
       name: "title",
       type: "text",
       label: "Titulo da secao",
-      required: true,
       maxLength: 100,
-      validate: requiredText("Informe o titulo das perguntas frequentes."),
       admin: {
         ...characterLimitAdmin(100),
         description:
-          "Titulo exibido antes da lista de perguntas.",
+          "Opcional. Titulo exibido antes da lista de perguntas.",
       },
     },
     {

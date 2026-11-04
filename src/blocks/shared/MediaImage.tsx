@@ -50,6 +50,7 @@ export function MediaImage({
 
   const src = localizeMediaUrl(media.url);
   const eager = preload ?? priority;
+  const unoptimized = media.mimeType === "image/svg+xml";
 
   if (fill) {
     return (
@@ -61,6 +62,7 @@ export function MediaImage({
         sizes={sizes}
         src={src}
         style={style}
+        unoptimized={unoptimized}
       />
     );
   }
@@ -74,6 +76,7 @@ export function MediaImage({
       sizes={sizes}
       src={src}
       style={style}
+      unoptimized={unoptimized}
       width={media.width || 1200}
     />
   );

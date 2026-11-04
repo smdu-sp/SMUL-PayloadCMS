@@ -15,7 +15,7 @@ Este guia registra como montar as três composições de referência no catálog
 
 ### Home-like
 
-1. **Destaque principal** — escolha o modelo de apresentação e, se necessário, imagem e ação principal.
+1. **Destaque principal** — escolha o uso da imagem (sem imagem, fundo ou lateral), ajuste o alinhamento do conteúdo e, se necessário, configure a ação principal.
 2. **Texto editorial** — adicione a introdução.
 3. **Cards e grades de benefícios** — selecione o modelo **Modalidades** para opções de regularização.
 4. **Faixas de ação** — adicione e reordene as chamadas; selecione o tom visual de cada faixa.

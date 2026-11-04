@@ -43,15 +43,17 @@ export function FAQAccordionBlock({
       scheme={customTheme ? "default" : effectiveTone}
     >
       <Container size="md">
-        <Heading level={2} size="lg">
-          <span className="text-balance wrap-break-word">{title}</span>
-        </Heading>
+        {title ? (
+          <Heading level={2} size="lg">
+            <span className="text-balance wrap-break-word">{title}</span>
+          </Heading>
+        ) : null}
         {description ? (
-          <div className="mt-4">
+          <div className={title ? "mt-4" : ""}>
             <Text variant="muted">{description}</Text>
           </div>
         ) : null}
-        <ColorScope scheme="surface" className="mt-8 divide-y divide-(--block-border) rounded-lg border border-(--block-border)">
+        <ColorScope scheme="surface" className={`${title || description ? "mt-8 " : ""}divide-y divide-(--block-border) rounded-lg border border-(--block-border)`}>
           {items.map((item) => (
             <details className="group" key={item.id}>
               <summary className="flex cursor-pointer list-none items-start justify-between gap-4 px-5 py-4 font-semibold text-(--block-foreground) outline-none focus-visible:outline focus-visible:outline-offset-[-3px] focus-visible:outline-focus [&::-webkit-details-marker]:hidden">

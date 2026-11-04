@@ -34,7 +34,7 @@ export function BlockLink({
 
   return (
     <Link
-      className="font-semibold text-[var(--block-foreground)] underline decoration-2 underline-offset-4 hover:decoration-4"
+      className="rounded-sm font-semibold text-[var(--block-foreground)] underline decoration-2 underline-offset-4 transition-[text-decoration-thickness,background-color] hover:decoration-4 hover:bg-[var(--block-foreground)]/10 focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-focus motion-reduce:transition-none"
       href={resolvedLink.href}
       rel={resolvedLink.rel}
       target={resolvedLink.target}

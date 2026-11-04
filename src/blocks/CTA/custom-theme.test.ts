@@ -6,6 +6,19 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { CTABlock } from "./Component";
 
 describe("CTA custom theme", () => {
+  it("gives the institutional variant a brand surface without discarding other chosen schemes", () => {
+    const render = (scheme: "default" | "muted") => renderToStaticMarkup(createElement(CTABlock, {
+      action: { label: "", type: "external", url: "" },
+      appearance: { scheme },
+      blockType: "cta",
+      title: "Chamada institucional",
+      variant: "brand",
+    }));
+
+    assert.match(render("default"), /data-color-scheme="brand"/);
+    assert.match(render("muted"), /data-color-scheme="muted"/);
+  });
+
   it("applies the local palette to the complete CTA surface", () => {
     const markup = renderToStaticMarkup(createElement(CTABlock, {
       action: { label: "", type: "external", url: "" },
@@ -48,5 +61,18 @@ describe("CTA custom theme", () => {
     assert.doesNotMatch(markup, /--block-background:#ff0000/);
     assert.doesNotMatch(markup, /--block-foreground:#00ff00/);
     assert.match(markup, /data-color-scheme="surface"/);
+  });
+
+  it("omits an empty title and gives strong emphasis a visible treatment", () => {
+    const markup = renderToStaticMarkup(createElement(CTABlock, {
+      action: { label: "", type: "external", url: "" },
+      appearance: { emphasis: "strong" },
+      blockType: "cta",
+      description: "Orientacao sem titulo",
+      variant: "default",
+    }));
+    assert.doesNotMatch(markup, /<h2/);
+    assert.match(markup, /Orientacao sem titulo/);
+    assert.match(markup, /border-2 shadow-lg/);
   });
 });

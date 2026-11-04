@@ -166,6 +166,20 @@ export const CarouselBlock: Block = {
           ),
           options: navigationOptions,
         },
+        {
+          name: "contentAlignment",
+          type: "select",
+          label: "Alinhamento do conteudo dos slides",
+          defaultValue: "left",
+          validate: closedSelect(
+            ["left", "center"],
+            "Escolha um alinhamento de conteudo aprovado.",
+          ),
+          options: [
+            { label: "A esquerda", value: "left" },
+            { label: "Centralizado", value: "center" },
+          ],
+        },
       ],
     },
     {

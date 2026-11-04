@@ -16,7 +16,7 @@ Este catalogo registra a base real encontrada no projeto durante a SPEC-018. Ele
 | Video Block | `src/blocks/VideoBlock/config.ts` | `src/blocks/VideoBlock/Component.tsx` | Proporcoes `16:9`, `4:3`, `1:1`; temas preset ou `custom` com `background` e `foreground` | Video incorporado de YouTube ou Vimeo com titulo acessivel e legenda opcional. |
 | ImageText | `src/blocks/ImageText/config.ts` | `src/blocks/ImageText/Component.tsx` | `image-left`, `image-right`; fallbacks legados `left` e `right` | Secoes de duas colunas com midia, titulo, rich text e acao complementar opcional. |
 | Cards | `src/blocks/Cards/config.ts` | `src/blocks/Cards/Component.tsx` | `default`, `modalities`; temas preset ou `custom` com `background`, `foreground` e `accent` | Listas editoriais em grade com titulo, resumo, itens, icone, descricao e link opcional; a variant `modalities` cobre modalidades sem duplicar Block. |
-| CTA | `src/blocks/CTA/config.ts` | `src/blocks/CTA/Component.tsx` | Variants `default`, `brand`, `compact`; temas preset ou `custom`; paleta local com `background`, `foreground`, `brand`, `action` e `accent` | Chamadas de acao pontuais ou finais com titulo, descricao e link obrigatorio. Cores sem contraste recebem fallback seguro no renderer. |
+| CTA | `src/blocks/CTA/config.ts` | `src/blocks/CTA/Component.tsx` | Variants `default`, `brand`, `compact`; temas preset ou `custom`; paleta local com `background`, `foreground`, `brand`, `action` e `accent` | Chamadas de acao pontuais ou finais com titulo e descricao opcionais e link obrigatorio. Cores sem contraste recebem fallback seguro no renderer. |
 | Icon Grid | `src/blocks/IconGrid/config.ts` | `src/blocks/IconGrid/Component.tsx` | `default`, `compact`; temas preset ou `custom` com `background`, `foreground` e `accent` | Grade compacta de itens com icone, texto curto e link opcional, priorizada para paginas de modalidades. |
 | FAQ / Accordion | `src/blocks/FAQ/config.ts` | `src/blocks/FAQ/Component.tsx` | `default`, `compact`; temas preset ou `custom` com `background` e `foreground` | Lista acessivel de perguntas e respostas com rich text, renderizada com `details` e `summary`. |
 | Alert Box | `src/blocks/AlertBox/config.ts` | `src/blocks/AlertBox/Component.tsx` | `info`, `success`, `warning`, `danger`; temas preset ou `custom` com `background` e `foreground` | Aviso editorial com tom controlado pelo Design System, rich text e link opcional. |
@@ -119,3 +119,29 @@ Este catalogo registra a base real encontrada no projeto durante a SPEC-018. Ele
 - Acessibilidade: regiao com `aria-roledescription`, slides identificados, foco visivel e controles anterior/proximo por botao.
 - Autoplay: desligado por padrao; quando ligado, respeita `prefers-reduced-motion`, possui botao de pausa e para apos interacao do usuario.
 - Mantido fora do escopo: swipe gestual customizado, loop infinito visual complexo, temporizador configuravel e efeitos livres.
+
+## Ajustes dos testes manuais — fase 2
+
+- Hero oferece uma escolha opcional de uso da imagem: sem imagem, fundo ou lateral. As configuracoes relevantes aparecem juntas no Admin.
+- `hero.variant` permanece no schema, oculto no Admin, para preservar documentos antigos. Sem `imageMode`, o renderer conserva o comportamento anterior, inclusive quando fundo e imagem lateral coexistem.
+- Cards mantem os mesmos campos e valores persistidos; apenas a ordem de edicao coloca icone e imagem antes do texto de cada item.
+
+## Ajustes dos testes manuais — fase 3
+
+- `Card`, Imagem, Video e imagem lateral do Hero usam a borda do proprio tema local. Links textuais compartilhados recebem feedback de hover e foco visivel por teclado.
+- Cards com imagem podem ocupar todo o topo; documentos sem a nova escolha mantem a imagem contida. Imagens dos cards deixam de ter borda propria.
+- O lightbox da galeria exibe a imagem em uma superficie escura e reorganiza os controles em telas pequenas, preservando a navegacao por teclado.
+- O carrossel pode centralizar titulo, descricao e link de cada slide. Sem configuracao, o conteudo segue alinhado a esquerda.
+
+## Ajustes dos testes manuais — fase 4
+
+- Cards aceitam descricao opcional de ate 300 caracteres. A descricao do CTA tambem aceita ate 300 caracteres.
+- CTA, FAQ, Grade de Icones e Midia e Texto aceitam titulo de secao opcional e omitem o heading quando ele estiver vazio. O titulo do Hero continua obrigatorio como H1 principal.
+- A enfase forte do CTA ganha borda e sombra proprias; os valores ja salvos continuam validos.
+- Footer aceita logo opcional e links sociais somente com icone, com nome acessivel derivado do catalogo fechado. O nome visivel continua opcional.
+
+## Ajustes dos testes manuais — fase 5
+
+- Texto Editorial oferece Inter, Open Sans e Lora alem das fontes anteriores, e cores de texto vinculadas aos papeis semanticos com contraste do tema do bloco.
+- O menu e o formulario de criacao de tabelas experimentais do Payload recebem traducao em portugues por um adaptador isolado; a estrutura das tabelas salvas nao muda.
+- Media aceita SVG e AVIF. SVG passa pela verificacao nativa do Payload, recebe CSP restritiva e e exibido sem otimizacao pelo Next.

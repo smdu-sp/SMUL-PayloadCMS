@@ -190,7 +190,7 @@ export function GalleryLightbox({
         <div
           aria-labelledby={titleId}
           aria-modal="true"
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/55 p-4 text-[var(--block-foreground)] backdrop-blur-md"
+          className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/85 p-3 text-[var(--block-foreground)] backdrop-blur-sm sm:p-6"
           ref={dialogRef}
           role="dialog"
           tabIndex={-1}
@@ -202,7 +202,7 @@ export function GalleryLightbox({
               </h2>
               <button
                 aria-label="Fechar galeria"
-                className="rounded-md border border-[var(--block-border)] px-4 py-2 text-sm font-semibold text-[var(--block-foreground)] hover:bg-[var(--block-foreground)]/10 focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-focus"
+                className="rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-[var(--block-foreground)] transition-colors hover:bg-white/20 focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-focus motion-reduce:transition-none"
                 onClick={close}
                 type="button"
               >
@@ -210,11 +210,11 @@ export function GalleryLightbox({
               </button>
             </div>
 
-            <div className="grid min-h-0 items-center gap-4 md:grid-cols-[auto_1fr_auto]">
+            <div className="grid min-h-0 grid-cols-2 items-center gap-3 md:grid-cols-[auto_minmax(0,1fr)_auto] md:gap-5">
               {hasMultiple ? (
                 <button
                   aria-label="Imagem anterior"
-                  className="rounded-md border border-[var(--block-border)] px-4 py-3 font-semibold text-[var(--block-foreground)] hover:bg-[var(--block-foreground)]/10 focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-focus"
+                  className="col-start-1 row-start-2 rounded-full bg-white/10 px-4 py-3 font-semibold text-[var(--block-foreground)] transition-colors hover:bg-white/20 focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-focus motion-reduce:transition-none md:col-start-1 md:row-start-1"
                   onClick={showPrevious}
                   type="button"
                 >
@@ -222,8 +222,8 @@ export function GalleryLightbox({
                 </button>
               ) : null}
 
-              <figure className="min-h-0">
-                <div className="relative mx-auto h-[70vh] max-h-[70vh] min-h-64 w-full overflow-hidden">
+              <figure className="col-span-2 col-start-1 row-start-1 min-h-0 min-w-0 md:col-span-1 md:col-start-2">
+                <div className="relative mx-auto h-[min(70vh,calc(100dvh-11rem))] min-h-48 w-full overflow-hidden rounded-lg bg-black/30 shadow-2xl">
                   <MediaImage
                     className="object-contain"
                     fill
@@ -249,7 +249,7 @@ export function GalleryLightbox({
               {hasMultiple ? (
                 <button
                   aria-label="Proxima imagem"
-                  className="rounded-md border border-[var(--block-border)] px-4 py-3 font-semibold text-[var(--block-foreground)] hover:bg-[var(--block-foreground)]/10 focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-focus"
+                  className="col-start-2 row-start-2 rounded-full bg-white/10 px-4 py-3 font-semibold text-[var(--block-foreground)] transition-colors hover:bg-white/20 focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-focus motion-reduce:transition-none md:col-start-3 md:row-start-1"
                   onClick={showNext}
                   type="button"
                 >

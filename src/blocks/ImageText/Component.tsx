@@ -1,5 +1,6 @@
 import { RichText } from "@payloadcms/richtext-lexical/react";
 import type { ImageTextBlock as ImageTextBlockProps } from "../../payload-types";
+import type { ImagePresentationSize } from "../../fields/image-presentation";
 import { BlockThemeScope, Container, Heading, Section } from "../../components/ui";
 import type { EditorialColorOverrides } from "../../lib/theme/block-color-theme";
 import type { ImagePresentation } from "../shared/image-presentation";
@@ -17,6 +18,13 @@ type ImageTextAppearance = {
 type ImageTextBlockWithLegacyProps = ImageTextBlockProps & {
   appearance?: ImageTextAppearance | null;
   imagePosition?: "left" | "right" | string | null;
+};
+
+const imageSizeClasses: Record<ImagePresentationSize, string> = {
+  small: "w-full sm:w-1/2 sm:mx-auto",
+  medium: "w-full sm:w-2/3 sm:mx-auto",
+  large: "w-full sm:w-5/6 sm:mx-auto",
+  full: "w-full",
 };
 
 export function normalizeImageTextVariant(
@@ -63,14 +71,17 @@ export function ImageTextBlock({
             className={`rounded-xl border border-(--block-border) ${imageOnRight ? "lg:order-2" : ""}`}
             media={image}
             presentation={imagePresentation as ImagePresentation}
+            sizeClassNames={imageSizeClasses}
             sizes="(min-width: 1024px) 50vw, 100vw"
           />
           <div className="max-w-container-sm">
-            <Heading level={2} size="lg">
-              <span className="text-balance break-words">{title}</span>
-            </Heading>
+            {title ? (
+              <Heading level={2} size="lg">
+                <span className="text-balance break-words">{title}</span>
+              </Heading>
+            ) : null}
             <RichText
-              className="cms-rich-text mt-5 leading-relaxed"
+              className={`cms-rich-text leading-relaxed${title ? " mt-5" : ""}`}
               data={content}
             />
             {cta?.label ? (

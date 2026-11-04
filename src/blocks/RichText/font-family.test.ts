@@ -9,8 +9,11 @@ import {
 
 describe("RichText controlled font families", () => {
   it("exposes the approved pool and rejects unknown stored values", () => {
-    assert.equal(allRichTextFontStylesheets.length, 4);
+    assert.equal(allRichTextFontStylesheets.length, 7);
     assert.match(getRichTextFontFamily("notoSansTC") ?? "", /Noto Sans TC/);
+    assert.match(getRichTextFontFamily("inter") ?? "", /Inter/);
+    assert.match(getRichTextFontFamily("openSans") ?? "", /Open Sans/);
+    assert.match(getRichTextFontFamily("lora") ?? "", /Lora/);
     assert.equal(getRichTextFontFamily("Comic Sans MS"), undefined);
   });
 

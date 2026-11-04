@@ -32,13 +32,11 @@ export const IconGridBlock: Block = {
       name: "title",
       type: "text",
       label: "Titulo da secao",
-      required: true,
       maxLength: 100,
-      validate: requiredText("Informe o titulo da grade de icones."),
       admin: {
         ...characterLimitAdmin(100),
         description:
-          "Titulo curto que contextualiza o conjunto de itens com icones.",
+          "Opcional. Titulo curto que contextualiza o conjunto de itens com icones.",
       },
     },
     {

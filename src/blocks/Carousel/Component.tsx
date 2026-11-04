@@ -10,6 +10,7 @@ import type { ImagePresentation } from "../shared/image-presentation";
 export type CarouselSlidesPerView = "1" | "2" | "3";
 export type CarouselNavigation = "arrows" | "arrows-dots";
 export type CarouselAutoplay = "off" | "on";
+export type CarouselContentAlignment = "left" | "center";
 
 export type CarouselLink = {
   label?: string | null;
@@ -38,6 +39,7 @@ export type CarouselBlockProps = {
   } | null;
   blockType: "carousel";
   display?: {
+    contentAlignment?: CarouselContentAlignment | string | null;
     navigation?: CarouselNavigation | string | null;
     slidesPerView?: CarouselSlidesPerView | string | null;
   } | null;
@@ -63,6 +65,12 @@ export function normalizeCarouselAutoplay(
   autoplay: CarouselAutoplay | string | null | undefined,
 ): CarouselAutoplay {
   return autoplay === "on" ? "on" : "off";
+}
+
+export function normalizeCarouselContentAlignment(
+  alignment: CarouselContentAlignment | string | null | undefined,
+): CarouselContentAlignment {
+  return alignment === "center" ? "center" : "left";
 }
 
 export function CarouselBlock({
@@ -94,6 +102,7 @@ export function CarouselBlock({
         ) : null}
         <CarouselClient
           autoplay={normalizeCarouselAutoplay(behavior?.autoplay)}
+          contentAlignment={normalizeCarouselContentAlignment(display?.contentAlignment)}
           items={usableItems}
           navigation={normalizeCarouselNavigation(display?.navigation)}
           slidesPerView={normalizeCarouselSlidesPerView(display?.slidesPerView)}

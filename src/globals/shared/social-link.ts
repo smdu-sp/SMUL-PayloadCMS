@@ -1,5 +1,5 @@
 import type { Field, TextFieldValidation } from "payload";
-import { SOCIAL_ICON_OPTIONS } from "../../domain/icons.ts";
+import { isSocialIcon, SOCIAL_ICON_OPTIONS } from "../../domain/icons.ts";
 import { validateOfficialHttpsUrl } from "../../domain/official-url.ts";
 
 export const createSocialLinkFields = (): Field[] => [
@@ -7,10 +7,14 @@ export const createSocialLinkFields = (): Field[] => [
     name: "label",
     type: "text",
     label: "Nome da rede",
-    required: true,
+    validate: ((value, { siblingData }) =>
+      (typeof value === "string" && value.trim()) ||
+      isSocialIcon((siblingData as { icon?: unknown })?.icon)
+        ? true
+        : "Informe o nome da rede ou selecione um icone valido.") satisfies TextFieldValidation,
     admin: {
       description:
-        "Nome curto exibido para identificar o canal oficial, como Instagram ou YouTube.",
+        "Opcional quando um icone for selecionado. Se informado, aparece ao lado do icone.",
     },
   },
   {
@@ -20,7 +24,7 @@ export const createSocialLinkFields = (): Field[] => [
     options: SOCIAL_ICON_OPTIONS,
     admin: {
       description:
-        "Opcional. Selecione o ícone da rede; o nome visível continua sendo obrigatório para acessibilidade.",
+        "Opcional quando ha nome. Sem nome, o icone vira o link e recebe nome acessivel.",
     },
   },
   {

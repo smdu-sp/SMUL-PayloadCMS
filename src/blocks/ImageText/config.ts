@@ -10,7 +10,6 @@ import {
 import {
   closedSelect,
   requiredRichText,
-  requiredText,
 } from "../../fields/editorial-validation";
 import { createImagePresentationFields } from "../../fields/image-presentation";
 import { createLinkFields } from "../../fields/link";
@@ -35,13 +34,11 @@ export const ImageTextBlock: Block = {
       name: "title",
       type: "text",
       label: "Titulo",
-      required: true,
       maxLength: 100,
-      validate: requiredText("Informe o titulo da secao com midia."),
       admin: {
         ...characterLimitAdmin(100),
         description:
-          "Titulo da secao que acompanha a imagem.",
+          "Opcional. Titulo da secao que acompanha a imagem.",
       },
     },
     {

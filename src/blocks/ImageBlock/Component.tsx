@@ -1,4 +1,5 @@
 import type { Media } from "../../payload-types";
+import type { ImagePresentationSize } from "../../fields/image-presentation";
 import { BlockThemeScope, Container, Section, Text } from "../../components/ui";
 import { classNames } from "../../components/ui/classNames";
 import {
@@ -34,6 +35,13 @@ const alignmentClasses: Record<ImageBlockAlignment, string> = {
   right: "ml-auto",
 };
 
+const imageSizeClasses: Record<ImagePresentationSize, string> = {
+  small: "w-full sm:w-1/2 sm:max-w-xs",
+  medium: "w-full sm:w-2/3 sm:max-w-md",
+  large: "w-full sm:w-5/6 sm:max-w-2xl",
+  full: "w-full",
+};
+
 export function normalizeImageBlockAlignment(
   alignment: ImageBlockAlignment | string | null | undefined,
 ): ImageBlockAlignment {
@@ -56,7 +64,9 @@ export function ImageBlock({
     canvas: imagePresentation?.canvas,
     fit: imagePresentation?.fit ?? "cover",
   };
-  const presentationSizeClassName = getImagePresentationSizeClassName(presentation);
+  const presentationSizeClassName = getImagePresentationSizeClassName(presentation, {
+    sizeClassNames: imageSizeClasses,
+  });
   const customTheme = appearance?.scheme === "custom";
 
   const section = (
@@ -73,7 +83,7 @@ export function ImageBlock({
           )}
         >
           <PresentedMediaImage
-            className="rounded-xl border border-border bg-muted"
+            className="rounded-xl border border-(--block-border) bg-muted"
             imageClassName="w-full"
             media={media}
             presentation={{ ...presentation, size: "full" }}

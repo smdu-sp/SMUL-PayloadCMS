@@ -28,7 +28,7 @@ describe("ui primitives and nested scopes", () => {
     assert.equal(card.props.scheme, "surface");
     assert.match(card.props.className, /p-8/);
     assert.match(card.props.className, /h-full/);
-    assert.match(card.props.className, /border-border/);
+    assert.match(card.props.className, /border-\(--block-border\)/);
     assert.match(card.props.className, /custom-card/);
     assert.equal(Card({ children: "plain", scheme: "inherit" }).props.scheme, "inherit");
   });

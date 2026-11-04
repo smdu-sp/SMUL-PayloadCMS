@@ -71,4 +71,21 @@ describe("Header and Footer Globals", () => {
     assert.equal(Header.hooks?.afterChange?.length, 1);
     assert.equal(Footer.hooks?.afterChange?.length, 1);
   });
+
+  it("accepts a nullable footer logo and social links identified by icon", async () => {
+    const logo = fieldByName(Footer.fields, "logo");
+    assert.equal(logo.type, "upload");
+    if (logo.type !== "upload") assert.fail("Expected upload field");
+    assert.equal(logo.relationTo, "media");
+    assert.notEqual(logo.required, true);
+
+    const socialLinks = fieldByName(Footer.fields, "socialLinks");
+    if (socialLinks.type !== "array") assert.fail("Expected social links array");
+    const label = fieldByName(socialLinks.fields, "label");
+    if (label.type !== "text" || !label.validate) assert.fail("Expected social label validation");
+    const validate = label.validate as TextFieldValidation;
+    assert.equal(await validate("", { siblingData: { icon: "instagram" } } as never), true);
+    assert.equal(await validate("Rede oficial", { siblingData: {} } as never), true);
+    assert.notEqual(await validate("", { siblingData: {} } as never), true);
+  });
 });

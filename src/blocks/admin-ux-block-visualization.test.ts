@@ -118,9 +118,9 @@ describe("SPEC-024 admin UX and block visualization", () => {
   });
 
   it("states that the current hero and page builder do not provide an automatic timer", () => {
-    const heroVariant = fieldByName(HeroBlock, "variant");
+    const heroImageMode = fieldByName(HeroBlock, "imageMode");
     const layout = Pages.fields.find((field) => "name" in field && field.name === "layout");
-    assert.match(descriptionOf(heroVariant), /timer automatico/);
+    assert.match(descriptionOf(heroImageMode), /timer automatico/);
     assert.ok(layout);
     assert.match(descriptionOf(layout), /timer automático/);
   });

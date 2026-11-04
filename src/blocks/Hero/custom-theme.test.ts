@@ -3,9 +3,47 @@ import { describe, it } from "node:test";
 import { isValidElement, type ReactElement } from "react";
 
 import { BlockThemeScope, Section } from "../../components/ui";
-import { HeroBlock } from "./Component";
+import { HeroBlock, resolveHeroMediaVisibility } from "./Component";
+import { HeroBlock as HeroSchema } from "./config";
 
 describe("Hero custom theme", () => {
+  it("uses one explicit image choice while preserving media on older Pages", () => {
+    const legacy = { hasBackgroundImage: true, hasSideImage: true, variant: "split" as const };
+
+    assert.deepEqual(resolveHeroMediaVisibility(legacy), { hasBackground: true, split: true });
+    assert.deepEqual(resolveHeroMediaVisibility({ ...legacy, imageMode: "background" }), {
+      hasBackground: true,
+      split: false,
+    });
+    assert.deepEqual(resolveHeroMediaVisibility({ ...legacy, imageMode: "side" }), {
+      hasBackground: false,
+      split: true,
+    });
+    assert.deepEqual(resolveHeroMediaVisibility({ ...legacy, imageMode: "none" }), {
+      hasBackground: false,
+      split: false,
+    });
+  });
+
+  it("keeps old media fields available when their Pages have no image mode", () => {
+    const fields = HeroSchema.fields as Array<{
+      admin?: { condition?: (data: unknown, siblings: Record<string, unknown>) => boolean; hidden?: boolean };
+      name?: string;
+      required?: boolean;
+    }>;
+    const field = (name: string) => fields.find((entry) => entry.name === name);
+
+    assert.equal(field("imageMode")?.required, undefined);
+    assert.equal(field("variant")?.admin?.hidden, true);
+    assert.equal(field("image")?.admin?.condition?.({}, { variant: "split" }), true);
+    assert.equal(field("background")?.admin?.condition?.({}, { background: { image: 1 } }), true);
+    assert.equal(field("image")?.admin?.condition?.({}, { imageMode: "side" }), true);
+    assert.equal(field("background")?.admin?.condition?.({}, { imageMode: "background" }), true);
+    assert.equal(field("image")?.admin?.condition?.({}, { imageMode: "background", variant: "split" }), false);
+    assert.equal(field("background")?.admin?.condition?.({}, { imageMode: "side", background: { image: 1 } }), false);
+    assert.equal(field("image")?.admin?.condition?.({}, { imageMode: "none", variant: "split" }), false);
+  });
+
   it("scopes every color role consumed by the Hero", () => {
     const block = HeroBlock({
       appearance: {

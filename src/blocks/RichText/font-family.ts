@@ -15,6 +15,18 @@ export const richTextFontFamilies = {
     css: { "font-family": '"Noto Sans TC", sans-serif' },
     label: "Noto Sans TC",
   },
+  inter: {
+    css: { "font-family": '"Inter", Arial, sans-serif' },
+    label: "Inter",
+  },
+  openSans: {
+    css: { "font-family": '"Open Sans", Arial, sans-serif' },
+    label: "Open Sans",
+  },
+  lora: {
+    css: { "font-family": '"Lora", Georgia, serif' },
+    label: "Lora",
+  },
 } as const;
 
 export type RichTextFontFamily = keyof typeof richTextFontFamilies;
@@ -28,6 +40,12 @@ const richTextFontStylesheets: Record<RichTextFontFamily, string> = {
     "https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap",
   notoSansTC:
     "https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100..900&display=swap",
+  inter:
+    "https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap",
+  openSans:
+    "https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap",
+  lora:
+    "https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&display=swap",
 };
 
 export const allRichTextFontStylesheets = Object.values(richTextFontStylesheets);

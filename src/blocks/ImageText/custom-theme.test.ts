@@ -1,8 +1,9 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { createElement } from "react";
+import { createElement, type ReactElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 
+import { getImagePresentationSizeClassName } from "../shared/image-presentation";
 import { ImageTextBlock } from "./Component";
 
 const content = {
@@ -24,6 +25,26 @@ const content = {
 };
 
 describe("ImageText custom theme", () => {
+  it("keeps large narrower than the image column and full at column width", () => {
+    const imageClassName = (size: "large" | "full") => {
+      const section = ImageTextBlock({
+        blockType: "imageText",
+        content,
+        image: { alt: "Imagem de teste", url: "/imagem.jpg" } as never,
+        imagePresentation: { aspectRatio: "original", fit: "cover", size },
+        title: "Imagem e texto",
+        variant: "image-left",
+      }) as ReactElement<{ children: ReactElement }>;
+      const container = section.props.children as ReactElement<{ children: ReactElement }>;
+      const grid = container.props.children as ReactElement<{ children: ReactElement[] }>;
+      const image = grid.props.children[0] as ReactElement<{ sizeClassNames: Record<string, string> }>;
+      return getImagePresentationSizeClassName({ size }, { sizeClassNames: image.props.sizeClassNames });
+    };
+
+    assert.match(imageClassName("large"), /sm:w-5\/6/);
+    assert.equal(imageClassName("full"), "w-full");
+  });
+
   it("applies the local palette to the complete editorial surface", () => {
     const markup = renderToStaticMarkup(createElement(ImageTextBlock, {
       appearance: {

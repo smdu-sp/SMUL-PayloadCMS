@@ -1,9 +1,10 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { createElement } from "react";
+import { createElement, isValidElement, type ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 
 import type { Footer, Header, Page } from "../../payload-types";
+import { MediaImage } from "../../blocks/shared/MediaImage";
 import { resolveSemanticTheme } from "../../lib/theme/semantic-theme";
 import { ThemeProvider } from "../ui/ColorScope";
 import { SiteFooter } from "./SiteFooter";
@@ -16,6 +17,13 @@ const page = {
   slug: "orientacoes",
   title: "Orientações",
 } as Page;
+
+function containsElement(node: ReactNode, type: unknown): boolean {
+  if (Array.isArray(node)) return node.some((child) => containsElement(child, type));
+  if (!isValidElement(node)) return false;
+  if (node.type === type) return true;
+  return containsElement((node.props as { children?: ReactNode }).children, type);
+}
 
 describe("public site shell", () => {
   it("renders semantic header navigation and ignores unavailable pages", () => {
@@ -124,6 +132,34 @@ describe("public site shell", () => {
     assert.match(markup, /h-8 w-8/);
     assert.match(markup, /Outra rede/);
     assert.doesNotMatch(markup, /Link inseguro/);
+  });
+
+  it("renders icon-only social links with an accessible name", () => {
+    const footer = {
+      id: 1,
+      socialLinks: [
+        { id: "icon-only", icon: "instagram", label: null, url: "https://example.gov.br/instagram" },
+        { id: "invalid", icon: null, label: null, url: "https://example.gov.br/invalid" },
+      ],
+    } as Footer;
+    const markup = renderToStaticMarkup(createElement(SiteFooter, { footer }));
+    assert.match(markup, /aria-label="Instagram"/);
+    assert.match(markup, /href="https:\/\/example.gov.br\/instagram"/);
+    assert.doesNotMatch(markup, /example.gov.br\/invalid/);
+  });
+
+  it("renders a footer containing only a populated logo", () => {
+    const footer = {
+      id: 1,
+      logo: { id: 2, alt: "Logo institucional", url: "/api/media/file/logo.png" },
+    } as Footer;
+    const tree = SiteFooter({ footer });
+    assert.ok(tree);
+    assert.equal(containsElement(tree, MediaImage), true);
+    assert.equal(SiteFooter({ footer: {
+      id: 1,
+      logo: { id: 3, alt: "Arquivo PDF", url: "/logo.pdf", mimeType: "application/pdf" },
+    } as Footer }), null);
   });
 
   it("keeps footer text readable when the global foreground matches its muted background", () => {

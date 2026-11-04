@@ -47,6 +47,7 @@ export const adminHelpSections: AdminHelpSection[] = [
       "Cadastre imagens e documentos na area de Midias antes de usa-los em paginas.",
       "Preencha texto alternativo objetivo para imagens informativas.",
       "Use o campo de uso principal para indicar se a midia e conteudo, fundo, logo, icone, infografico ou documento.",
+      "Arquivos SVG e AVIF sao aceitos; SVG passa por verificacao de seguranca antes do upload.",
     ],
   },
   {
@@ -110,14 +111,14 @@ export const adminHelpBlockGuides: AdminHelpBlockGuide[] = [
   {
     name: "Destaque principal",
     purpose: "Abrir uma pagina com titulo, resumo, imagem opcional e chamada principal.",
-    fields: ["titulo", "descricao", "imagem", "acao", "modelo"],
+    fields: ["titulo", "descricao", "uso da imagem", "alinhamento do conteúdo", "acao"],
     useWhen: "Use no inicio de paginas importantes.",
     avoidWhen: "Evite para avisos curtos ou listas de itens.",
   },
   {
     name: "Texto editorial",
-    purpose: "Publicar texto corrido com headings, listas e links.",
-    fields: ["conteudo", "largura de leitura"],
+    purpose: "Publicar texto corrido com headings, listas, tabelas e links.",
+    fields: ["conteudo", "largura de leitura", "fontes e cores controladas"],
     useWhen: "Use para explicacoes, orientacoes e contexto institucional.",
     avoidWhen: "Evite para perguntas frequentes, chamadas finais ou cards repetidos.",
   },

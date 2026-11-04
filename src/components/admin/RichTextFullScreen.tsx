@@ -1,5 +1,6 @@
 "use client";
 
+import { useLivePreviewContext } from "@payloadcms/ui";
 import { useEffect, useRef, useState } from "react";
 import { allRichTextFontStylesheets } from "../../blocks/RichText/font-family";
 import styles from "./RichTextFullScreen.module.css";
@@ -7,6 +8,25 @@ import styles from "./RichTextFullScreen.module.css";
 export function RichTextFullScreen() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const restorePreviewRef = useRef(false);
+  const { isLivePreviewing, setIsLivePreviewing } = useLivePreviewContext();
+
+  const toggleFullscreen = () => {
+    if (isFullscreen) {
+      setIsFullscreen(false);
+      return;
+    }
+
+    restorePreviewRef.current = isLivePreviewing;
+    if (isLivePreviewing) setIsLivePreviewing(false);
+    setIsFullscreen(true);
+  };
+
+  useEffect(() => {
+    if (isFullscreen || !restorePreviewRef.current) return;
+    restorePreviewRef.current = false;
+    setIsLivePreviewing(true);
+  }, [isFullscreen, setIsLivePreviewing]);
 
   useEffect(() => {
     if (!isFullscreen) return;
@@ -48,7 +68,7 @@ export function RichTextFullScreen() {
         <button
           type="button"
           className={`${styles.button} ${isFullscreen ? styles.exitButton : ""}`}
-          onClick={() => setIsFullscreen((prev) => !prev)}
+          onClick={toggleFullscreen}
           aria-pressed={isFullscreen}
           title={isFullscreen ? "Sair da tela cheia (Esc)" : "Expandir para tela cheia (estilo Word / Google Docs)"}
         >

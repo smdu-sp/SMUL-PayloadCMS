@@ -13,6 +13,7 @@ import {
   getUsedRichTextFontStylesheets,
 } from "./font-family";
 import { getRichTextFontSize } from "./font-size";
+import { getRichTextTextColor } from "./text-color";
 
 type RichTextVariant = "default" | "narrow";
 
@@ -36,13 +37,14 @@ const richTextConverters: JSXConvertersFunction = ({ defaultConverters }) => ({
         ? defaultConverters.text(args)
         : args.node.text;
     const state = (args.node as {
-      $?: { fontFamily?: unknown; fontSize?: unknown };
+      $?: { fontFamily?: unknown; fontSize?: unknown; textColor?: unknown };
     }).$;
     const fontFamily = getRichTextFontFamily(state?.fontFamily);
     const fontSize = getRichTextFontSize(state?.fontSize);
+    const color = getRichTextTextColor(state?.textColor);
 
-    return fontFamily || fontSize
-      ? <span style={{ fontFamily, fontSize }}>{defaultText}</span>
+    return fontFamily || fontSize || color
+      ? <span style={{ color, fontFamily, fontSize }}>{defaultText}</span>
       : defaultText;
   },
 });

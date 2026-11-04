@@ -339,7 +339,9 @@ describe("CMS editing UX", () => {
       "image/jpeg",
       "image/png",
       "image/webp",
+      "image/avif",
       "image/gif",
+      "image/svg+xml",
       "application/pdf",
     ]);
     assert.equal("displayPreview" in upload ? upload.displayPreview : false, true);

@@ -15,6 +15,7 @@ import { $forEachSelectedTextNode } from "@payloadcms/richtext-lexical/lexical/s
 import { useEffect } from "react";
 import { richTextFontFamilies } from "./font-family";
 import { richTextFontSizes } from "./font-size";
+import { richTextTextColors } from "./text-color";
 
 type StateValues = Record<
   string,
@@ -35,6 +36,7 @@ type StateMap = Map<
 const typographyStates = {
   fontFamily: richTextFontFamilies,
   fontSize: richTextFontSizes,
+  textColor: richTextTextColors,
 } satisfies Record<string, StateValues>;
 
 function registerTypographyStates(): StateMap {
@@ -123,6 +125,10 @@ function FontSizeIcon() {
   );
 }
 
+function TextColorIcon() {
+  return <span aria-hidden="true" style={{ color: "#0f766e", fontWeight: 700 }}>A</span>;
+}
+
 const createFontFamilyItems = (stateMap: StateMap) => [
   {
     ChildComponent: FontFamilyIcon,
@@ -169,6 +175,27 @@ const createFontSizeItems = (stateMap: StateMap) => [
   })),
 ];
 
+const createTextColorItems = (stateMap: StateMap) => [
+  {
+    ChildComponent: TextColorIcon,
+    key: "text-color-default",
+    label: "Cor padrao",
+    onSelect: ({ editor }: { editor: LexicalEditor }) =>
+      setTypographyState(editor, stateMap, "textColor", undefined),
+    order: 1,
+  },
+  ...Object.entries(richTextTextColors).map(([value, meta], index) => ({
+    ChildComponent: () => (
+      <span aria-hidden="true" style={{ color: meta.css.color, fontWeight: 700 }}>A</span>
+    ),
+    key: `text-color-${value}`,
+    label: meta.label,
+    onSelect: ({ editor }: { editor: LexicalEditor }) =>
+      setTypographyState(editor, stateMap, "textColor", value),
+    order: index + 2,
+  })),
+];
+
 export const RichTextTypographyFeatureClient = createClientFeature(() => {
   const stateMap = registerTypographyStates();
   const groups = [
@@ -185,6 +212,13 @@ export const RichTextTypographyFeatureClient = createClientFeature(() => {
       items: createFontSizeItems(stateMap),
       key: "fontSize",
       order: 31,
+    },
+    {
+      type: "dropdown" as const,
+      ChildComponent: TextColorIcon,
+      items: createTextColorItems(stateMap),
+      key: "textColor",
+      order: 32,
     },
   ];
 

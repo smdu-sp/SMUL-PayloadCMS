@@ -110,4 +110,22 @@ describe("RichText custom theme", () => {
     assert.match(markup, /font-family:&quot;Merriweather&quot;, Georgia, serif/);
     assert.doesNotMatch(markup, /family=Roboto/);
   });
+
+  it("renders a selected semantic text color", () => {
+    const coloredContent = {
+      root: {
+        ...content.root,
+        children: [{
+          ...content.root.children[0],
+          children: [{ ...content.root.children[0].children[0], $: { textColor: "accent" } }],
+        }],
+      },
+    };
+    const markup = renderToStaticMarkup(createElement(RichTextBlock, {
+      blockType: "richText",
+      content: coloredContent,
+      variant: "default",
+    }));
+    assert.match(markup, /color:var\(--block-accent/);
+  });
 });

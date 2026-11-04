@@ -37,6 +37,15 @@ export const Footer: GlobalConfig = {
       createBlockContrastStatusField(footerColorTokens),
     ]),
     {
+      name: "logo",
+      type: "upload",
+      relationTo: "media",
+      label: "Logo do rodape",
+      admin: {
+        description: "Opcional. Selecione uma midia institucional com texto alternativo adequado.",
+      },
+    },
+    {
       name: "phone",
       type: "text",
       label: "Telefone",

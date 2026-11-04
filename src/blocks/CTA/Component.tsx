@@ -25,6 +25,11 @@ const ctaEmphasisPadding = {
   default: "lg",
   strong: "lg",
 } as const;
+const ctaEmphasisDecoration = {
+  subtle: "",
+  default: "",
+  strong: "border-2 shadow-lg",
+} as const;
 
 export function normalizeCTAVariant(variant?: string | null): CTAVariant {
   return variant === "brand" || variant === "compact" ? variant : "default";
@@ -43,17 +48,23 @@ export function CTABlock({ action, appearance, description, title, variant }: CT
   const emphasis = normalizeCTAEmphasis(appearance?.emphasis);
   const styles = ctaVariantStyles[normalizedVariant];
   const customTheme = appearance?.scheme === "custom";
+  const scheme = normalizedVariant === "brand" && (!appearance?.scheme || appearance.scheme === "default")
+    ? "brand"
+    : normalizeColorScheme(appearance?.scheme);
   const card = (
     <Card
-      scheme={customTheme ? "default" : normalizeColorScheme(appearance?.scheme)}
+      className={ctaEmphasisDecoration[emphasis]}
+      scheme={customTheme ? "default" : scheme}
       padding={ctaEmphasisPadding[emphasis]}
     >
-      <Heading level={2} size={styles.headingSize}>
-        <span className="text-balance wrap-break-word">{title}</span>
-      </Heading>
-      {description ? <div className="mt-4 max-w-container-sm"><Text variant="lead">{description}</Text></div> : null}
+      {title ? (
+        <Heading level={2} size={styles.headingSize}>
+          <span className="text-balance wrap-break-word">{title}</span>
+        </Heading>
+      ) : null}
+      {description ? <div className={`${title ? "mt-4 " : ""}max-w-container-sm`}><Text variant="lead">{description}</Text></div> : null}
       {action?.label ? (
-        <div className="mt-7"><BlockLink appearance="solid" link={action} size={styles.linkSize} /></div>
+        <div className={title || description ? "mt-7" : ""}><BlockLink appearance="solid" link={action} size={styles.linkSize} /></div>
       ) : null}
     </Card>
   );

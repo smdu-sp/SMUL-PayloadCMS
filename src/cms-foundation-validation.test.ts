@@ -264,6 +264,7 @@ describe("SPEC-029 CMS foundation validation", () => {
     ]);
     assert.deepEqual(footerFieldNames, [
       "appearance",
+      "logo",
       "phone",
       "email",
       "address",

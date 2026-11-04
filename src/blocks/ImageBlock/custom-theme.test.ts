@@ -8,6 +8,23 @@ import { ImageBlock } from "./Component";
 const media = { alt: "Imagem de teste", url: "/imagem.jpg" } as never;
 
 describe("ImageBlock custom theme", () => {
+  it("applies distinct display widths from the medium breakpoint", () => {
+    const figureClassName = (size: "small" | "medium" | "large" | "full") => {
+      const section = ImageBlock({
+        blockType: "imageBlock",
+        imagePresentation: { aspectRatio: "original", fit: "cover", size },
+        media,
+      }) as ReactElement<{ children: ReactElement<{ children: ReactElement<{ className: string }> }> }>;
+      return section.props.children.props.children.props.className;
+    };
+
+    assert.match(figureClassName("small"), /sm:max-w-xs/);
+    assert.match(figureClassName("medium"), /sm:max-w-md/);
+    assert.match(figureClassName("large"), /sm:max-w-2xl/);
+    assert.match(figureClassName("large"), /sm:w-5\/6/);
+    assert.doesNotMatch(figureClassName("full"), /sm:max-w-/);
+  });
+
   it("scopes the image section and caption to the local palette", () => {
     const block = ImageBlock({
       appearance: {

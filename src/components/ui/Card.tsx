@@ -3,7 +3,7 @@ import type { ColorScheme, EditorialColorOverrides } from "../../lib/theme/block
 import { ColorScope } from "./ColorScope";
 import { classNames } from "./classNames";
 
-const cardPaddings = { sm: "p-5", md: "p-6", lg: "p-8" } as const;
+const cardPaddings = { none: "", sm: "p-5", md: "p-6", lg: "p-8" } as const;
 export type CardPadding = keyof typeof cardPaddings;
 type CardProps = {
   children: ReactNode;
@@ -27,7 +27,7 @@ export function Card({
       scheme={scheme}
       overrides={overrides}
       className={classNames(
-        "flex flex-col overflow-hidden rounded-lg border border-border",
+        "flex flex-col overflow-hidden rounded-lg border border-(--block-border)",
         cardPaddings[padding],
         fullHeight && "h-full",
         className,

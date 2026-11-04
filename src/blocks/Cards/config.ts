@@ -15,7 +15,6 @@ import {
 import {
   closedSelect,
   requiredText,
-  requiredTextarea,
 } from "../../fields/editorial-validation";
 import { createImagePresentationFields } from "../../fields/image-presentation";
 import { createLinkFields } from "../../fields/link";
@@ -121,69 +120,6 @@ export const CardsBlock: Block = {
           options: mediaSourceOptions,
         },
         {
-          name: "mediaPosition",
-          type: "select",
-          label: "Posicao da midia",
-          defaultValue: "top",
-          validate: closedSelect(
-            ["top", "left", "right"],
-            "Escolha uma posicao de midia aprovada.",
-          ),
-          admin: {
-            condition: (_, siblingData) => siblingData?.mediaSource !== "none",
-          },
-          options: mediaPositionOptions,
-        },
-        {
-          name: "imagePresentation",
-          type: "group",
-          label: "Apresentação da imagem",
-          admin: {
-            condition: (_, siblingData) => siblingData?.mediaSource === "image",
-            description:
-              "Define como esta imagem aparece neste card sem alterar o arquivo original na Midia.",
-          },
-          fields: createImagePresentationFields({
-            canvas: { mediaFieldName: "image" },
-            sizes: ["small", "medium", "large"],
-            aspectRatios: ["original", "1:1", "4:3", "16:9"],
-            defaultSize: "medium",
-            defaultAspectRatio: "original",
-            defaultFit: "cover",
-            dbNames: {
-              size: "sz",
-              aspectRatio: "asp",
-              fit: "fit",
-            },
-          }),
-        },
-        {
-          name: "title",
-          type: "text",
-          label: "Titulo do card",
-          required: true,
-          maxLength: 80,
-          validate: requiredText("Informe o titulo deste card."),
-          admin: {
-            ...characterLimitAdmin(80),
-            description:
-              "Texto principal do card. Pode quebrar linha sem afetar os demais itens.",
-          },
-        },
-        {
-          name: "description",
-          type: "textarea",
-          label: "Descricao do card",
-          required: true,
-          maxLength: 160,
-          validate: requiredTextarea("Informe a descricao deste card."),
-          admin: {
-            ...characterLimitAdmin(160, "textarea"),
-            description:
-              "Resumo ou orientacao exibida dentro do card.",
-          },
-        },
-        {
           name: "iconSource",
           type: "select",
           label: "Origem do icone",
@@ -251,6 +187,20 @@ export const CardsBlock: Block = {
           }) satisfies UploadFieldSingleValidation,
         },
         {
+          name: "mediaPosition",
+          type: "select",
+          label: "Posicao da midia",
+          defaultValue: "top",
+          validate: closedSelect(
+            ["top", "left", "right"],
+            "Escolha uma posicao de midia aprovada.",
+          ),
+          admin: {
+            condition: (_, siblingData) => siblingData?.mediaSource !== "none",
+          },
+          options: mediaPositionOptions,
+        },
+        {
           name: "image",
           type: "upload",
           relationTo: "media",
@@ -270,6 +220,72 @@ export const CardsBlock: Block = {
             }
             return true;
           }) satisfies UploadFieldSingleValidation,
+        },
+        {
+          name: "imageLayout",
+          type: "select",
+          label: "Disposicao da imagem",
+          defaultValue: "contained",
+          validate: closedSelect(
+            ["contained", "fullTop"],
+            "Escolha uma disposicao de imagem aprovada.",
+          ),
+          admin: {
+            condition: (_, siblingData) =>
+              siblingData?.mediaSource === "image" &&
+              (!siblingData?.mediaPosition || siblingData?.mediaPosition === "top"),
+            description: "Ocupar o topo fixa a largura da imagem em 100% do card; proporcao e enquadramento continuam editaveis.",
+          },
+          options: [
+            { label: "Dentro do card", value: "contained" },
+            { label: "Ocupar o topo", value: "fullTop" },
+          ],
+        },
+        {
+          name: "imagePresentation",
+          type: "group",
+          label: "Apresentação da imagem",
+          admin: {
+            condition: (_, siblingData) => siblingData?.mediaSource === "image",
+            description:
+              "Define como esta imagem aparece neste card sem alterar o arquivo original na Midia.",
+          },
+          fields: createImagePresentationFields({
+            canvas: { mediaFieldName: "image" },
+            sizes: ["small", "medium", "large"],
+            aspectRatios: ["original", "1:1", "4:3", "16:9"],
+            defaultSize: "medium",
+            defaultAspectRatio: "original",
+            defaultFit: "cover",
+            dbNames: {
+              size: "sz",
+              aspectRatio: "asp",
+              fit: "fit",
+            },
+          }),
+        },
+        {
+          name: "title",
+          type: "text",
+          label: "Titulo do card",
+          required: true,
+          maxLength: 80,
+          validate: requiredText("Informe o titulo deste card."),
+          admin: {
+            ...characterLimitAdmin(80),
+            description:
+              "Texto principal do card. Pode quebrar linha sem afetar os demais itens.",
+          },
+        },
+        {
+          name: "description",
+          type: "textarea",
+          label: "Descricao do card",
+          maxLength: 300,
+          admin: {
+            ...characterLimitAdmin(300, "textarea"),
+            description: "Opcional. Resumo ou orientacao exibida dentro do card.",
+          },
         },
         {
           name: "link",

@@ -10,7 +10,9 @@ export const allowedMediaMimeTypes = [
   "image/jpeg",
   "image/png",
   "image/webp",
+  "image/avif",
   "image/gif",
+  "image/svg+xml",
   "application/pdf",
 ] as const;
 
@@ -52,6 +54,13 @@ export const Media: CollectionConfig = {
     displayPreview: true,
     focalPoint: true,
     mimeTypes: [...allowedMediaMimeTypes],
+    modifyResponseHeaders: ({ headers }) => {
+      if (headers.get("Content-Type") === "image/svg+xml") {
+        headers.set("Content-Security-Policy", "default-src 'none'; style-src 'unsafe-inline'; sandbox");
+        headers.set("X-Content-Type-Options", "nosniff");
+      }
+      return headers;
+    },
   },
   fields: [
     {
@@ -62,7 +71,7 @@ export const Media: CollectionConfig = {
       defaultValue: "content",
       admin: {
         description:
-          "Classifique o papel editorial da midia. SVG nao e aceito; para icones e logos, use PNG ou WebP aprovados.",
+          "Classifique o papel editorial da midia. Imagens SVG sao aceitas apos validacao de seguranca; para icones e logos, use arquivos institucionais aprovados.",
       },
       options: [...mediaUsageOptions],
     },

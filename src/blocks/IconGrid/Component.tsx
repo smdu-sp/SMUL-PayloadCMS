@@ -61,16 +61,18 @@ export function IconGridBlock({
   const section = (
     <Section spacing={effectiveSpacing} scheme={customTheme ? "default" : effectiveTone}>
       <Container size="lg">
-        <Heading level={2} size="lg">
-          <span className="text-balance break-words">{title}</span>
-        </Heading>
+        {title ? (
+          <Heading level={2} size="lg">
+            <span className="text-balance break-words">{title}</span>
+          </Heading>
+        ) : null}
         {description ? (
-          <div className="mt-4 max-w-container-sm">
+          <div className={`${title ? "mt-4 " : ""}max-w-container-sm`}>
             <Text variant="muted">{description}</Text>
           </div>
         ) : null}
         <ul
-          className={`mt-8 grid gap-4 ${compact ? "sm:grid-cols-2 lg:grid-cols-4" : "sm:grid-cols-2 lg:grid-cols-3"}`}
+          className={`${title || description ? "mt-8 " : ""}grid gap-4 ${compact ? "sm:grid-cols-2 lg:grid-cols-4" : "sm:grid-cols-2 lg:grid-cols-3"}`}
         >
           {items.map((rawItem) => {
             const item = rawItem as IconGridItem;

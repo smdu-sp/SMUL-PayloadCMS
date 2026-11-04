@@ -1,5 +1,6 @@
 import type { Footer } from "../../payload-types";
-import { isSocialIcon } from "../../domain/icons";
+import { isSocialIcon, SOCIAL_ICON_LABELS } from "../../domain/icons";
+import { MediaImage } from "../../blocks/shared/MediaImage";
 import { resolveOfficialHttpsUrl } from "../../domain/official-url";
 import { normalizeColorScheme } from "../../lib/theme/block-color-theme";
 import { BlockThemeScope, ColorScope, Container, Icon } from "../ui";
@@ -9,10 +10,17 @@ function telephoneHref(phone: string): string {
 }
 
 export function SiteFooter({ footer }: { footer?: Footer | null }) {
+  const logo = footer?.logo && typeof footer.logo === "object" && footer.logo.url &&
+    (!footer.logo.mimeType || footer.logo.mimeType.startsWith("image/"))
+    ? footer.logo
+    : null;
   const socialLinks = (footer?.socialLinks ?? []).flatMap((item) => {
     const href = resolveOfficialHttpsUrl(item.url);
-    return href && item.label.trim()
-      ? [{ href, icon: isSocialIcon(item.icon) ? item.icon : null, label: item.label }]
+    const icon = isSocialIcon(item.icon) ? item.icon : null;
+    const visibleLabel = item.label?.trim() ?? "";
+    const label = visibleLabel || (icon ? SOCIAL_ICON_LABELS[icon] : "");
+    return href && label
+      ? [{ href, icon, label, visibleLabel }]
       : [];
   });
   const institutionalLinks = (footer?.institutionalLinks ?? []).flatMap((item) => {
@@ -23,7 +31,7 @@ export function SiteFooter({ footer }: { footer?: Footer | null }) {
     footer?.phone || footer?.email || footer?.address || footer?.inPersonService,
   );
 
-  if (!hasContact && !socialLinks.length && !institutionalLinks.length) return null;
+  if (!logo && !hasContact && !socialLinks.length && !institutionalLinks.length) return null;
 
   const customTheme = footer?.appearance?.scheme === "custom";
   const content = (
@@ -34,6 +42,15 @@ export function SiteFooter({ footer }: { footer?: Footer | null }) {
     >
       <Container size="xl">
         <div className="grid gap-8 py-10 md:grid-cols-3">
+          {logo ? (
+            <div className="md:col-span-3">
+              <MediaImage
+                className="h-auto max-h-20 w-auto max-w-64 object-contain"
+                media={logo}
+                sizes="256px"
+              />
+            </div>
+          ) : null}
           {hasContact ? (
             <section aria-labelledby="footer-contact-title">
               <h2 className="text-lg font-bold text-(--block-heading)" id="footer-contact-title">
@@ -76,11 +93,12 @@ export function SiteFooter({ footer }: { footer?: Footer | null }) {
                 {socialLinks.map((link) => (
                   <li key={`${link.href}-${link.label}`}>
                     <a
+                      aria-label={link.visibleLabel ? undefined : link.label}
                       className="inline-flex items-center gap-2 underline underline-offset-4"
                       href={link.href}
                     >
                       {link.icon ? <Icon name={link.icon} size="xl" tone="current" /> : null}
-                      <span>{link.label}</span>
+                      {link.visibleLabel ? <span>{link.visibleLabel}</span> : null}
                     </a>
                   </li>
                 ))}

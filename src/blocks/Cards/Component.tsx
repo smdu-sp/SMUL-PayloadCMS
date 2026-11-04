@@ -10,11 +10,13 @@ import { PresentedMediaImage } from "../shared/PresentedMediaImage";
 type CardsVariant = "default" | "modalities";
 type CardMediaSource = "icon" | "image" | "none";
 type CardMediaPosition = "left" | "right" | "top";
+type CardImageLayout = "contained" | "fullTop";
 type CardsInteraction = "none" | "subtle" | "default" | "emphasized";
 
 type CardsItem = CardsBlockProps["items"][number] & {
   iconSource?: "custom" | "standard" | string | null;
   image?: CardsBlockProps["items"][number]["icon"];
+  imageLayout?: CardImageLayout | string | null;
   imagePresentation?: ImagePresentation;
   mediaPosition?: CardMediaPosition | string | null;
   mediaSource?: CardMediaSource | string | null;
@@ -91,6 +93,12 @@ export function normalizeCardMediaPosition(
   return "top";
 }
 
+export function normalizeCardImageLayout(
+  layout: CardImageLayout | string | null | undefined,
+): CardImageLayout {
+  return layout === "fullTop" ? "fullTop" : "contained";
+}
+
 const iconSizeClasses = {
   default: {
     modalities: "h-14 w-14",
@@ -116,11 +124,13 @@ const cardImageSizeClasses = {
 } as const;
 
 function CardMedia({
+  edgeToEdge,
   item,
   modalities,
   position,
   source,
 }: {
+  edgeToEdge: boolean;
   item: CardsItem;
   modalities: boolean;
   position: CardMediaPosition;
@@ -151,7 +161,7 @@ function CardMedia({
 
   const presentation: NonNullable<ImagePresentation> = {
     size: item.imagePresentation?.size ?? "medium",
-    aspectRatio: item.imagePresentation?.aspectRatio ?? "original",
+    aspectRatio: item.imagePresentation?.aspectRatio ?? (edgeToEdge ? "16:9" : "original"),
     canvas: item.imagePresentation?.canvas,
     fit: item.imagePresentation?.fit ?? "cover",
   };
@@ -159,12 +169,15 @@ function CardMedia({
   return (
     <PresentedMediaImage
       className={classNames(
-        side ? "mt-1" : "mb-5",
-        "rounded-md border border-(--block-border) bg-(--block-background)",
+        !edgeToEdge && (side ? "mt-1" : "mb-5"),
+        !edgeToEdge && "rounded-md",
+        "bg-(--block-background)",
       )}
       media={item.image}
       presentation={presentation}
-      sizeClassNames={side ? cardImageSizeClasses.side : cardImageSizeClasses.top}
+      sizeClassNames={edgeToEdge
+        ? { small: "w-full", medium: "w-full", large: "w-full" }
+        : side ? cardImageSizeClasses.side : cardImageSizeClasses.top}
       sizes={side ? "128px" : "(min-width: 1024px) 33vw, 100vw"}
     />
   );
@@ -209,13 +222,16 @@ export function CardsBlock({
             const mediaSource = normalizeCardMediaSource(cardItem);
             const mediaPosition = normalizeCardMediaPosition(cardItem.mediaPosition);
             const sideMedia = mediaSource !== "none" && mediaPosition !== "top";
+            const edgeToEdge = mediaSource === "image" &&
+              mediaPosition === "top" &&
+              normalizeCardImageLayout(cardItem.imageLayout) === "fullTop";
 
             return (
               <li key={item.id}>
                 <Card
                   className={cardInteractionClasses[effectiveInteraction]}
                   fullHeight
-                  padding={modalities ? "lg" : "md"}
+                  padding={edgeToEdge ? "none" : modalities ? "lg" : "md"}
                 >
                   <div
                     className={classNames(
@@ -224,22 +240,32 @@ export function CardsBlock({
                     )}
                   >
                     <CardMedia
+                      edgeToEdge={edgeToEdge}
                       item={cardItem}
                       modalities={modalities}
                       position={mediaPosition}
                       source={mediaSource}
                     />
-                    <div className="min-w-0 flex-1">
+                    <div className={classNames(
+                      "min-w-0 flex-1",
+                      edgeToEdge && (modalities ? "px-8 pt-8" : "px-6 pt-6"),
+                      edgeToEdge && !item.link?.label && (modalities ? "pb-8" : "pb-6"),
+                    )}>
                       <Heading level={3} size="md">
                         <span className="wrap-break-word">{item.title}</span>
                       </Heading>
-                      <div className="mt-3">
-                        <Text>{item.description}</Text>
-                      </div>
+                      {item.description ? (
+                        <div className="mt-3">
+                          <Text>{item.description}</Text>
+                        </div>
+                      ) : null}
                     </div>
                   </div>
                   {item.link?.label ? (
-                    <div className="mt-auto pt-5">
+                    <div className={classNames(
+                      "mt-auto pt-5",
+                      edgeToEdge && (modalities ? "px-8 pb-8" : "px-6 pb-6"),
+                    )}>
                       <BlockLink link={item.link} />
                     </div>
                   ) : null}

@@ -1,4 +1,4 @@
-import type { Block } from "payload";
+import type { Block, SelectFieldSingleValidation } from "payload";
 import { characterLimitAdmin } from "../../fields/character-limit";
 import {
   createAlignmentField,
@@ -18,6 +18,7 @@ import { createBlockAdmin } from "../shared/admin";
 
 // Hero text, overlay, eyebrow and CTA consume these roles directly.
 const heroColorTokens = ["background", "foreground", "action", "accent"] as const;
+const imageModes = ["none", "background", "side"] as const;
 
 const overlayOptions = [
   { label: "Sem sobreposicao", value: "none" },
@@ -81,14 +82,34 @@ export const HeroBlock: Block = {
       },
     },
     {
+      name: "imageMode",
+      type: "select",
+      label: "Uso da imagem",
+      validate: ((value) =>
+        !value || imageModes.includes(value as typeof imageModes[number])
+          ? true
+          : "Escolha como a imagem sera usada no destaque.") satisfies SelectFieldSingleValidation,
+      admin: {
+        description:
+          "Escolha Sem imagem, Imagem de fundo ou Imagem lateral. As configuracoes correspondentes aparecem logo abaixo. Destaques antigos mantem a apresentacao atual ate uma escolha ser feita. Este bloco nao possui contador nem timer automatico.",
+      },
+      options: [
+        { label: "Sem imagem", value: "none" },
+        { label: "Imagem de fundo", value: "background" },
+        { label: "Imagem lateral (ao lado do texto)", value: "side" },
+      ],
+    },
+    {
       name: "image",
       type: "upload",
       relationTo: "media",
       label: "Imagem",
       admin: {
-        condition: (_, siblingData) => siblingData?.variant === "split",
+        condition: (_, siblingData) =>
+          siblingData?.imageMode === "side" ||
+          (!siblingData?.imageMode && siblingData?.variant === "split"),
         description:
-          "Usada apenas no modelo Imagem lateral. Em telas pequenas, a imagem fica empilhada abaixo do texto.",
+          "Exibida quando Uso da imagem e Imagem lateral. Em telas pequenas, a imagem fica empilhada abaixo do texto.",
       },
     },
     {
@@ -96,7 +117,9 @@ export const HeroBlock: Block = {
       type: "group",
       label: "Apresentação da imagem",
       admin: {
-        condition: (_, siblingData) => siblingData?.variant === "split",
+        condition: (_, siblingData) =>
+          siblingData?.imageMode === "side" ||
+          (!siblingData?.imageMode && siblingData?.variant === "split"),
         description:
           "Define como esta imagem é exibida neste bloco. O arquivo original na Mídia não é alterado.",
       },
@@ -108,22 +131,15 @@ export const HeroBlock: Block = {
       }),
     },
     {
-      name: "cta",
-      type: "group",
-      label: "Acao principal",
-      admin: {
-        description:
-          "Link opcional exibido como botao principal da abertura.",
-      },
-      fields: createLinkFields(),
-    },
-    {
       name: "background",
       type: "group",
       label: "Imagem de fundo",
       admin: {
+        condition: (_, siblingData) =>
+          siblingData?.imageMode === "background" ||
+          (!siblingData?.imageMode && Boolean(siblingData?.background?.image)),
         description:
-          "Opcional. Use midia cadastrada para compor o fundo do destaque sem alterar o arquivo original.",
+          "Use midia cadastrada quando Uso da imagem for Imagem de fundo. O arquivo original nao e alterado.",
       },
       fields: [
         {
@@ -182,6 +198,16 @@ export const HeroBlock: Block = {
       ],
     },
     {
+      name: "cta",
+      type: "group",
+      label: "Acao principal",
+      admin: {
+        description:
+          "Link opcional exibido como botao principal da abertura.",
+      },
+      fields: createLinkFields(),
+    },
+    {
       name: "variant",
       type: "select",
       label: "Modelo de apresentação",
@@ -192,8 +218,8 @@ export const HeroBlock: Block = {
         "Escolha um modelo de apresentação aprovado.",
       ),
       admin: {
-        description:
-          "Padrao alinha o conteudo a esquerda; Centralizado destaca uma mensagem curta; Imagem lateral exibe texto e imagem lado a lado no desktop. Este bloco nao possui contador nem timer automatico.",
+        hidden: true,
+        description: "Campo legado preservado para compatibilidade com destaques existentes.",
       },
       options: [
         { label: "Padrao", value: "default" },

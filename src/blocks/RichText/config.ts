@@ -74,10 +74,11 @@ export const RichTextBlock: Block = {
         components: {
           beforeInput: [
             "/components/admin/RichTextFullScreen#RichTextFullScreen",
+            "/components/admin/RichTextTableMenuPortuguese#RichTextTableMenuPortuguese",
           ],
         },
         description:
-          "Area para texto, listas, tabelas, links e subtitulos com barra de ferramentas WYSIWYG. A aparencia final segue a tipografia editorial do portal.",
+          "Area para texto, listas, tabelas, links e subtitulos com barra de ferramentas WYSIWYG. Fontes e cores usam opcoes controladas e acompanham o tema do bloco.",
       },
     },
     {

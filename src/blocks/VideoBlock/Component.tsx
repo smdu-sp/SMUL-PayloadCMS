@@ -61,7 +61,7 @@ export function VideoBlock({
 
         <div
           className={classNames(
-            "overflow-hidden rounded-lg border border-border bg-muted",
+            "overflow-hidden rounded-lg border border-(--block-border) bg-muted",
             aspectRatioClasses[normalizedAspectRatio],
           )}
         >

@@ -161,7 +161,7 @@ export interface User {
 export interface Media {
   id: number;
   /**
-   * Classifique o papel editorial da midia. SVG nao e aceito; para icones e logos, use PNG ou WebP aprovados.
+   * Classifique o papel editorial da midia. Imagens SVG sao aceitas apos validacao de seguranca; para icones e logos, use arquivos institucionais aprovados.
    */
   usage: 'content' | 'background' | 'logo' | 'icon' | 'infographic' | 'document';
   /**
@@ -297,7 +297,11 @@ export interface HeroBlock {
    */
   description?: string | null;
   /**
-   * Usada apenas no modelo Imagem lateral. Em telas pequenas, a imagem fica empilhada abaixo do texto.
+   * Escolha Sem imagem, Imagem de fundo ou Imagem lateral. As configuracoes correspondentes aparecem logo abaixo. Destaques antigos mantem a apresentacao atual ate uma escolha ser feita. Este bloco nao possui contador nem timer automatico.
+   */
+  imageMode?: ('none' | 'background' | 'side') | null;
+  /**
+   * Exibida quando Uso da imagem e Imagem lateral. Em telas pequenas, a imagem fica empilhada abaixo do texto.
    */
   image?: (number | null) | Media;
   /**
@@ -330,32 +334,7 @@ export interface HeroBlock {
       | null;
   };
   /**
-   * Link opcional exibido como botao principal da abertura.
-   */
-  cta?: {
-    /**
-     * Texto visivel para o usuario. Use uma acao clara, como Abrir pagina ou Saiba mais.
-     */
-    label?: string | null;
-    /**
-     * Escolha pagina interna para navegar no portal ou URL externa para encaminhar a servico oficial.
-     */
-    type?: ('internal' | 'external') | null;
-    /**
-     * Pagina publicada ou em rascunho dentro deste CMS. Mudancas de slug nao quebram este relacionamento.
-     */
-    page?: (number | null) | Page;
-    /**
-     * Informe o endereco completo, incluindo http:// ou https://.
-     */
-    url?: string | null;
-    /**
-     * Recomendado para links externos, mantendo o portal aberto na aba atual.
-     */
-    newTab?: boolean | null;
-  };
-  /**
-   * Opcional. Use midia cadastrada para compor o fundo do destaque sem alterar o arquivo original.
+   * Use midia cadastrada quando Uso da imagem for Imagem de fundo. O arquivo original nao e alterado.
    */
   background?: {
     /**
@@ -394,7 +373,32 @@ export interface HeroBlock {
     focalPoint?: ('center' | 'top' | 'bottom' | 'left' | 'right') | null;
   };
   /**
-   * Padrao alinha o conteudo a esquerda; Centralizado destaca uma mensagem curta; Imagem lateral exibe texto e imagem lado a lado no desktop. Este bloco nao possui contador nem timer automatico.
+   * Link opcional exibido como botao principal da abertura.
+   */
+  cta?: {
+    /**
+     * Texto visivel para o usuario. Use uma acao clara, como Abrir pagina ou Saiba mais.
+     */
+    label?: string | null;
+    /**
+     * Escolha pagina interna para navegar no portal ou URL externa para encaminhar a servico oficial.
+     */
+    type?: ('internal' | 'external') | null;
+    /**
+     * Pagina publicada ou em rascunho dentro deste CMS. Mudancas de slug nao quebram este relacionamento.
+     */
+    page?: (number | null) | Page;
+    /**
+     * Informe o endereco completo, incluindo http:// ou https://.
+     */
+    url?: string | null;
+    /**
+     * Recomendado para links externos, mantendo o portal aberto na aba atual.
+     */
+    newTab?: boolean | null;
+  };
+  /**
+   * Campo legado preservado para compatibilidade com destaques existentes.
    */
   variant: 'default' | 'centered' | 'split';
   /**
@@ -430,7 +434,7 @@ export interface HeroBlock {
  */
 export interface RichTextBlock {
   /**
-   * Area para texto, listas, tabelas, links e subtitulos com barra de ferramentas WYSIWYG. A aparencia final segue a tipografia editorial do portal.
+   * Area para texto, listas, tabelas, links e subtitulos com barra de ferramentas WYSIWYG. Fontes e cores usam opcoes controladas e acompanham o tema do bloco.
    */
   content: {
     root: {
@@ -726,6 +730,7 @@ export interface CarouselBlock {
   display: {
     slidesPerView: '1' | '2' | '3';
     navigation: 'arrows' | 'arrows-dots';
+    contentAlignment?: ('left' | 'center') | null;
   };
   behavior: {
     /**
@@ -807,9 +812,9 @@ export interface VideoBlock {
  */
 export interface ImageTextBlock {
   /**
-   * Titulo da secao que acompanha a imagem.
+   * Opcional. Titulo da secao que acompanha a imagem.
    */
-  title: string;
+  title?: string | null;
   /**
    * Texto complementar exibido ao lado da imagem em telas maiores.
    */
@@ -966,44 +971,6 @@ export interface CardsBlock {
    */
   items: {
     mediaSource?: ('none' | 'icon' | 'image') | null;
-    mediaPosition?: ('top' | 'left' | 'right') | null;
-    /**
-     * Define como esta imagem aparece neste card sem alterar o arquivo original na Midia.
-     */
-    imagePresentation?: {
-      /**
-       * Controla a largura da imagem dentro do espaco do bloco. Em celulares, a imagem sempre ocupa a largura total.
-       */
-      size: 'small' | 'medium' | 'large';
-      /**
-       * Original preserva as proporcoes do arquivo enviado. As demais opcoes recortam a imagem para a proporcao escolhida.
-       */
-      aspectRatio: 'original' | '1:1' | '4:3' | '16:9';
-      /**
-       * Preencher recorta a imagem para cobrir o espaco; Conter mostra a imagem inteira, podendo sobrar espaco vazio. Usa o ponto focal definido na Midia quando disponivel.
-       */
-      fit?: ('cover' | 'contain') | null;
-      /**
-       * Ajuste esta ocorrencia da imagem. O arquivo original na biblioteca de Midia nao e alterado.
-       */
-      canvas?:
-        | {
-            [k: string]: unknown;
-          }
-        | unknown[]
-        | string
-        | number
-        | boolean
-        | null;
-    };
-    /**
-     * Texto principal do card. Pode quebrar linha sem afetar os demais itens.
-     */
-    title: string;
-    /**
-     * Resumo ou orientacao exibida dentro do card.
-     */
-    description: string;
     /**
      * Escolha um icone padrao do catalogo ou uma midia personalizada.
      */
@@ -1038,10 +1005,52 @@ export interface CardsBlock {
      * Opcional para conteudo antigo; obrigatorio quando Origem do icone for Midia personalizada.
      */
     icon?: (number | null) | Media;
+    mediaPosition?: ('top' | 'left' | 'right') | null;
     /**
      * Imagem do card. O arquivo original permanece preservado na biblioteca de midia.
      */
     image?: (number | null) | Media;
+    /**
+     * Ocupar o topo fixa a largura da imagem em 100% do card; proporcao e enquadramento continuam editaveis.
+     */
+    imageLayout?: ('contained' | 'fullTop') | null;
+    /**
+     * Define como esta imagem aparece neste card sem alterar o arquivo original na Midia.
+     */
+    imagePresentation?: {
+      /**
+       * Controla a largura da imagem dentro do espaco do bloco. Em celulares, a imagem sempre ocupa a largura total.
+       */
+      size: 'small' | 'medium' | 'large';
+      /**
+       * Original preserva as proporcoes do arquivo enviado. As demais opcoes recortam a imagem para a proporcao escolhida.
+       */
+      aspectRatio: 'original' | '1:1' | '4:3' | '16:9';
+      /**
+       * Preencher recorta a imagem para cobrir o espaco; Conter mostra a imagem inteira, podendo sobrar espaco vazio. Usa o ponto focal definido na Midia quando disponivel.
+       */
+      fit?: ('cover' | 'contain') | null;
+      /**
+       * Ajuste esta ocorrencia da imagem. O arquivo original na biblioteca de Midia nao e alterado.
+       */
+      canvas?:
+        | {
+            [k: string]: unknown;
+          }
+        | unknown[]
+        | string
+        | number
+        | boolean
+        | null;
+    };
+    /**
+     * Texto principal do card. Pode quebrar linha sem afetar os demais itens.
+     */
+    title: string;
+    /**
+     * Opcional. Resumo ou orientacao exibida dentro do card.
+     */
+    description?: string | null;
     /**
      * Opcional. Use quando o card deve encaminhar para outra pagina ou servico.
      */
@@ -1079,9 +1088,9 @@ export interface CardsBlock {
  */
 export interface CTABlock {
   /**
-   * Mensagem curta que encerra uma secao ou orienta o proximo passo.
+   * Opcional. Mensagem curta que encerra uma secao ou orienta o proximo passo.
    */
-  title: string;
+  title?: string | null;
   /**
    * Texto opcional para explicar o contexto da chamada.
    */
@@ -1152,9 +1161,9 @@ export interface CTABlock {
  */
 export interface IconGridBlock {
   /**
-   * Titulo curto que contextualiza o conjunto de itens com icones.
+   * Opcional. Titulo curto que contextualiza o conjunto de itens com icones.
    */
-  title: string;
+  title?: string | null;
   /**
    * Texto opcional para orientar a leitura antes da grade.
    */
@@ -1265,9 +1274,9 @@ export interface IconGridBlock {
  */
 export interface FAQAccordionBlock {
   /**
-   * Titulo exibido antes da lista de perguntas.
+   * Opcional. Titulo exibido antes da lista de perguntas.
    */
-  title: string;
+  title?: string | null;
   /**
    * Texto opcional para contextualizar as perguntas.
    */
@@ -1835,6 +1844,7 @@ export interface HeroBlockSelect<T extends boolean = true> {
   eyebrow?: T;
   title?: T;
   description?: T;
+  imageMode?: T;
   image?: T;
   imagePresentation?:
     | T
@@ -1843,15 +1853,6 @@ export interface HeroBlockSelect<T extends boolean = true> {
         aspectRatio?: T;
         fit?: T;
         canvas?: T;
-      };
-  cta?:
-    | T
-    | {
-        label?: T;
-        type?: T;
-        page?: T;
-        url?: T;
-        newTab?: T;
       };
   background?:
     | T
@@ -1862,6 +1863,15 @@ export interface HeroBlockSelect<T extends boolean = true> {
         mobileCanvas?: T;
         overlay?: T;
         focalPoint?: T;
+      };
+  cta?:
+    | T
+    | {
+        label?: T;
+        type?: T;
+        page?: T;
+        url?: T;
+        newTab?: T;
       };
   variant?: T;
   appearance?:
@@ -2024,6 +2034,7 @@ export interface CarouselBlockSelect<T extends boolean = true> {
     | {
         slidesPerView?: T;
         navigation?: T;
+        contentAlignment?: T;
       };
   behavior?:
     | T
@@ -2146,7 +2157,12 @@ export interface CardsBlockSelect<T extends boolean = true> {
     | T
     | {
         mediaSource?: T;
+        iconSource?: T;
+        standardIcon?: T;
+        icon?: T;
         mediaPosition?: T;
+        image?: T;
+        imageLayout?: T;
         imagePresentation?:
           | T
           | {
@@ -2157,10 +2173,6 @@ export interface CardsBlockSelect<T extends boolean = true> {
             };
         title?: T;
         description?: T;
-        iconSource?: T;
-        standardIcon?: T;
-        icon?: T;
-        image?: T;
         link?:
           | T
           | {
@@ -2604,6 +2616,10 @@ export interface Footer {
     };
   };
   /**
+   * Opcional. Selecione uma midia institucional com texto alternativo adequado.
+   */
+  logo?: (number | null) | Media;
+  /**
    * Opcional. Informe somente se houver canal oficial vigente para atendimento.
    */
   phone?: string | null;
@@ -2625,11 +2641,11 @@ export interface Footer {
   socialLinks?:
     | {
         /**
-         * Nome curto exibido para identificar o canal oficial, como Instagram ou YouTube.
+         * Opcional quando um icone for selecionado. Se informado, aparece ao lado do icone.
          */
-        label: string;
+        label?: string | null;
         /**
-         * Opcional. Selecione o ícone da rede; o nome visível continua sendo obrigatório para acessibilidade.
+         * Opcional quando ha nome. Sem nome, o icone vira o link e recebe nome acessivel.
          */
         icon?: ('instagram' | 'facebook' | 'youtube' | 'linkedin' | 'x-social' | 'whatsapp') | null;
         /**
@@ -2827,6 +2843,7 @@ export interface FooterSelect<T extends boolean = true> {
               accent?: T;
             };
       };
+  logo?: T;
   phone?: T;
   email?: T;
   address?: T;

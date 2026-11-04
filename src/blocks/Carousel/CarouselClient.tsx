@@ -7,9 +7,9 @@ import { classNames } from "../../components/ui/classNames";
 import { BlockLink } from "../shared/BlockLink";
 import type { ImagePresentation } from "../shared/image-presentation";
 import { PresentedMediaImage } from "../shared/PresentedMediaImage";
-import type { CarouselAutoplay, CarouselItem, CarouselNavigation, CarouselSlidesPerView } from "./Component";
+import type { CarouselAutoplay, CarouselContentAlignment, CarouselItem, CarouselNavigation, CarouselSlidesPerView } from "./Component";
 
-const AUTOPLAY_DELAY_MS = 600;
+const AUTOPLAY_DELAY_MS = 5000;
 
 const slideWidthClasses: Record<CarouselSlidesPerView, string> = {
   "1": "basis-full",
@@ -17,8 +17,14 @@ const slideWidthClasses: Record<CarouselSlidesPerView, string> = {
   "3": "basis-full md:basis-1/2 lg:basis-1/3",
 };
 
+export const carouselContentAlignmentClasses: Record<CarouselContentAlignment, string> = {
+  left: "",
+  center: "items-center text-center",
+};
+
 type CarouselClientProps = {
   autoplay: CarouselAutoplay;
+  contentAlignment: CarouselContentAlignment;
   items: CarouselItem[];
   navigation: CarouselNavigation;
   slidesPerView: CarouselSlidesPerView;
@@ -71,7 +77,7 @@ function PlayIcon({ className }: { className?: string }) {
   );
 }
 
-export function CarouselClient({ autoplay, items, navigation, slidesPerView }: CarouselClientProps) {
+export function CarouselClient({ autoplay, contentAlignment, items, navigation, slidesPerView }: CarouselClientProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [userInteracted, setUserInteracted] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -117,6 +123,7 @@ export function CarouselClient({ autoplay, items, navigation, slidesPerView }: C
     (index: number, userAction = false) => {
       if (userAction) {
         setUserInteracted(true);
+        setIsPlaying(false);
       }
       setActiveIndex(index);
       scrollToSlide(index);
@@ -128,6 +135,7 @@ export function CarouselClient({ autoplay, items, navigation, slidesPerView }: C
     (userAction = false) => {
       if (userAction) {
         setUserInteracted(true);
+        setIsPlaying(false);
       }
       setActiveIndex((current) => {
         const nextIndex = (current - 1 + items.length) % items.length;
@@ -142,6 +150,7 @@ export function CarouselClient({ autoplay, items, navigation, slidesPerView }: C
     (userAction = false) => {
       if (userAction) {
         setUserInteracted(true);
+        setIsPlaying(false);
       }
       setActiveIndex((current) => {
         const nextIndex = (current + 1) % items.length;
@@ -174,6 +183,7 @@ export function CarouselClient({ autoplay, items, navigation, slidesPerView }: C
     if (closestIndex !== activeIndex) {
       setActiveIndex(closestIndex);
       setUserInteracted(true);
+      setIsPlaying(false);
     }
   }, [activeIndex]);
 
@@ -286,7 +296,7 @@ export function CarouselClient({ autoplay, items, navigation, slidesPerView }: C
                           sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
                         />
                       </div>
-                      <div className="flex flex-1 flex-col pt-5">
+                      <div className={classNames("flex flex-1 flex-col pt-5", carouselContentAlignmentClasses[contentAlignment])}>
                         {item.title ? (
                           <Heading level={3} size="md">
                             <span className="wrap-break-word">{item.title}</span>
@@ -388,7 +398,10 @@ aria-label="Próximo slide"
             <button
               aria-label={isPlaying ? "Pausar rotação automática" : "Iniciar rotação automática"}
               className="inline-flex items-center justify-center rounded-md border border-border bg-surface p-1.5 text-muted-foreground shadow-sm transition-colors hover:bg-muted hover:text-foreground focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-focus"
-              onClick={() => setIsPlaying((prev) => !prev)}
+              onClick={() => {
+                if (!isPlaying) setUserInteracted(false);
+                setIsPlaying((prev) => !prev);
+              }}
               title={isPlaying ? "Pausar rotação automática" : "Iniciar rotação automática"}
               type="button"
             >
